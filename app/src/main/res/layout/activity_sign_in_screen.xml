@@ -6,27 +6,39 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".Main">
+    tools:context="dk.projekt.bachelor.wheresmyfamily.SignInScreen"
 
-   />/ android:background="@drawable/family_bg" >
+    android:background="#ffffff">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_centerInParent="true"
-        android:background="@drawable/linearlayout_bg"
         android:padding="10dp">
 
-        <Button
-            android:id="@+id/btnSignUp"
+        <EditText
+            android:id="@+id/etUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edittext_top_bg"
             android:padding="10dp"
-            android:layout_margin="4dp"
-            android:text="Registrer Bruger"
-            android:background="@drawable/button_default_bg"
-            style="@style/DefaultButtonText"
+            android:hint="Email"
+            android:textColorHint="#cccccc"
+            android:drawableLeft="@drawable/email"
+            />
+
+        <EditText
+            android:id="@+id/etPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Password"
+            android:textColorHint="#cccccc"
+            android:password="true"
+            android:drawableLeft="@drawable/password"
             />
 
         <Button
@@ -36,10 +48,12 @@
             android:padding="10dp"
             android:layout_margin="4dp"
             android:text="Log Ind"
-            android:background="@drawable/button_default_bg"
             style="@style/DefaultButtonText"
+            android:background="@drawable/button_default_bg"
             />
 
         </LinearLayout>
+
+
 
 </RelativeLayout>

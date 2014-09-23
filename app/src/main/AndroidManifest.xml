@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.SignUpScreen"
+            android:label="@string/title_activity_sign_up_screen" >
+        </activity>
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.SignInScreen"
+            android:label="@string/title_activity_sign_in_screen" >
+        </activity>
     </application>
 
 </manifest>
