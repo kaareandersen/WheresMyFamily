@@ -19,7 +19,7 @@
         >
 
         <EditText
-            android:id="@+id/etEmail"
+            android:id="@+id/txtRegisterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_top_bg"
@@ -30,7 +30,7 @@
             android:singleLine="true"/>
 
         <EditText
-            android:id="@+id/etUserName"
+            android:id="@+id/txtRegisterUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_default_bg"
@@ -42,7 +42,7 @@
             android:singleLine="true"/>
 
         <EditText
-            android:id="@+id/etPass"
+            android:id="@+id/txtRegisterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_bottom_bg"
@@ -55,7 +55,7 @@
             android:singleLine="true"/>
 
         <EditText
-            android:id="@+id/etPassAgain"
+            android:id="@+id/txtRegisterConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_bottom_bg"
@@ -68,7 +68,7 @@
             android:singleLine="true"/>
 
         <Button
-            android:id="@+id/btnSignIn"
+            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"

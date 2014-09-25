@@ -6,14 +6,26 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import com.microsoft.windowsazure.mobileservices.*;
 
+import java.net.MalformedURLException;
 
 public class Main extends Activity {
+    private MobileServiceClient mClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+            mClient = new MobileServiceClient(
+                    "https://wheresmyfamilymobileservice.azure-mobile.net/",
+                    "pxLbxStZdNLVcRfgvOBsuROQwhFukR85",
+                    this
+            );
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
 

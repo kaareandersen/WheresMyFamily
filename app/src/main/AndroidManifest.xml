@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dk.projekt.bachelor.wheresmyfamily" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -23,6 +25,10 @@
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.SignInScreen"
             android:label="@string/title_activity_sign_in_screen" >
+        </activity>
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.LoggedIn"
+            android:label="@string/title_activity_logged_in" >
         </activity>
     </application>
 

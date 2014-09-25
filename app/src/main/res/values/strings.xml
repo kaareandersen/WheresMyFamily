@@ -21,5 +21,6 @@
     <string name="title_activity_sign_up_screen">Registrer Bruger</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sign_in_screen">Log Ind</string>
+    <string name="title_activity_logged_in">LoggedIn</string>
 
 </resources>
