@@ -18,8 +18,8 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
-    <string name="title_activity_sign_up_screen">SignUpScreen</string>
+    <string name="title_activity_sign_up_screen">Registrer Bruger</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_sign_in_screen">SignInScreen</string>
+    <string name="title_activity_sign_in_screen">Log Ind</string>
 
 </resources>

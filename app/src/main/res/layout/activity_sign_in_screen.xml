@@ -26,7 +26,7 @@
             android:hint="Email"
             android:textColorHint="#cccccc"
             android:drawableLeft="@drawable/email"
-            />
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/etPass"
@@ -39,7 +39,7 @@
             android:textColorHint="#cccccc"
             android:password="true"
             android:drawableLeft="@drawable/password"
-            />
+            android:singleLine="true"/>
 
         <Button
             android:id="@+id/btnSignIn"

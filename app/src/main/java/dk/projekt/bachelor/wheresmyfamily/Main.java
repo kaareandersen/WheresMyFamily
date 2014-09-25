@@ -1,9 +1,11 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class Main extends Activity {
@@ -35,5 +37,15 @@ public class Main extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void signUpScreen(View view) {
+        Intent signUp = new Intent(this, SignUpScreen.class);
+        startActivity(signUp);
+    }
+
+    public void signInScreen(View view) {
+        Intent signIn = new Intent(this, SignInScreen.class);
+        startActivity(signIn);
     }
 }

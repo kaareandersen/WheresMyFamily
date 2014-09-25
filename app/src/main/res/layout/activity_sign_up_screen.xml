@@ -26,7 +26,8 @@
             android:padding="10dp"
             android:hint="Email"
             android:textColorHint="#bbbbbb"
-            android:drawableLeft="@drawable/email"/>
+            android:drawableLeft="@drawable/email"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/etUserName"
@@ -37,7 +38,8 @@
             android:padding="10dp"
             android:hint="Bruger Navn"
             android:textColorHint="#bbbbbb"
-            android:drawableLeft="@drawable/user"/>
+            android:drawableLeft="@drawable/user"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/etPass"
@@ -49,7 +51,21 @@
             android:hint="Password"
             android:textColorHint="#bbbbbb"
             android:password="true"
-            android:drawableLeft="@drawable/password"/>
+            android:drawableLeft="@drawable/password"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/etPassAgain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Bekræft Password"
+            android:textColorHint="#bbbbbb"
+            android:password="true"
+            android:drawableLeft="@drawable/password"
+            android:singleLine="true"/>
 
         <Button
             android:id="@+id/btnSignIn"
@@ -57,7 +73,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:layout_margin="4dp"
-            android:text="Log Ind"
+            android:text="Opret"
             style="@style/DefaultButtonText"
             android:background="@drawable/button_default_bg"/>
 

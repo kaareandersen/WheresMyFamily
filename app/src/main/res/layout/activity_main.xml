@@ -27,6 +27,7 @@
             android:text="Registrer Bruger"
             android:background="@drawable/button_default_bg"
             style="@style/DefaultButtonText"
+            android:onClick="signUpScreen"
             />
 
         <Button
@@ -38,6 +39,7 @@
             android:text="Log Ind"
             android:background="@drawable/button_default_bg"
             style="@style/DefaultButtonText"
+            android:onClick="signInScreen"
             />
 
         </LinearLayout>
