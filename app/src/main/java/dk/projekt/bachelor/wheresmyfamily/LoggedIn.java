@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.util.Log;
 
 
-public class LoggedIn extends Activity {
+public class LoggedIn extends BaseActivity {
 
     private final String TAG = "LoggedIn";
     private TextView mLblUserIdValue;
@@ -27,7 +27,7 @@ public class LoggedIn extends Activity {
     private Button mBtnTestNoRetry;
     private Button mBtnTestRetry;
     private TextView mLblInfo;
-    private AuthService mAuthService;
+    //private AuthService mAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +48,19 @@ public class LoggedIn extends Activity {
         mLblUserIdValue.setText(authService.getUserId());
 
         //Fetch auth data (the username) on load
-        authService.getAuthData(new TableJsonQueryCallback() {
-            @Override
-            public void onCompleted(JsonElement result, int count, Exception exception,
-                                    ServiceFilterResponse response) {
-                if (exception == null) {
-                    JsonArray results = result.getAsJsonArray();
-                    JsonElement item = results.get(0);
-                    mLblUsernameValue.setText(item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString());
-                } else {
-                    Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
-                }
-            }
-        });
+//        authService.getAuthData(new TableJsonQueryCallback() {
+//            @Override
+//            public void onCompleted(JsonElement result, int count, Exception exception,
+//                                    ServiceFilterResponse response) {
+//                if (exception == null) {
+//                    JsonArray results = result.getAsJsonArray();
+//                    JsonElement item = results.get(0);
+//                    mLblUsernameValue.setText(item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString());
+//                } else {
+//                    Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
+//                }
+//            }
+//        });
     }
 
 

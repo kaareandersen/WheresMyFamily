@@ -15,14 +15,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
-public class SignInScreen extends Activity {
+public class SignInScreen extends BaseActivity {
 
     private final String TAG = "SignInScreen";
     private Button mBtnLogin;
     private EditText mTxtUsername;
     private EditText mTxtPassword;
     private Activity mActivity;
-    private AuthService mAuthService;
+    //private AuthService mAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

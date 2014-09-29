@@ -17,7 +17,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class SignUpScreen extends Activity {
+public class SignUpScreen extends BaseActivity {
 
     private final String TAG = "SignUpScreen";
     private Button btnRegister;
@@ -26,7 +26,7 @@ public class SignUpScreen extends Activity {
     private EditText mTxtConfirm;
     private EditText mTxtEmail;
     private Activity mActivity;
-    private AuthService mAuthService;
+    //private AuthService mAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

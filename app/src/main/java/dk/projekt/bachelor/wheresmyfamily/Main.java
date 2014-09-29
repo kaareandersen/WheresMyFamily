@@ -7,25 +7,42 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import com.microsoft.windowsazure.mobileservices.*;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
 
 import java.net.MalformedURLException;
 
-public class Main extends Activity {
-    private MobileServiceClient mClient;
+public class Main extends BaseActivity {
+
+    private final String TAG = "Main";
+    private Button btnLoginWithEmail;
+    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        try {
-            mClient = new MobileServiceClient(
-                    "https://wheresmyfamilymobileservice.azure-mobile.net/",
-                    "pxLbxStZdNLVcRfgvOBsuROQwhFukR85",
-                    this
-            );
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+
+        mActivity = this;
+
+        //Get UI Properties
+        btnLoginWithEmail = (Button) findViewById(R.id.btnMainSignIn);
+
+        //If user is already authenticated, bypass logging in
+        if (mAuthService.isUserAuthenticated()) {
+            Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
+            startActivity(loggedInIntent);
         }
+
+        //Set onclick listeners
+        btnLoginWithEmail.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent customLoginIntent = new Intent(getApplicationContext(), SignInScreen.class);
+                startActivity(customLoginIntent);
+            }
+        });
     }
 
 
