@@ -6,12 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.microsoft.windowsazure.mobileservices.*;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
-
-import java.net.MalformedURLException;
 
 public class Main extends BaseActivity {
 
@@ -39,7 +35,7 @@ public class Main extends BaseActivity {
         btnLoginWithEmail.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent customLoginIntent = new Intent(getApplicationContext(), SignInScreen.class);
+                Intent customLoginIntent = new Intent(getApplicationContext(), LogInScreen.class);
                 startActivity(customLoginIntent);
             }
         });
@@ -69,12 +65,12 @@ public class Main extends BaseActivity {
     }
 
     public void signUpScreen(View view) {
-        Intent signUp = new Intent(this, SignUpScreen.class);
+        Intent signUp = new Intent(this, CreateUserScreen.class);
         startActivity(signUp);
     }
 
     public void signInScreen(View view) {
-        Intent signIn = new Intent(this, SignInScreen.class);
+        Intent signIn = new Intent(this, LogInScreen.class);
         startActivity(signIn);
     }
 }

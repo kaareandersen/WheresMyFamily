@@ -16,22 +16,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+import android.widget.CheckBox;
 
-public class SignUpScreen extends BaseActivity {
+public class CreateUserScreen extends BaseActivity {
 
-    private final String TAG = "SignUpScreen";
+    private final String TAG = "CreateUserScreen";
     private Button btnRegister;
     private EditText mTxtUsername;
     private EditText mTxtPassword;
     private EditText mTxtConfirm;
     private EditText mTxtEmail;
     private Activity mActivity;
-    //private AuthService mAuthService;
+    private CheckBox mChbChild;
+    private boolean chcBoxChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up_screen);
+        setContentView(R.layout.activity_create_user_screen);
 
         mActivity = this;
 
@@ -41,6 +44,8 @@ public class SignUpScreen extends BaseActivity {
         mTxtPassword = (EditText) findViewById(R.id.txtRegisterPassword);
         mTxtConfirm = (EditText) findViewById(R.id.txtRegisterConfirm);
         mTxtEmail = (EditText) findViewById(R.id.txtRegisterEmail);
+        mChbChild = (CheckBox) findViewById(R.id.checkBoxRegChild);
+        //chcBoxChild = false;
 
         //Set click listeners
         btnRegister.setOnClickListener(registerClickListener);
@@ -69,6 +74,23 @@ public class SignUpScreen extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onCheckboxClicked(View view) {
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkBoxRegChild:
+                if (checked)
+                //Child
+                chcBoxChild = true;
+                else
+                //Parent
+                chcBoxChild = false;
+                break;
+        }
+    }
+
     View.OnClickListener registerClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -77,16 +99,20 @@ public class SignUpScreen extends BaseActivity {
                     mTxtPassword.getText().toString().equals("") ||
                     mTxtConfirm.getText().toString().equals("") ||
                     mTxtEmail.getText().toString().equals("")) {
+                Toast.makeText(getApplicationContext(),
+                        "You must enter all fields to register", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "You must enter all fields to register");
                 return;
             } else if (!mTxtPassword.getText().toString().equals(mTxtConfirm.getText().toString())) {
+                Toast.makeText(getApplicationContext(),
+                        "The passwords you've entered don't match", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "The passwords you've entered don't match");
                 return;
             } else {
                 mAuthService.registerUser(mTxtUsername.getText().toString(),
                         mTxtPassword.getText().toString(),
                         mTxtConfirm.getText().toString(),
-                        mTxtEmail.getText().toString(),
+                        mTxtEmail.getText().toString(), chcBoxChild,
                         new TableJsonOperationCallback() {
                             @Override
                             public void onCompleted(JsonObject jsonObject, Exception exception,
@@ -96,8 +122,15 @@ public class SignUpScreen extends BaseActivity {
                                     mAuthService.setUserAndSaveData(jsonObject);
                                     //Finish this activity and run the logged in activity
                                     mActivity.finish();
-                                    Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
-                                    startActivity(loggedInIntent);
+
+                                    if (chcBoxChild == true) {
+                                        Intent loggedInChildIntent = new Intent(getApplicationContext(), LoggedInChild.class);
+                                        startActivity(loggedInChildIntent);
+                                    }
+                                    else {
+                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
+                                        startActivity(loggedInIntent);
+                                    }
                                 } else {
                                     Log.e(TAG, "There was an error registering the user: " + exception.getMessage());
                                 }

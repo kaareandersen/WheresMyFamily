@@ -70,18 +70,10 @@ public class AuthService {
         return mClient.getCurrentUser().getUserId();
     }
 
-    //Show the login dialog
-    public void login(Context activityContext, MobileServiceAuthenticationProvider provider, UserAuthenticationCallback callback) {
-        mProvider = provider;
-        mClient.setContext(activityContext);
-        mClient.login(provider, callback);
-    }
-
     public void login(String username, String password, TableJsonOperationCallback callback) {
         JsonObject customUser = new JsonObject();
         customUser.addProperty("username", username);
         customUser.addProperty("password", password);
-
         List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
         parameters.add(new Pair<String, String>("login", "true"));
 
@@ -161,12 +153,13 @@ public class AuthService {
      * @param callback
      */
     public void registerUser(String username, String password, String confirm,
-                             String email,
+                             String email, boolean child,
                              TableJsonOperationCallback callback) {
         JsonObject newUser = new JsonObject();
         newUser.addProperty("username", username);
         newUser.addProperty("password", password);
         newUser.addProperty("email", email);
+        newUser.addProperty("child", child);
 
         mTableAccounts.insert(newUser, callback);
     }
@@ -197,19 +190,6 @@ public class AuthService {
             logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(logoutIntent);
         }
-    }
-
-    /**
-     * Calls a method on the server that will auto trigger a 401 result
-     * @param shouldRetry
-     * @param callback
-     */
-    public void testForced401(boolean shouldRetry,
-                              TableJsonOperationCallback callback) {
-        JsonObject data = new JsonObject();
-        data.addProperty("data", "data");
-        mShouldRetryAuth = shouldRetry;
-        mTableBadAuth.insert(data, callback);
     }
 
     /**

@@ -22,16 +22,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.SignUpScreen"
+            android:name=".CreateUserScreen"
             android:label="@string/title_activity_sign_up_screen" >
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.SignInScreen"
+            android:name=".LogInScreen"
             android:label="@string/title_activity_sign_in_screen" >
         </activity>
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.LoggedIn"
             android:label="@string/title_activity_logged_in" >
+        </activity>
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.LoggedInChild"
+            android:label="@string/title_activity_logged_in_child" >
         </activity>
     </application>
 

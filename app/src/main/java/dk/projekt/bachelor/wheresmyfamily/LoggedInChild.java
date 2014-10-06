@@ -1,44 +1,33 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
-import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
-
-import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 
-public class LoggedIn extends BaseActivity {
+public class LoggedInChild extends BaseActivity {
 
     private final String TAG = "LoggedIn";
-    private TextView mLblUserIdValue;
     private TextView mLblUsernameValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logged_in);
+        setContentView(R.layout.activity_logged_in_child);
 
         //get UI elements
-        mLblUserIdValue = (TextView) findViewById(R.id.lblUserIdValue);
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
-
-        mLblUserIdValue.setText(authService.getUserId());
 
         //Fetch auth data (the username) on load
         authService.getAuthData(new TableJsonQueryCallback() {
@@ -60,7 +49,7 @@ public class LoggedIn extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.logged_in, menu);
+        getMenuInflater().inflate(R.menu.logged_in_child, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

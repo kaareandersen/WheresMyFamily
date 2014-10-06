@@ -3,6 +3,8 @@
 
     <string name="app_name">WheresMyFamily</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Log Ud</string>
+    <string name="action_deleteusr">Slet Bruger</string>
 
     <style name="DefaultButtonText">
         <item name="android:layout_width">fill_parent</item>
@@ -21,6 +23,7 @@
     <string name="title_activity_sign_up_screen">Registrer Bruger</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sign_in_screen">Log Ind</string>
-    <string name="title_activity_logged_in">LoggedIn</string>
+    <string name="title_activity_logged_in">Wheres My Family</string>
+    <string name="title_activity_logged_in_child">LoggedInChild</string>
 
 </resources>
