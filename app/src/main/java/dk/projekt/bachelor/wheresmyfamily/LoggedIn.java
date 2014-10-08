@@ -76,6 +76,10 @@ public class LoggedIn extends BaseActivity {
             mAuthService.logout(true);
             return true;
         }
+        if (id == R.id.action_deleteusr) {
+            mAuthService.deleteUser("Accounts");
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
