@@ -9,6 +9,7 @@ import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,5 +83,11 @@ public class LoggedIn extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void registrer_user(View v)
+    {
+        Intent register = new Intent(this, Register_child.class);
+        startActivity(register);
     }
 }
