@@ -2,18 +2,16 @@
 <resources>
 
     <string name="app_name">WheresMyFamily</string>
-    <string name="register_barn_title">Registrér barn</string>
+    <string name="register_barn_title">Registrer barn</string>
     <string name="action_settings">Settings</string>
-    <string name="registrer_barn_beskrivelse">Android Beam is activated
-        by placing devices back to back with the content to be shared displayed
-        on the screen. If the content is able to be sent, the screen will shrink
-        down and display Tap to Beam at the top. Tapping the screen sends the
-        content from the one device to the other. A sound will play when devices
-        are near and able to beam. When the data is sent, a confirmation tone
-        will play or a negative tone will play if failed and the content will
-        shrink off the screen indicating beaming is complete. Sharing is one
-        direction and the device sending content will not get content from the
-        receiving device.</string>
+    <string name="registrer_barn_beskrivelse">1. Åbn WhereIsMyFamily på begge telefoner,
+        og placér begge enheders bagside mod hinanden \n
+        2. Vent på en lyd, der bekræfter, at begge enheder har fundet hinanden. \n
+        3. Rør ved afsenderens skærm for at starte dataoverførslen. Der vil være en lyd,
+        der fortæller, når dataoverførslen starter. \n
+        4. Når dataoverførslen er færdig, vil der afspilles endnu en lyd.</string>
+    <string name="turn_on_nfc_headline">Aktivér NFC:</string>
+    <string name="turn_on_nfc">http://www.androidauthority.com/how-to-use-nfc-android-2-164644/</string>
     <string name="registrer_barn_knap">Registrér barn</string>
     <string name="title_activity_registrer_barn">Registrer_barn</string>
     <string name="hello_world">Hello world!</string>
@@ -26,6 +24,9 @@
     <string name="title_activity_child_info">child_info</string>
     <string name="edit_child_button_text">Redigér</string>
     <string name="call_button_text">Ring op</string>
+    <string name="register_child_name_hint">Navn</string>
+    <string name="register_child_button_title">Registrér</string>
+    <string name="register_child_phone_hint">Telefonnummer</string>
 
     <string-array name="child_info_list">
         <item>Kalender</item>
@@ -38,5 +39,7 @@
     <string name="calendar_add_event_button_text">+</string>
     <string name="title_activity_position">position</string>
     <string name="title_activity_calendar">calendar</string>
+    <string name="title_activity_child__start__screen">Child_Start_Screen</string>
+    <string name="title_activity_parent__start__screen">Parent_Start_Screen</string>
 
 </resources>

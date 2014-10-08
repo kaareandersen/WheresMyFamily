@@ -1,20 +1,35 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
 import android.app.Activity;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.app.ActionBar;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.widget.Toast;
 
 
-public class Main extends Activity {
+public class Main extends Activity implements CreateNdefMessageCallback {
+
+    private NfcAdapter _nfcNfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Bundle b = getIntent().getExtras();
+
+        _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if(_nfcNfcAdapter == null)
+            Toast.makeText(getApplicationContext(), "NFC er ikke tilgængeligt",
+                    Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,5 +51,10 @@ public class Main extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
+        return null;
     }
 }

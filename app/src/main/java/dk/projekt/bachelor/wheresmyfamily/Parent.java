@@ -1,5 +1,7 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -9,6 +11,8 @@ public class Parent implements Serializable {
 
     public String name;
     public String phone;
+
+    public Parent(){}
 
     public Parent(String _name, String _phone)
     {
