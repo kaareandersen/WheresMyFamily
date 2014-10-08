@@ -3,6 +3,10 @@
     package="dk.projekt.bachelor.wheresmyfamily" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.NFC" />
@@ -27,17 +31,18 @@
         android:value="@integer/google_play_services_version" />
 
     <application
+        android:name="dk.projekt.bachelor.wheresmyfamily.AuthenticationApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault.Light" >
         <activity
-            android:name=".Main"
+            android:name="dk.projekt.bachelor.wheresmyfamily.Main"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -94,6 +99,22 @@
         <activity
             android:name=".Parent_Start_Screen"
             android:label="@string/title_activity_parent__start__screen" >
+        </activity>
+        <activity
+            android:name=".CreateUserScreen"
+            android:label="@string/title_activity_sign_up_screen" >
+        </activity>
+        <activity
+            android:name=".LogInScreen"
+            android:label="@string/title_activity_sign_in_screen" >
+        </activity>
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.LoggedIn"
+            android:label="@string/title_activity_logged_in" >
+        </activity>
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.LoggedInChild"
+            android:label="@string/title_activity_logged_in_child" >
         </activity>
     </application>
 

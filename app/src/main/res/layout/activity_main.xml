@@ -8,9 +8,40 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".Main">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+   />/ android:background="@drawable/family_bg" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:background="@drawable/linearlayout_bg"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/btnMainSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:text="Log Ind"
+            android:background="@drawable/button_default_bg"
+            style="@style/DefaultButtonText"
+            android:onClick="signInScreen"
+            />
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:text="Registrer Bruger"
+            android:background="@drawable/button_default_bg"
+            style="@style/DefaultButtonText"
+            android:onClick="signUpScreen"
+            />
+
+        </LinearLayout>
 
 </RelativeLayout>

@@ -1,0 +1,93 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="dk.projekt.bachelor.wheresmyfamily.CreateUserScreen"
+
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+        >
+
+        <EditText
+            android:id="@+id/txtRegisterEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_top_bg"
+            android:padding="10dp"
+            android:hint="Email"
+            android:textColorHint="#bbbbbb"
+            android:drawableLeft="@drawable/email"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/txtRegisterUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_default_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Bruger Navn"
+            android:textColorHint="#bbbbbb"
+            android:drawableLeft="@drawable/user"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/txtRegisterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Password"
+            android:textColorHint="#bbbbbb"
+            android:password="true"
+            android:drawableLeft="@drawable/password"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/txtRegisterConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Bekræft Password"
+            android:textColorHint="#bbbbbb"
+            android:password="true"
+            android:drawableLeft="@drawable/password"
+            android:singleLine="true"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Børnekonto?"
+            android:id="@+id/checkBoxRegChild"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:textColor="#bbbbbb"
+            android:onClick="onCheckboxClicked"
+            />
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:text="Opret"
+            style="@style/DefaultButtonText"
+            android:background="@drawable/button_default_bg"/>
+
+        </LinearLayout>
+
+</RelativeLayout>

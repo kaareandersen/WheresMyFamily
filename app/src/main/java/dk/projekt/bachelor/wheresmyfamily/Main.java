@@ -1,35 +1,46 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
 import android.app.Activity;
-import android.nfc.NdefMessage;
-import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.app.ActionBar;
-import android.nfc.NfcAdapter.CreateNdefMessageCallback;
-import android.widget.Toast;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
+public class Main extends BaseActivity {
 
-public class Main extends Activity implements CreateNdefMessageCallback {
-
-    private NfcAdapter _nfcNfcAdapter;
+    private final String TAG = "Main";
+    private Button btnLoginWithEmail;
+    private Activity mActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        mActivity = this;
 
-        Bundle b = getIntent().getExtras();
+        //Get UI Properties
+        btnLoginWithEmail = (Button) findViewById(R.id.btnMainSignIn);
 
-        _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(_nfcNfcAdapter == null)
-            Toast.makeText(getApplicationContext(), "NFC er ikke tilgængeligt",
-                    Toast.LENGTH_SHORT).show();
+        //If user is already authenticated, bypass logging in
+        if (mAuthService.isUserAuthenticated()) {
+            Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
+            startActivity(loggedInIntent);
+        }
+
+        //Set onclick listeners
+        btnLoginWithEmail.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent customLoginIntent = new Intent(getApplicationContext(), LogInScreen.class);
+                startActivity(customLoginIntent);
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,8 +64,13 @@ public class Main extends Activity implements CreateNdefMessageCallback {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        return null;
+    public void signUpScreen(View view) {
+        Intent signUp = new Intent(this, CreateUserScreen.class);
+        startActivity(signUp);
+    }
+
+    public void signInScreen(View view) {
+        Intent signIn = new Intent(this, LogInScreen.class);
+        startActivity(signIn);
     }
 }
