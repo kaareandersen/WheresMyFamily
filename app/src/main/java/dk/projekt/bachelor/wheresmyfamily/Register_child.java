@@ -8,6 +8,7 @@ import android.nfc.NdefMessage;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -55,10 +56,10 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
         _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if(_nfcNfcAdapter == null)
+        if(!_nfcNfcAdapter.isEnabled())
         {
-            Toast.makeText(this, "NFC er ikke tilgængeligt", Toast.LENGTH_LONG).show();
-            finish();
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
         }
 
         _nfcNfcAdapter.setNdefPushMessageCallback(this, this);
@@ -239,4 +240,11 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
         regDialog.show();
     }
+
+    public void childView(View v)
+    {
+        Intent childList = new Intent(this, LoggedIn.class);
+        startActivity(childList);
+    }
+
 }

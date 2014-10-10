@@ -1,17 +1,31 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 
 public class Register_parent extends Activity {
+
+    private NfcAdapter _nfcNfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_parent);
+
+        _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if(!_nfcNfcAdapter.isEnabled())
+        {
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+        }
     }
 
 

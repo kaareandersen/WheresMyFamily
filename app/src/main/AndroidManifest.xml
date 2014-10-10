@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.NFC" />
@@ -47,7 +46,8 @@
         </activity>
         <activity
             android:name=".Register_child"
-            android:label="@string/title_activity_registrer_barn" >
+            android:label="@string/title_activity_registrer_barn"
+            android:parentActivityName=".LoggedIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
@@ -86,13 +86,15 @@
         </activity>
         <activity
             android:name=".CreateUserScreen"
-            android:label="@string/title_activity_sign_up_screen" >
+            android:label="@string/title_activity_sign_up_screen"
+            android:parentActivityName=".Main">
         </activity>
         <activity
             android:name=".LogInScreen"
-            android:label="@string/title_activity_sign_in_screen" >
+            android:label="@string/title_activity_sign_in_screen"
+            android:parentActivityName=".Main">
         </activity>
-        <activity
+        <activity android:uiOptions="splitActionBarWhenNarrow"
             android:name="dk.projekt.bachelor.wheresmyfamily.LoggedIn"
             android:label="@string/title_activity_logged_in" >
         </activity>

@@ -33,13 +33,10 @@ public class LoggedIn extends BaseActivity {
         setContentView(R.layout.activity_logged_in);
 
         //get UI elements
-        mLblUserIdValue = (TextView) findViewById(R.id.lblUserIdValue);
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
-
-        mLblUserIdValue.setText(authService.getUserId());
 
         //Fetch auth data (the username) on load
         authService.getAuthData(new TableJsonQueryCallback() {
@@ -81,11 +78,16 @@ public class LoggedIn extends BaseActivity {
             mAuthService.deleteUser("Accounts");
             return true;
         }
+        if (id == R.id.action_addChild) {
+            Intent register = new Intent(this, Register_child.class);
+            startActivity(register);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void registrer_user(View v)
+    public void addChild(View v)
     {
         Intent register = new Intent(this, Register_child.class);
         startActivity(register);
