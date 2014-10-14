@@ -62,6 +62,11 @@
     <string name="title_activity_sign_in_screen">Log Ind</string>
     <string name="title_activity_logged_in">Wheres My Family</string>
     <string name="title_activity_logged_in_child">LoggedInChild</string>
+    <string name="title_activity_parent_info">ParentInfo</string>
+    <string name="parent_info_headline">Contact information</string>
+    <string name="parent_phone">Forælder telefon</string>
+    <string name="parent_name">Forælder navn</string>
+    <string name="submit_button_title">Tilføj</string>
     <string name="title_activity_swipe_menu">SwipeMenu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

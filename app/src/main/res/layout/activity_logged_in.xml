@@ -51,40 +51,14 @@
             android:onClick="test"/>
     </RelativeLayout>
 
- <!--   <Button
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="Registrer bruger"
         android:clickable="true"
-        android:onClick="registrer_user"/>-->
+        android:onClick="registrer_user"/>
 
-</RelativeLayout>
-
-<!--    <LinearLayout
-        android:id="@+id/buttons"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btnOverview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_view_as_list"
-            android:background="#5192ec"/>
-
-        <ImageButton
-            android:id="@+id/btnAddChild"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_add_person"
-            android:background="#5192ec"
-            android:onClick="addChild"/>
-    </LinearLayout>-->
 
 
 </RelativeLayout>

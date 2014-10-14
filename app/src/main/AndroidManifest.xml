@@ -29,13 +29,13 @@
         android:value="@integer/google_play_services_version" />
 
     <application
-        android:name=".authenticator.AuthenticationApplication"
+        android:name="dk.projekt.bachelor.wheresmyfamily.AuthenticationApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.Main"
+            android:name="dk.projekt.bachelor.wheresmyfamily.Main"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,6 +56,11 @@
                     android:host="ext"
                     android:pathPrefix="/app/dk.project.bachelor.wheresmyfamily:deviceid"
                     android:scheme="vnd.android.nfc" />
+                <!--Tillad implicit intents-->
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="text/plain" />
+
             </intent-filter>
         </activity>
         <activity
