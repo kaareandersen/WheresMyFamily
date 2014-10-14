@@ -85,9 +85,15 @@ public class LoggedIn extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registrer_user(View v)
+    public void register_user(View v)
     {
         Intent register = new Intent(this, Register_child.class);
         startActivity(register);
+    }
+
+    public void parent_info(View v)
+    {
+        Intent p_info = new Intent(this, ParentInfo.class);
+        startActivity(p_info);
     }
 }

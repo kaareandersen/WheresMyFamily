@@ -1,10 +1,12 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.JsonArray;
@@ -67,5 +69,11 @@ public class LoggedInChild extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void register_user(View v)
+    {
+        Intent register = new Intent(this, Register_parent.class);
+        startActivity(register);
     }
 }

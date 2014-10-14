@@ -19,6 +19,7 @@ import android.nfc.NfcEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.location.Location;
 import android.location.LocationListener;
@@ -28,13 +29,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Register_child extends Activity implements CreateNdefMessageCallback{
+public class Register_child extends Activity implements CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {
 
     ArrayList<Child> children = new ArrayList<Child>();
     Parent parent = new Parent();
     private NfcAdapter _nfcNfcAdapter;
     String currentChildName;
-    private boolean isNdefMessageNew;
+    TextView parentName;
+    TextView parentPhone;
 
     @Override
     protected void onPause() {
@@ -60,10 +62,20 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
             Toast.makeText(this, "NFC er ikke tilgængeligt", Toast.LENGTH_LONG).show();
             finish();
         }
+        else
+        {
+            Toast.makeText(Register_child.this,
+                    "Set Callback(s)",
+                    Toast.LENGTH_LONG).show();
 
-        _nfcNfcAdapter.setNdefPushMessageCallback(this, this);
+            //        Registrér callback
+            _nfcNfcAdapter.setNdefPushMessageCallback(this, this);
+
+            _nfcNfcAdapter.setOnNdefPushCompleteCallback(this, this);
+        }
+
+
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,10 +92,10 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
         try
         {
-            String n = getIntent().getAction();
-            String e = _nfcNfcAdapter.ACTION_NDEF_DISCOVERED;
+            Intent intent = getIntent();
+            String action = intent.getAction();
 
-            if(e.equals(n) && isNdefMessageNew)
+            if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED))
                 processIntent(getIntent());
         }
         catch(Exception e)
@@ -107,21 +119,35 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
 
-        NdefMessage msg = new NdefMessage(
+        String text = ("Beam me up, Android!\n\n" +
+                "Beam Time: " + System.currentTimeMillis());
+        String stringOut = parentName.getText().toString();
+        byte[] byteOut = text.getBytes();
+
+        NdefRecord record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                new byte[] {}, byteOut);
+
+        NdefMessage message = new NdefMessage(record);
+
+        return message;
+
+        /*NdefMessage msg = new NdefMessage(
                 new NdefRecord[]
                         {
                                 NdefRecord.createExternal(
-                                        "application/dk.projekt.bachelor.wheresmyfamily",
+                                        "app/dk.projekt.bachelor.wheresmyfamily",
                                         "ParentName", parent.name.getBytes()),
                                 NdefRecord.createExternal(
-                                        "application/dk.projekt.bachelor.wheresmyfamily",
+                                        "app/dk.projekt.bachelor.wheresmyfamily",
                                         "ParentPhone", parent.phone.getBytes()),
                                 NdefRecord.createExternal(
-                                        "application/dk.projekt.bachelor.wheresmyfamily",
+                                        "app/dk.projekt.bachelor.wheresmyfamily",
                                         "ChildName", currentChildName.getBytes())
                         }
-        );
-        return msg;
+        );*/
+
+
+        // return msg;
     }
 
     private ArrayList<Child> loadChildren()
@@ -186,16 +212,26 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
         }
     }
 
-    void processIntent(Intent intent)
-    {
-        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // onResume bliver kaldt efter denne funktion for at håndtere intent
 
+        // isNdefMessageNew = true;
+        setIntent(intent);
+    }
+
+    void processIntent(Intent intent) {
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
+                NfcAdapter.EXTRA_NDEF_MESSAGES);
         NdefMessage msg = (NdefMessage) rawMsgs[0];
         String childDevice = new String(msg.getRecords()[0].getPayload());
-        isNdefMessageNew = false;
+        /*TextView view = (TextView) this.findViewById(R.id.parentinput);
+        view.setText(childDevice);*/
+        // isNdefMessageNew = false;
 
-        openRegisterDialog(childDevice);
+        // openRegisterDialog(childDevice);
     }
+
 
     public void openRegisterDialog(final String deviceId)
     {
@@ -229,6 +265,7 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
                 currentChildName = name;
                 children.add(new Child(name, phone, deviceId));
+                Parent parent1 = new Parent(getIntent().getData().getUserInfo(), "test");
 
                 regDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Dit barn " + name + " er nu registréret",
@@ -238,5 +275,19 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
         });
 
         regDialog.show();
+    }
+
+    @Override
+    public void onNdefPushComplete(NfcEvent nfcEvent) {
+        final String eventString = "Dit barn NAVN HER er nu registreret";
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(),
+                        eventString,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
