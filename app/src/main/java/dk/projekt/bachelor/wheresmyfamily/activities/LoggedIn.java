@@ -81,7 +81,7 @@ public class LoggedIn extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void registrer_user(View v)
+    public void test(View v)
     {
         Intent register = new Intent(this, SwipeMenu.class);
         startActivity(register);
