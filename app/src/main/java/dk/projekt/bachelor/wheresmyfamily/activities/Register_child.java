@@ -23,15 +23,13 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-
-public class Register_child extends Activity implements CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {
 import dk.projekt.bachelor.wheresmyfamily.Child;
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedIn;
 
-public class Register_child extends Activity implements CreateNdefMessageCallback{
+public class Register_child extends Activity implements CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback{
 
     ArrayList<Child> children = new ArrayList<Child>();
     Parent parent = new Parent();
