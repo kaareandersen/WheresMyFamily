@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.authenticator;
 
 import android.app.Activity;
 import android.app.Application;

@@ -1,24 +1,22 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 import android.util.Log;
+
+import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
+import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
 public class LoggedIn extends BaseActivity {
@@ -33,13 +31,10 @@ public class LoggedIn extends BaseActivity {
         setContentView(R.layout.activity_logged_in);
 
         //get UI elements
-        mLblUserIdValue = (TextView) findViewById(R.id.lblUserIdValue);
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
-
-        mLblUserIdValue.setText(authService.getUserId());
 
         //Fetch auth data (the username) on load
         authService.getAuthData(new TableJsonQueryCallback() {
@@ -82,18 +77,13 @@ public class LoggedIn extends BaseActivity {
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
-    public void register_user(View v)
+    public void registrer_user(View v)
     {
-        Intent register = new Intent(this, Register_child.class);
+        Intent register = new Intent(this, SwipeMenu.class);
         startActivity(register);
-    }
-
-    public void parent_info(View v)
-    {
-        Intent p_info = new Intent(this, ParentInfo.class);
-        startActivity(p_info);
     }
 }

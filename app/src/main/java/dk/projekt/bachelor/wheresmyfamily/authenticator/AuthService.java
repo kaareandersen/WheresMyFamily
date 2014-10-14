@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.authenticator;
 
 /**
  * Created by KaareAndersen on 25/09/14.
@@ -32,10 +32,11 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilter;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterRequest;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
-import com.microsoft.windowsazure.mobileservices.TableDeleteCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.mobileservices.UserAuthenticationCallback;
+
+import dk.projekt.bachelor.wheresmyfamily.activities.Main;
 
 
 public class AuthService {
@@ -43,6 +44,7 @@ public class AuthService {
     private MobileServiceJsonTable mTableAccounts;
     private MobileServiceJsonTable mTableAuthData;
     private MobileServiceJsonTable mTableBadAuth;
+    private MobileServiceJsonTable mTableTableRows;
     private Context mContext;
     private final String TAG = "AuthService";
     private boolean mShouldRetryAuth;
@@ -58,6 +60,7 @@ public class AuthService {
             mTableAccounts = mClient.getTable("Accounts");
             mTableAuthData = mClient.getTable("AuthData");
             mTableBadAuth = mClient.getTable("BadAuth");
+            mTableTableRows = mClient.getTable("TableRows");
         } catch (MalformedURLException e) {
             Log.e(TAG, "There was an error creating the Mobile Service.  Verify the URL");
         }
@@ -165,15 +168,17 @@ public class AuthService {
         mTableAccounts.insert(newUser, callback);
     }
 
-    public void deleteUser(String tableName)
+   public void deleteUser(String tableName)
     {
-        String provider = mClient.getCurrentUser().getUserId().toString();
+        /*String provider = mClient.getCurrentUser().getUserId().toString();
         String userID = provider.substring(7);
         JsonObject delUser = new JsonObject();
         delUser.addProperty("id", userID);
 
         List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
-        parameters.add(new Pair<String, String>("TableName", tableName));
+        parameters.add(new Pair<String, String>("tableName", tableName));
+        parameters.add(new Pair<String, String>("rowKey", rowKey));
+        parameters.add(new Pair<String, String>("partitionKey", partitionKey));
         mTableAccounts.delete(delUser, parameters, new TableDeleteCallback() {
             @Override
             public void onCompleted(Exception exception, ServiceFilterResponse response) {
@@ -181,12 +186,10 @@ public class AuthService {
                     Log.e(TAG, exception.getCause().getMessage());
                     return;
                 }
-                else{
-                    logout(true);
-                }
+                //logout
+                logout(true);
             }
-
-        });
+        });*/
     }
 
     /**

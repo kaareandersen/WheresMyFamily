@@ -1,17 +1,15 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.activities;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.nfc.NdefMessage;
-import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
@@ -21,15 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Register_child extends Activity implements CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {
+import dk.projekt.bachelor.wheresmyfamily.Child;
+import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
+import dk.projekt.bachelor.wheresmyfamily.Parent;
+import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.activities.LoggedIn;
+
+public class Register_child extends Activity implements CreateNdefMessageCallback{
 
     ArrayList<Child> children = new ArrayList<Child>();
     Parent parent = new Parent();
@@ -57,10 +59,10 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
         _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if(_nfcNfcAdapter == null)
+        if(!_nfcNfcAdapter.isEnabled())
         {
-            Toast.makeText(this, "NFC er ikke tilgængeligt", Toast.LENGTH_LONG).show();
-            finish();
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
         }
         else
         {
@@ -290,4 +292,11 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
             }
         });
     }
+
+    public void childView(View v)
+    {
+        Intent childList = new Intent(this, LoggedIn.class);
+        startActivity(childList);
+    }
+
 }

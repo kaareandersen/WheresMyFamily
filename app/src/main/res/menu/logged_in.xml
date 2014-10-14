@@ -1,23 +1,38 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="dk.projekt.bachelor.wheresmyfamily.LoggedIn" >
+    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.LoggedIn" >
+
+    <!--<item
+        android:id="@+id/action_listChildren"
+        android:title="Vis Børn"
+        android:icon="@drawable/ic_action_view_as_list"
+        android:showAsAction="always"
+        android:orderInCategory="0"/>
+
+    <item
+        android:id="@+id/action_addChild"
+        android:title="Tilføj Barn"
+        android:icon="@drawable/ic_action_add_person"
+        android:showAsAction="always"
+        android:orderInCategory="1"/>-->
 
     <item
         android:id="@+id/menu_settings"
-        android:orderInCategory="0"
-        android:showAsAction="always"
+        android:orderInCategory="2"
+        android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_settings"
         android:title="Settings">
-<menu>
-    <item android:id="@+id/action_logout"
-        android:title="@string/action_logout"
-        android:orderInCategory="100"
-        android:showAsAction="always" />
+    <menu>
+        <item android:id="@+id/action_logout"
+            android:title="@string/action_logout"
+            android:orderInCategory="100"
+            android:showAsAction="always" />
 
-    <item android:id="@+id/action_deleteusr"
-        android:title="@string/action_deleteusr"
-        android:orderInCategory="100"
-        android:showAsAction="always" />
+        <item android:id="@+id/action_deleteusr"
+            android:title="@string/action_deleteusr"
+            android:orderInCategory="100"
+            android:showAsAction="always" />
     </menu>
     </item>
+
 </menu>
