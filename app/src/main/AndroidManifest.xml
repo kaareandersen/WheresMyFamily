@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.NFC" />
@@ -30,13 +29,13 @@
         android:value="@integer/google_play_services_version" />
 
     <application
-        android:name="dk.projekt.bachelor.wheresmyfamily.AuthenticationApplication"
+        android:name=".authenticator.AuthenticationApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.Main"
+            android:name=".activities.Main"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,15 +44,26 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register_child"
+            android:name=".activities.Register_child"
             android:label="@string/title_activity_registrer_barn"
-            android:parentActivityName=".LoggedIn">
+            android:parentActivityName=".activities.LoggedIn" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <data android:mimeType="text/plain"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
-
+                <data android:mimeType="text/plain" />
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.project.bachelor.wheresmyfamily:deviceid"
+                    android:scheme="vnd.android.nfc" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.Register_parent"
+            android:label="@string/title_activity_registrer_parent" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <data
                     android:host="ext"
@@ -62,45 +72,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register_parent"
-            android:label="@string/title_activity_registrer_parent" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-
-
-
-                <data
-                    android:host="ext"
-                    android:pathPrefix="/app/dk.project.bachelor.wheresmyfamily:deviceid"
-                    android:scheme="vnd.android.nfc"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".position"
+            android:name="dk.projekt.bachelor.wheresmyfamily.position"
             android:label="@string/title_activity_position" >
         </activity>
         <activity
-            android:name=".calendar"
+            android:name="dk.projekt.bachelor.wheresmyfamily.calendar"
             android:label="@string/title_activity_calendar" >
         </activity>
         <activity
-            android:name=".CreateUserScreen"
+            android:name=".activities.CreateUserScreen"
             android:label="@string/title_activity_sign_up_screen"
-            android:parentActivityName=".Main">
+            android:parentActivityName=".activities.Main" >
         </activity>
         <activity
-            android:name=".LogInScreen"
+            android:name=".activities.LogInScreen"
             android:label="@string/title_activity_sign_in_screen"
-            android:parentActivityName=".Main">
-        </activity>
-        <activity android:uiOptions="splitActionBarWhenNarrow"
-            android:name="dk.projekt.bachelor.wheresmyfamily.LoggedIn"
-            android:label="@string/title_activity_logged_in" >
+            android:parentActivityName=".activities.Main" >
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.LoggedInChild"
+            android:name=".activities.LoggedIn"
+            android:label="@string/title_activity_logged_in">
+            <!--android:uiOptions="splitActionBarWhenNarrow"-->
+        </activity>
+        <activity
+            android:name=".activities.LoggedInChild"
             android:label="@string/title_activity_logged_in_child" >
+        </activity>
+        <activity
+            android:name=".activities.SwipeMenu"
+            android:label="@string/title_activity_swipe_menu" >
         </activity>
     </application>
 
