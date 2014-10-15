@@ -55,9 +55,9 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
         getActionBar().setDisplayHomeAsUpEnabled(true);
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if(!_nfcNfcAdapter.isEnabled())
+        if(!nfcAdapter.isEnabled())
         {
             Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));

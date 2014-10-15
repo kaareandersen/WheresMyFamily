@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
+        android:name="android.hardware.nfc"/>
+
+    <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
 
@@ -55,7 +58,6 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>-->
 
-            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -87,11 +89,17 @@
         <activity
             android:name=".activities.LoggedIn"
             android:label="@string/title_activity_logged_in">
-            <!--android:uiOptions="splitActionBarWhenNarrow"-->
+
         </activity>
         <activity
             android:name=".activities.LoggedInChild"
             android:label="@string/title_activity_logged_in_child" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.SwipeMenu"

@@ -14,13 +14,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import dk.projekt.bachelor.wheresmyfamily.R;
 
 public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMessageCallback
          {
 
     TextView parentNameTextView;
+    TextView parentPhoneTextView;
+    EditText parentPhoneEdit;
     EditText parentName;
+    private boolean isNFCMessageNew = true;
 
     NfcAdapter nfcAdapter;
 
@@ -31,6 +36,9 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
 
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
         parentName = (EditText)findViewById(R.id.parentNameInfo);
+
+        parentPhoneTextView = (TextView) findViewById(R.id.parentPhoneTextView);
+        parentPhoneEdit = (EditText) findViewById(R.id.parentPhoneInfo);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if(nfcAdapter==null){
@@ -50,9 +58,9 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
     protected void onResume() {
         super.onResume();
 
-        Intent intent = getIntent().setAction("action_addChild");
+        /*Intent intent = getIntent().setAction("action_addChild");
         String action = intent.getAction();
-        if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)){
+        if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED) && isNFCMessageNew){
             Parcelable[] parcelables =
                     intent.getParcelableArrayExtra(
                             NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -60,11 +68,32 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
             NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
             NdefRecord NdefRecord_0 = inNdefRecords[0];
             String inMsg = new String(NdefRecord_0.getPayload());
+
+
             parentName.setText(inMsg);
+        }*/
+
+        try {
+            String n = getIntent().getAction();
+            String e = NfcAdapter.ACTION_NDEF_DISCOVERED;
+
+            if(e.equals(n) && isNFCMessageNew)
+            {
+                processIntent(getIntent());
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
     }
 
-    @Override
+     @Override
+     protected void onPause() {
+         super.onPause();
+
+         nfcAdapter.disableForegroundDispatch(this);
+     }
+
+             @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.register_child, menu);
@@ -84,23 +113,55 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(Intent intent)
+    {
+        isNFCMessageNew = true;
         setIntent(intent);
     }
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
         String stringOut = parentName.getText().toString();
-        byte[] bytesOut = stringOut.getBytes();
+        String parentPhoneString = parentPhoneEdit.getText().toString();
+
+        byte[] parentNameOut = stringOut.getBytes();
+        byte[] parentPhoneOut = parentPhoneString.getBytes();
 
         NdefRecord ndefRecordOut = new NdefRecord(
                 NdefRecord.TNF_MIME_MEDIA,
                 "text/plain".getBytes(),
                 new byte[] {},
-                bytesOut);
+                parentNameOut);
 
-        NdefMessage ndefMessageout = new NdefMessage(ndefRecordOut);
+        NdefMessage ndefMessageout = new NdefMessage
+                (new NdefRecord
+                        (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                                new byte[] {}, parentNameOut),
+                new NdefRecord
+                        (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                        new byte[]{}, parentPhoneOut));
+
         return ndefMessageout;
+    }
+
+    void processIntent(Intent intent)
+    {
+        Parcelable[] parcelables =
+                intent.getParcelableArrayExtra(
+                        NfcAdapter.EXTRA_NDEF_MESSAGES);
+        NdefMessage inNdefMessage = (NdefMessage)parcelables[0];
+        NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
+        NdefRecord NdefRecord_0 = inNdefRecords[0];
+        NdefRecord NdefRecord_1 = inNdefRecords[1];
+        String pName = new String(NdefRecord_0.getPayload());
+        String phoneNumber = new String(NdefRecord_1.getPayload());
+
+
+        parentName.setText(pName);
+        parentPhoneEdit.setText(phoneNumber);
+
+
+        isNFCMessageNew = false;
     }
 
 
