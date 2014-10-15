@@ -50,5 +50,12 @@
                 android:clickable="true"
                 android:onClick="open"/>
         </RelativeLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:text="reg"
+            android:clickable="true"
+            android:onClick="reg"/>
     </RelativeLayout>
 </RelativeLayout>

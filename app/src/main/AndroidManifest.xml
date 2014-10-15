@@ -13,8 +13,7 @@
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true"
-        />
+        android:required="true" />
 
     <permission
         android:name="com.example.permission.MAPS_RECEIVE"
@@ -58,22 +57,21 @@
 
             <!--
             <intent-filter>
-                &lt;!&ndash;<data android:mimeType="text/plain" />
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
                 <data
                     android:host="ext"
                     android:pathPrefix="/app/dk.project.bachelor.wheresmyfamily:deviceid"
-                    android:scheme="vnd.android.nfc" />&ndash;&gt;
-                &lt;!&ndash;&lt;!&ndash;Tillad implicit intents&ndash;&gt;
-                &ndash;&gt;
+                    android:scheme="vnd.android.nfc" />
             </intent-filter>
-            -->
         </activity>
         <activity
-            android:name=".position"
+            android:name="dk.projekt.bachelor.wheresmyfamily.position"
             android:label="@string/title_activity_position" >
         </activity>
         <activity
-            android:name=".calendar"
+            android:name="dk.projekt.bachelor.wheresmyfamily.calendar"
             android:label="@string/title_activity_calendar" >
         </activity>
         <activity
@@ -88,9 +86,8 @@
         </activity>
         <activity
             android:name=".activities.LoggedIn"
-            android:label="@string/title_activity_logged_in" >
-
-            <!-- android:uiOptions="splitActionBarWhenNarrow" -->
+            android:label="@string/title_activity_logged_in">
+            <!--android:uiOptions="splitActionBarWhenNarrow"-->
         </activity>
         <activity
             android:name=".activities.LoggedInChild"

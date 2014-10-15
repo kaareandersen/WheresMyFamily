@@ -96,4 +96,10 @@ public class LoggedIn extends BaseActivity {
         Intent intent = new Intent(this, SwipeMenu.class);
         startActivity(intent);
     }
+
+    public void reg(View v)
+    {
+        Intent register = new Intent(this, Register_child.class);
+        startActivity(register);
+    }
 }

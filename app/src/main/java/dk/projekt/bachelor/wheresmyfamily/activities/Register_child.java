@@ -55,11 +55,15 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
         getActionBar().setDisplayHomeAsUpEnabled(true);
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if (nfcAdapter == null) {
-            Toast.makeText(Register_child.this,
-                    "nfcAdapter==null, no NFC adapter exists",
-                    Toast.LENGTH_LONG).show();
-        } else {
+        _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        if(!_nfcNfcAdapter.isEnabled())
+        {
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+        }
+        else
+        {
             Toast.makeText(Register_child.this,
                     "Set Callback(s)",
                     Toast.LENGTH_LONG).show();
@@ -205,8 +209,9 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
     @Override
     protected void onNewIntent(Intent intent) {
-
         // onResume bliver kaldt efter denne funktion for at håndtere intent
+
+        // isNdefMessageNew = true;
         setIntent(intent);
     }
 
