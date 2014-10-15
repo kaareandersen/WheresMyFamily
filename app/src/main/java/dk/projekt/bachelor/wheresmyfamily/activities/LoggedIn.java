@@ -50,6 +50,8 @@ public class LoggedIn extends BaseActivity {
                 }
             }
         });
+
+
     }
 
 
@@ -68,23 +70,33 @@ public class LoggedIn extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            mAuthService.logout(true);
-            return true;
-        }
-        if (id == R.id.action_deleteusr) {
-            mAuthService.deleteUser("Accounts");
-            return true;
+        switch (id) {
+            case R.id.action_logout:
+                mAuthService.logout(true);
+                return true;
+            case R.id.action_deleteusr:
+                mAuthService.deleteUser("Accounts");
+                return true;
+            case R.id.action_addChild:
+                Intent register = new Intent(this, RegisterChild.class);
+                startActivity(register);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
 
 
-        return super.onOptionsItemSelected(item);
+
     }
 
-    public void test(View v)
-    {
-        Intent register = new Intent(this, SwipeMenu.class);
-        startActivity(register);
+
+
+
+    public void open(View view) {
+
+        Intent intent = new Intent(this, SwipeMenu.class);
+        startActivity(intent);
     }
 
     public void reg(View v)

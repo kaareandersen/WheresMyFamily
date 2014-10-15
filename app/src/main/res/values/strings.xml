@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--app-->
     <string name="app_name">WheresMyFamily</string>
+
+    <!--acttivity_register_child2-->
     <string name="register_barn_title">Registrer Barn</string>
     <string name="action_settings">Settings</string>
-    <string name="registrer_barn_beskrivelse">1. Åbn WhereIsMyFamily på begge telefoner,
+    <string name="register_child_headline">Registeringsvejledning</string>
+    <string name="register_child_description">1. Åbn WhereIsMyFamily på begge telefoner,
         og placér begge enheders bagside mod hinanden \n
         2. Vent på en lyd, der bekræfter, at begge enheder har fundet hinanden. \n
         3. Rør ved afsenderens skærm for at starte dataoverførslen. Der vil være en lyd,
@@ -17,6 +21,11 @@
     <string name="registrer_barn_title">Registrér Barn</string>
     <string name="title_activity_registrer_parent">Registrer Forælder</string>
     <string name="register_parent_title">Registrer Forælder</string>
+    <string name="title_activity_register_child">RegisterChild</string>
+    <string name="parent_name_textView_title">Forælder navn</string>
+    <string name="parent_phone_textView_title">Telefonnummer</string>
+
+    <!--child_overview-->
     <string name="title_activity_child_overview">child_overview</string>
     <string name="my_children_title">Mine børn</string>
     <string name="action_search"></string>
@@ -34,6 +43,7 @@
         <item>Spærring af App</item>
     </string-array>
 
+    <!--calendar_view-->
     <string name="title_activity_calendar_view">calendar_view</string>
     <string name="calendar_add_event_button_text">+</string>
     <string name="title_activity_position">position</string>
@@ -43,6 +53,7 @@
     <string name="action_logout">Log Ud</string>
     <string name="action_deleteusr">Slet Bruger</string>
 
+    <!--Button styles-->
     <style name="DefaultButtonText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -57,16 +68,25 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
+    <!--sign_up_screen-->
     <string name="title_activity_sign_up_screen">Registrer Bruger</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_sign_in_screen">Log Ind</string>
+
+    <!--logged_in-->
     <string name="title_activity_logged_in">Wheres My Family</string>
+
+    <!--logged_in_child-->
     <string name="title_activity_logged_in_child">LoggedInChild</string>
+
+    <!--parent_info-->
     <string name="title_activity_parent_info">ParentInfo</string>
     <string name="parent_info_headline">Contact information</string>
     <string name="parent_phone">Forælder telefon</string>
     <string name="parent_name">Forælder navn</string>
     <string name="submit_button_title">Tilføj</string>
+
+    <!--swipe_menu-->
     <string name="title_activity_swipe_menu">SwipeMenu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

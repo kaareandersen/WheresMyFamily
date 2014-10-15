@@ -5,74 +5,15 @@
     tools:context="dk.projekt.bachelor.wheresmyfamily.activities.Register_child"
     android:background="#ffffff">
 
-    <RelativeLayout
+    <EditText
+        android:id="@+id/textout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:layout_height="wrap_content" />
 
-        <TextView
-            android:text="@string/register_barn_title"
-            android:id="@+id/lblHeaderLoggedIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/registrer_barn_beskrivelse"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:textSize="16dp" />
-
-        <ImageView
-            android:id="@+id/nfcpic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/nfc"
-            android:layout_gravity="center_horizontal"
-            />
-
-    </LinearLayout>
-
-</RelativeLayout>
-
-<!--    <LinearLayout
-        android:id="@+id/buttons"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/btnOverview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_view_as_list"
-            android:background="#5192ec"
-            android:clickable="true"
-            android:onClick="childView"/>
-
-        <ImageButton
-            android:id="@+id/btnAddChild"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_action_add_person"
-            android:background="#5192ec"
-            android:clickable="true"/>
-    </LinearLayout>-->
 
 </RelativeLayout>

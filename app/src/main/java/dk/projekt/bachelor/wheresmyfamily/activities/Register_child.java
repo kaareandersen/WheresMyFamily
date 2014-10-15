@@ -7,6 +7,7 @@ import android.nfc.NdefMessage;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,6 +21,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,37 +34,30 @@ import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedIn;
+import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 public class Register_child extends Activity implements CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback{
 
     ArrayList<Child> children = new ArrayList<Child>();
-    Parent parent = new Parent();
-    private NfcAdapter _nfcNfcAdapter;
+
+    private NfcAdapter nfcAdapter;
     String currentChildName;
     TextView parentName;
     TextView parentPhone;
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        _nfcNfcAdapter.disableForegroundDispatch(this);
-
-        ArrayList<Child> oldChildren = loadChildren();
-        oldChildren.addAll(children);
-        saveChildren(oldChildren);
-    }
+    private final String TAG = "Register_child";
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_child);
-
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        if(!_nfcNfcAdapter.isEnabled())
+        if(!nfcAdapter.isEnabled())
         {
             Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
@@ -69,13 +68,11 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
                     "Set Callback(s)",
                     Toast.LENGTH_LONG).show();
 
-            //        Registrér callback
-            _nfcNfcAdapter.setNdefPushMessageCallback(this, this);
+            nfcAdapter.setNdefPushMessageCallback(this, this);
+            nfcAdapter.setOnNdefPushCompleteCallback(this, this);
 
-            _nfcNfcAdapter.setOnNdefPushCompleteCallback(this, this);
+
         }
-
-
     }
 
     @Override
@@ -89,8 +86,6 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
     protected void onResume() {
         super.onResume();
 
-        //parent = loadParent();
-
         try
         {
             Intent intent = getIntent();
@@ -98,16 +93,10 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
             if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED))
                 processIntent(getIntent());
-            Toast.makeText(Register_child.this,
-                    "try",
-                    Toast.LENGTH_LONG).show();
         }
         catch(Exception e)
         {
             finish();
-            Toast.makeText(Register_child.this,
-                    "catch",
-                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -126,10 +115,9 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
 
-        String text = ("Beam me up, Android!\n\n" +
-                "Beam Time: " + System.currentTimeMillis());
+
         String stringOut = parentName.getText().toString();
-        byte[] byteOut = text.getBytes();
+        byte[] byteOut = stringOut.getBytes();
 
         NdefRecord record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
                 new byte[] {}, byteOut);
@@ -230,13 +218,11 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
     void processIntent(Intent intent) {
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
                 NfcAdapter.EXTRA_NDEF_MESSAGES);
-        NdefMessage msg = (NdefMessage) rawMsgs[0];
-        String childDevice = new String(msg.getRecords()[0].getPayload());
-        /*TextView view = (TextView) this.findViewById(R.id.parentinput);
-        view.setText(childDevice);*/
-        // isNdefMessageNew = false;
-
-        // openRegisterDialog(childDevice);
+        NdefMessage inNdefMessage = (NdefMessage) rawMsgs[0];
+        NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
+        NdefRecord NdefRecord_0 = inNdefRecords[0];
+        String inMsg = new String(NdefRecord_0.getPayload());
+        parentName.setText(inMsg);
     }
 
 

@@ -21,35 +21,35 @@
         android:text="Forælder"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <RelativeLayout
-        android:id="@+id/RelativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lblHeaderLoggedIn"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/lblUsername"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/RelativeLayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Username" />
+            android:layout_below="@+id/lblHeaderLoggedIn"
+            android:layout_centerHorizontal="true" >
 
-        <TextView
-            android:id="@+id/lblUsernameValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="TextView" />
+            <TextView
+                android:id="@+id/lblUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="Test"
-            android:clickable="true"
-            android:onClick="test"/>
+            <TextView
+                android:id="@+id/lblUsernameValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="TextView" />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="Test"
+                android:clickable="true"
+                android:onClick="open"/>
+        </RelativeLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,4 @@
             android:clickable="true"
             android:onClick="reg"/>
     </RelativeLayout>
-
-
-        </RelativeLayout>
-    </RelativeLayout>
+</RelativeLayout>
