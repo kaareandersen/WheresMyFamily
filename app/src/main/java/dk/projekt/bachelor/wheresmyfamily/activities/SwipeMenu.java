@@ -56,6 +56,9 @@ public class SwipeMenu extends FragmentActivity {
         actionBar.addTab(actionBar.newTab().setText("Oversigt").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("Maps").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("Calender").setTabListener(tabListener));
+
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
 

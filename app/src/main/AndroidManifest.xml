@@ -14,6 +14,7 @@
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
+    <uses-feature android:name="android.hardware.nfc" />
 
     <permission
         android:name="com.example.permission.MAPS_RECEIVE"
@@ -48,21 +49,18 @@
             android:label="@string/title_activity_registrer_barn"
             android:parentActivityName=".activities.LoggedIn" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <data android:mimeType="text/plain" />
-                <data
+                <!--<data
                     android:host="ext"
                     android:pathPrefix="/app/dk.project.bachelor.wheresmyfamily:deviceid"
-                    android:scheme="vnd.android.nfc" />
+                    android:scheme="vnd.android.nfc" />-->
                 <!--Tillad implicit intents-->
                 <category android:name="android.intent.category.DEFAULT"/>
-
-                <data android:mimeType="text/plain" />
-
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.Register_parent"
             android:label="@string/title_activity_registrer_parent" >

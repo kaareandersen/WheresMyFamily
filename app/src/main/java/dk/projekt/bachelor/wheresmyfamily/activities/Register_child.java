@@ -53,6 +53,7 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_child);
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         _nfcNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -88,7 +89,7 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
     protected void onResume() {
         super.onResume();
 
-        parent = loadParent();
+        //parent = loadParent();
 
         try
         {
@@ -97,10 +98,16 @@ public class Register_child extends Activity implements CreateNdefMessageCallbac
 
             if(action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED))
                 processIntent(getIntent());
+            Toast.makeText(Register_child.this,
+                    "try",
+                    Toast.LENGTH_LONG).show();
         }
         catch(Exception e)
         {
             finish();
+            Toast.makeText(Register_child.this,
+                    "catch",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
