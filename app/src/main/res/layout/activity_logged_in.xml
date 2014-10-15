@@ -48,7 +48,7 @@
                 android:layout_alignParentBottom="true"
                 android:text="Test"
                 android:clickable="true"
-                android:onClick="test"/>
+                android:onClick="open"/>
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
