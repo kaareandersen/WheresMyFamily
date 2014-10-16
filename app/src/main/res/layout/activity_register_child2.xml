@@ -69,20 +69,6 @@
             android:layout_height="wrap_content"
             android:text="@string/register_child_description" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/turn_on_nfc_headline"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/turn_on_nfc"
-            android:linksClickable="true"
-            android:autoLink="web" />
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -31,6 +31,7 @@ public class CreateUserScreen extends BaseActivity {
     private EditText mTxtPassword;
     private EditText mTxtConfirm;
     private EditText mTxtEmail;
+    private EditText mTxtPhone;
     private Activity mActivity;
     private CheckBox mChbChild;
     private boolean chcBoxChild;
@@ -51,6 +52,7 @@ public class CreateUserScreen extends BaseActivity {
         mTxtPassword = (EditText) findViewById(R.id.txtRegisterPassword);
         mTxtConfirm = (EditText) findViewById(R.id.txtRegisterConfirm);
         mTxtEmail = (EditText) findViewById(R.id.txtRegisterEmail);
+        mTxtPhone = (EditText) findViewById(R.id.txtRegisterPhone);
         mChbChild = (CheckBox) findViewById(R.id.checkBoxRegChild);
         //chcBoxChild = false;
 
@@ -105,7 +107,8 @@ public class CreateUserScreen extends BaseActivity {
             if (mTxtUsername.getText().toString().equals("") ||
                     mTxtPassword.getText().toString().equals("") ||
                     mTxtConfirm.getText().toString().equals("") ||
-                    mTxtEmail.getText().toString().equals("")) {
+                    mTxtEmail.getText().toString().equals("") ||
+                    mTxtPhone.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(),
                         "You must enter all fields to register", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "You must enter all fields to register");
@@ -119,7 +122,8 @@ public class CreateUserScreen extends BaseActivity {
                 mAuthService.registerUser(mTxtUsername.getText().toString(),
                         mTxtPassword.getText().toString(),
                         mTxtConfirm.getText().toString(),
-                        mTxtEmail.getText().toString(), chcBoxChild,
+                        mTxtEmail.getText().toString(),
+                       mTxtPhone.getText().toString(), chcBoxChild,
                         new TableJsonOperationCallback() {
                             @Override
                             public void onCompleted(JsonObject jsonObject, Exception exception,

@@ -1,5 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -8,6 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -34,6 +36,9 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_child2);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
         parentName = (EditText)findViewById(R.id.parentNameInfo);
 
@@ -41,11 +46,12 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         parentPhoneEdit = (EditText) findViewById(R.id.parentPhoneInfo);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(nfcAdapter==null){
-            Toast.makeText(RegisterChild.this,
-                    "nfcAdapter==null, no NFC adapter exists",
-                    Toast.LENGTH_LONG).show();
-        }else{
+        if(!nfcAdapter.isEnabled())
+        {
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+        }
+        else{
             Toast.makeText(RegisterChild.this,
                     "Set Callback(s)",
                     Toast.LENGTH_LONG).show();
