@@ -143,6 +143,8 @@ public class CreateUserScreen extends BaseActivity {
                                         startActivity(loggedInIntent);
                                     }
                                 } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            "There was an error registering the user: "+ exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
                                     Log.e(TAG, "There was an error registering the user: " + exception.getMessage());
                                 }
                             }

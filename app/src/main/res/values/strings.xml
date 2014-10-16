@@ -75,6 +75,7 @@
 
     <!--logged_in-->
     <string name="title_activity_logged_in">Wheres My Family</string>
+    <string name="main_no_items">No children to display</string>
 
     <!--logged_in_child-->
     <string name="title_activity_logged_in_child">LoggedInChild</string>
@@ -90,6 +91,6 @@
     <string name="title_activity_swipe_menu">SwipeMenu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="main_no_items">No orders to display</string>
+
 
 </resources>
