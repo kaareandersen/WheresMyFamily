@@ -47,28 +47,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.Register_child"
-            android:label="@string/title_activity_registrer_barn"
-            android:parentActivityName=".activities.LoggedIn" >
-            <!--<intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
-            </intent-filter>-->
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
-                <data
-                    android:host="ext"
-                    android:pathPrefix="/app/dk.project.bachelor.wheresmyfamily:deviceid"
-                    android:scheme="vnd.android.nfc" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.position"
             android:label="@string/title_activity_position" >
         </activity>
@@ -98,6 +76,15 @@
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily:parentName"
+                    android:scheme="vnd.android.nfc" />
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.wheresmyfamily:parentPhone"
+                    android:scheme="vnd.android.nfc" />
             </intent-filter>
 
         </activity>

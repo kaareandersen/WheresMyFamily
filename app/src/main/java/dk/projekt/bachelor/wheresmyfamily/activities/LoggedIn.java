@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.util.Log;
 
@@ -24,6 +25,7 @@ public class LoggedIn extends BaseActivity {
     private final String TAG = "LoggedIn";
     private TextView mLblUserIdValue;
     private TextView mLblUsernameValue;
+    private EditText parentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,6 @@ public class LoggedIn extends BaseActivity {
                 }
             }
         });
-
-
     }
 
 
@@ -101,7 +101,7 @@ public class LoggedIn extends BaseActivity {
 
     public void reg(View v)
     {
-        Intent register = new Intent(this, Register_child.class);
+        Intent register = new Intent(this, RegisterChild.class);
         startActivity(register);
     }
 }

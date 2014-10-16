@@ -78,7 +78,7 @@ public class LoggedInChild extends BaseActivity {
 
     public void register_user(View v)
     {
-        Intent register = new Intent(this, Register_child.class);
+        Intent register = new Intent(this, RegisterChild.class);
         startActivity(register);
     }
 }
