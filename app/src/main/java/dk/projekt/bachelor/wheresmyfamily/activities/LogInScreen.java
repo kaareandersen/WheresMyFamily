@@ -105,8 +105,8 @@ public class LogInScreen extends BaseActivity {
                                 if (exception == null) {
                                     JsonArray results = result.getAsJsonArray();
                                     JsonElement item = results.get(0);
-                                    boolean child = Boolean.valueOf(item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean());
-                                    if (child == true)
+                                    boolean _child = Boolean.valueOf(item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean());
+                                    if (_child == true)
                                     {
                                         Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInChild.class);
                                         startActivity(loggedInIntent);
@@ -124,7 +124,7 @@ public class LogInScreen extends BaseActivity {
 
                     } else {
                         Toast.makeText(getApplicationContext(),
-                                "Error loggin in: ", Toast.LENGTH_SHORT).show();
+                                "Error loggin in: " + exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
                         Log.e(TAG, "Error loggin in: " + exception.getMessage());
                     }
                 }

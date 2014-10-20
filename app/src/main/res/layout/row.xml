@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip">
 
@@ -10,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginRight="6dip"
-        android:src="@drawable/ic_action_help" />
+        android:src="@drawable/ic_action_help"
+        />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dip"
@@ -32,4 +32,11 @@
             android:ellipsize="marquee"
             />
     </LinearLayout>
+    <ImageView
+        android:id="@+id/forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dip"
+        android:src="@drawable/ic_action_next_item"
+        />
 </LinearLayout>

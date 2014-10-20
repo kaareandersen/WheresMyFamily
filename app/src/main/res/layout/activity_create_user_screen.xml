@@ -77,7 +77,8 @@
             android:hint="Telefon Nummer"
             android:textColorHint="#bbbbbb"
             android:drawableLeft="@drawable/ic_action_phone"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:inputType="number"/>
 
         <CheckBox
             android:layout_width="wrap_content"
