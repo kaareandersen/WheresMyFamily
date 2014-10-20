@@ -286,6 +286,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
     public void saveChild(Child _child)
     {
+        // Comment
         try
         {
             InternalStorage.writeObject(this, "Child", child);
