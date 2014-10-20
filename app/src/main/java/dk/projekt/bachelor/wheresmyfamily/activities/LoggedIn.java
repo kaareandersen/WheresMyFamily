@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,23 +16,39 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
-public class LoggedIn extends BaseActivity {
+public class LoggedIn extends ListActivity {
 
     private final String TAG = "LoggedIn";
     private TextView mLblUserIdValue;
     private TextView mLblUsernameValue;
     private EditText parentName;
+    AuthService mAuthService;
+
+    /*private ProgressDialog m_ProgressDialog = null;
+    private ArrayList<Order> m_orders = null;
+    private OrderAdapter m_adapter;
+    private Runnable viewOrders;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
+
+        /*m_orders = new ArrayList<Order>();
+        this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
+        setListAdapter(this, m_adapter);*/
+
+
+
+
 
         //get UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);

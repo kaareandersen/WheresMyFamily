@@ -95,6 +95,7 @@
         <activity
             android:name=".activities.RegisterChild"
             android:label="@string/title_activity_register_child"
+            android:parentActivityName=".activities.LoggedIn"
             >
 
             <intent-filter>

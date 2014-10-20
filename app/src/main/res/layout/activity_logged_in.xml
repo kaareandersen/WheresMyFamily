@@ -21,14 +21,25 @@
         android:text="Forælder"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/RelativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lblHeaderLoggedIn"
             android:layout_centerHorizontal="true" >
 
+            <ListView
+                android:id="@+id/android:list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                />
             <TextView
+                android:id="@+id/android:empty"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="@string/main_no_items"/>
+
+            <!--<TextView
                 android:id="@+id/lblUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,14 +59,7 @@
                 android:layout_alignParentBottom="true"
                 android:text="Test"
                 android:clickable="true"
-                android:onClick="open"/>
-        </RelativeLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="false"
-            android:text="reg"
-            android:clickable="true"
-            android:onClick="reg"/>
+                android:onClick="open"/>-->
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -8,6 +9,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -16,11 +18,6 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
-import dk.projekt.bachelor.wheresmyfamily.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 
@@ -34,13 +31,15 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
     private boolean isNFCMessageNew = true;
     Parent parent = new Parent();
 
-
     NfcAdapter nfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_child2);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
         parentName = (EditText)findViewById(R.id.parentNameInfo);
@@ -57,6 +56,12 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         }
         else
         {
+        if(!nfcAdapter.isEnabled())
+        {
+            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+        }
+        else{
             Toast.makeText(RegisterChild.this,
                     "Set Callback(s)",
                     Toast.LENGTH_LONG).show();
@@ -131,7 +136,6 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.register_child, menu);
         return true;
@@ -139,15 +143,15 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         // Handle action bar item clicks here. The action bar will
-         // automatically handle clicks on the Home/Up button, so long
-         // as you specify a parent activity in AndroidManifest.xml.
-         int id = item.getItemId();
-         if (id == R.id.action_settings) {
-             return true;
-         }
-         return super.onOptionsItemSelected(item);
-     }
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onNewIntent(Intent intent)
@@ -193,8 +197,10 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         String pName = new String(NdefRecord_0.getPayload());
         String phoneNumber = new String(NdefRecord_1.getPayload());
 
+
         parentName.setText(pName);
         parentPhoneEdit.setText(phoneNumber);
+
 
         isNFCMessageNew = false;
     }

@@ -157,12 +157,13 @@ public class AuthService {
      * @param callback
      */
     public void registerUser(String username, String password, String confirm,
-                             String email, boolean child,
+                             String email, String phone, boolean child,
                              TableJsonOperationCallback callback) {
         JsonObject newUser = new JsonObject();
         newUser.addProperty("username", username);
         newUser.addProperty("password", password);
         newUser.addProperty("email", email);
+        newUser.addProperty("phone", phone);
         newUser.addProperty("child", child);
 
         mTableAccounts.insert(newUser, callback);

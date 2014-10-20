@@ -45,7 +45,7 @@
             android:id="@+id/txtRegisterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bottom_bg"
+            android:background="@drawable/edittext_default_bg"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
             android:hint="Password"
@@ -58,13 +58,25 @@
             android:id="@+id/txtRegisterConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bottom_bg"
+            android:background="@drawable/edittext_default_bg"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
             android:hint="Bekræft Password"
             android:textColorHint="#bbbbbb"
             android:password="true"
             android:drawableLeft="@drawable/password"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/txtRegisterPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Telefon Nummer"
+            android:textColorHint="#bbbbbb"
+            android:drawableLeft="@drawable/ic_action_phone"
             android:singleLine="true"/>
 
         <CheckBox
