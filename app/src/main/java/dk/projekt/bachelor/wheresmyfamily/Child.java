@@ -11,6 +11,8 @@ public class Child implements Serializable {
     public String phone;
     public String deviceID;
 
+    public Child() {};
+
     public Child(String _name, String _phone, String _deviceID)
     {
         name = _name;

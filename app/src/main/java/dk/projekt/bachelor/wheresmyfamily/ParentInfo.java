@@ -6,16 +6,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import dk.projekt.bachelor.wheresmyfamily.activities.RegisterChild;
 
-public class ParentInfo extends Activity implements View.OnClickListener {
 
+public class ParentInfo extends Activity implements View.OnClickListener
+{
+    RegisterChild reg = new RegisterChild();
     Parent parent = new Parent();
+    EditText parentInfoName;
+    EditText parentInfoPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,12 @@ public class ParentInfo extends Activity implements View.OnClickListener {
         super.onResume();
 
         parent = loadParent();
+
+        parentInfoName = (EditText) findViewById(R.id.parentNameInput);
+        parentInfoPhone = (EditText) findViewById(R.id.parentPhoneInput);
+
+        parentInfoName.setText(parent.name);
+        parentInfoPhone.setText(parent.phone);
     }
 
     @Override

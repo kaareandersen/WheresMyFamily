@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -42,18 +43,16 @@ public class LoggedIn extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
 
+        Toast.makeText(this, "LoggedIn OnCreate", Toast.LENGTH_SHORT).show();
+
         /*m_orders = new ArrayList<Order>();
         this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
         setListAdapter(this, m_adapter);*/
-
-
-
-
-
         //get UI elements
+
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
-        AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
+        /*AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
 
         //Fetch auth data (the username) on load
@@ -69,8 +68,9 @@ public class LoggedIn extends ListActivity {
                     Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
                 }
             }
-        });
+        });*/
     }
+
 
 
     @Override
@@ -101,15 +101,8 @@ public class LoggedIn extends ListActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
-
-
-
     }
-
-
-
 
     public void open(View view) {
 

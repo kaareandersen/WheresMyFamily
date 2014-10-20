@@ -1,19 +1,31 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
+import dk.projekt.bachelor.wheresmyfamily.Parent;
+import dk.projekt.bachelor.wheresmyfamily.ParentInfo;
+import dk.projekt.bachelor.wheresmyfamily.RegisterParent;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
@@ -24,6 +36,14 @@ public class LoggedInChild extends BaseActivity {
 
     private final String TAG = "LoggedIn";
     private TextView mLblUsernameValue;
+    Parent parent = new Parent();
+    EditText parentInfoName;
+    EditText parentInfoPhone;
+    TextView parentNameTextView;
+    EditText parentNameEditText;
+    TextView parentPhoneTextView;
+    EditText parentPhoneEditText;
+    AuthService mAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +52,15 @@ public class LoggedInChild extends BaseActivity {
 
         //get UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
+        parentInfoName = (EditText) findViewById(R.id.parentinput);
+        parentInfoPhone = (EditText) findViewById(R.id.phoneinput);
+
+        Toast.makeText(this, "LoggedInChild OnCreate", Toast.LENGTH_SHORT).show();
+
+        parent = loadParent();
+
+        parentInfoName.setText(parent.name);
+        parentInfoPhone.setText(parent.phone);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
@@ -50,8 +79,35 @@ public class LoggedInChild extends BaseActivity {
                 }
             }
         });
+
+        saveParent(parent);
+
+        /*parentInfoName = (EditText) findViewById(R.id.parentPhoneInput);
+        parentInfoPhone = (EditText) findViewById(R.id.parentPhoneInput);
+
+        parent = reg.loadParent();
+
+        parentInfoName.setText(parent.name);
+        parentInfoPhone.setText(parent.phone);*/
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Toast.makeText(this, "LoggedInChild OnResume", Toast.LENGTH_SHORT).show();
+
+        parent = loadParent();
+
+        parentInfoName.setText(parent.name);
+        parentInfoPhone.setText(parent.phone);
+
+        /*parentInfoName = (EditText) findViewById(R.id.parentPhoneInput);
+        parentInfoPhone = (EditText) findViewById(R.id.parentPhoneInput);
+
+        parentInfoName.setText(parent.name);
+        parentInfoPhone.setText(parent.phone);*/
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,7 +134,49 @@ public class LoggedInChild extends BaseActivity {
 
     public void register_user(View v)
     {
-        Intent register = new Intent(this, RegisterChild.class);
+        Intent register = new Intent(this, RegisterParent.class);
         startActivity(register);
+    }
+
+    public void saveParent(Parent parent)
+    {
+        try
+        {
+            InternalStorage.writeObject(this, "Parent", parent);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public Parent loadParent()
+    {
+        Parent retVal = null;
+
+        try
+        {
+            retVal = (Parent) InternalStorage.readObject(this, "Parent");
+             /*parentNameEditText.setText(retVal.name);
+             parentPhoneEditText.setText(retVal.phone);*/
+
+        }
+        catch(FileNotFoundException fe)
+        {
+            fe.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException ce)
+        {
+            ce.printStackTrace();
+        }
+
+        if(retVal == null)
+            return new Parent();
+        else
+            return retVal;
     }
 }

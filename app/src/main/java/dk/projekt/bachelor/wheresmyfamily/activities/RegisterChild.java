@@ -10,55 +10,77 @@ import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import dk.projekt.bachelor.wheresmyfamily.Child;
+import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
+import dk.projekt.bachelor.wheresmyfamily.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.RegisterParent;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
+import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
-public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMessageCallback
+public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback,
+        NfcAdapter.OnNdefPushCompleteCallback
 {
 
     TextView parentNameTextView;
     TextView parentPhoneTextView;
-    EditText parentPhoneEdit;
-    EditText parentName;
+    EditText parentPhoneEditText;
+    EditText parentNameEditText;
     private boolean isNFCMessageNew = true;
+    private final String TAG = "AuthService";
     Parent parent = new Parent();
+    Child child = new Child();
+    Boolean isUserParent;
+    String userName;
+    String userPhone;
 
     NfcAdapter nfcAdapter;
+
+    public RegisterChild() {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_child2);
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        setContentView(R.layout.activity_register_child2);
+
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
-        parentName = (EditText)findViewById(R.id.parentNameInfo);
+        parentNameEditText = (EditText)findViewById(R.id.parentNameInfo);
 
         parentPhoneTextView = (TextView) findViewById(R.id.parentPhoneTextView);
-        parentPhoneEdit = (EditText) findViewById(R.id.parentPhoneInfo);
+        parentPhoneEditText = (EditText) findViewById(R.id.parentPhoneInfo);
+
+        parent = loadParent();
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if(nfcAdapter==null)
-        {
-            Toast.makeText(RegisterChild.this,
-                    "nfcAdapter==null, no NFC adapter exists",
-                    Toast.LENGTH_LONG).show();
-        }
-        else
-        {
+
         if(!nfcAdapter.isEnabled())
         {
-            Toast.makeText(getApplicationContext(), "Please activate NFC and press Back to return to the application!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),
+                    "Please activate NFC and press Back to return to the application!",
+                    Toast.LENGTH_LONG).show();
             startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
         }
         else{
@@ -75,17 +97,49 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
 
         parent = loadParent();
 
-        AuthService auth = new AuthService(this);
+        AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
+        AuthService authService = myApp.getAuthService();
 
-        parent = loadParent();
+        //Fetch auth data (the username) on load
+        authService.getAuthData(new TableJsonQueryCallback() {
+            @Override
+            public void onCompleted(JsonElement result, int count, Exception exception,
+                                    ServiceFilterResponse response)
+            {
+                if (exception == null)
+                {
+                    JsonArray results = result.getAsJsonArray();
+                    JsonElement item = results.get(0);
+                    String userName = item.getAsJsonObject().getAsJsonPrimitive(
+                            "UserName").getAsString();
+                    String userPhone = item.getAsJsonObject().getAsJsonPrimitive(
+                            "Phone").getAsString();
 
-        parent.name = auth.getUserId();
+                    isUserParent = !item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean();
 
-        EditText pName = (EditText) findViewById(R.id.parentNameInfo);
+                    if(isUserParent)
+                    {
+                        parent.name = userName;
+                        parent.phone = userPhone;
+
+                        parentNameEditText.setText(userName);
+                        parentPhoneEditText.setText(userPhone);
+                    }
+                }
+                else
+                {
+                    Log.e(TAG, "There was an exception getting auth data: " +
+                            exception.getMessage());
+                }
+            }
+        });
+
+
+        /*EditText pName = (EditText) findViewById(R.id.parentNameInfo);
         EditText pPhone = (EditText) findViewById(R.id.parentPhoneInfo);
 
         pName.setText(parent.name);
-        pPhone.setText(parent.phone);
+        pPhone.setText(parent.phone);*/
 
         try
         {
@@ -110,19 +164,6 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         saveParent(parent);
 
         nfcAdapter.disableForegroundDispatch(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-
-
-       /* EditText pName = (EditText) findViewById(R.id.parentNameInfo);
-        // EditText pPhone = (EditText) findViewById(R.id.parentPhoneInput);
-
-        pName.setText(parent.name);
-        // pPhone.setText(parent.phone);*/
     }
 
     @Override
@@ -154,25 +195,12 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
     }
 
     @Override
-    protected void onNewIntent(Intent intent)
-    {
-        isNFCMessageNew = true;
-        setIntent(intent);
-    }
-
-    @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String stringOut = parentName.getText().toString();
-        String parentPhoneString = parentPhoneEdit.getText().toString();
+        String stringOut = parentNameEditText.getText().toString();
+        String parentPhoneString = parentPhoneEditText.getText().toString();
 
         byte[] parentNameOut = stringOut.getBytes();
         byte[] parentPhoneOut = parentPhoneString.getBytes();
-
-        NdefRecord ndefRecordOut = new NdefRecord(
-                NdefRecord.TNF_MIME_MEDIA,
-                "text/plain".getBytes(),
-                new byte[] {},
-                parentNameOut);
 
         NdefMessage ndefMessageout = new NdefMessage(
                 new NdefRecord
@@ -185,6 +213,13 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         return ndefMessageout;
     }
 
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        isNFCMessageNew = true;
+        setIntent(intent);
+    }
+
     void processIntent(Intent intent)
     {
         Parcelable[] parcelables =
@@ -194,13 +229,15 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
-        String pName = new String(NdefRecord_0.getPayload());
-        String phoneNumber = new String(NdefRecord_1.getPayload());
+        userName = new String(NdefRecord_0.getPayload());
+        userPhone = new String(NdefRecord_1.getPayload());
 
+        Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        parentName.setText(pName);
-        parentPhoneEdit.setText(phoneNumber);
+        child.name = userName;
+        child.phone = userPhone;
 
+        saveChild(child);
 
         isNFCMessageNew = false;
     }
@@ -217,33 +254,81 @@ public class RegisterChild extends Activity implements NfcAdapter.CreateNdefMess
         }
     }
 
-     public Parent loadParent()
-     {
-         Parent retVal = null;
+    public Parent loadParent()
+    {
+        Parent retVal = null;
 
-         try
-         {
-             retVal = (Parent) InternalStorage.readObject(this, "Parent");
-             parentName.setText(retVal.name);
-             parentPhoneEdit.setText(retVal.phone);
+        try
+        {
+            retVal = (Parent) InternalStorage.readObject(this, "Parent");
+             /*parentNameEditText.setText(retVal.name);
+             parentPhoneEditText.setText(retVal.phone);*/
 
-         }
-         catch(FileNotFoundException fe)
-         {
-             fe.printStackTrace();
-         }
-         catch (IOException e)
-         {
-             e.printStackTrace();
-         }
-         catch (ClassNotFoundException ce)
-         {
-             ce.printStackTrace();
-         }
+        }
+        catch(FileNotFoundException fe)
+        {
+            fe.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException ce)
+        {
+            ce.printStackTrace();
+        }
 
-         if(retVal == null)
-             return new Parent();
-         else
-             return retVal;
-     }
+        if(retVal == null)
+            return new Parent();
+        else
+            return retVal;
+    }
+
+    public void saveChild(Child _child)
+    {
+        try
+        {
+            InternalStorage.writeObject(this, "Child", child);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public Child loadChild()
+    {
+        Child retVal = null;
+
+        try
+        {
+            retVal = (Child) InternalStorage.readObject(this, "Child");
+             /*parentNameEditText.setText(retVal.name);
+             parentPhoneEditText.setText(retVal.phone);*/
+
+        }
+        catch(FileNotFoundException fe)
+        {
+            fe.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException ce)
+        {
+            ce.printStackTrace();
+        }
+
+        if(retVal == null)
+            return new Child();
+        else
+            return retVal;
+    }
+
+    @Override
+    public void onNdefPushComplete(NfcEvent nfcEvent) {
+
+        Toast.makeText(this, "User data saved", Toast.LENGTH_SHORT).show();
+    }
 }
