@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -30,6 +31,8 @@ public class LoggedIn extends ListActivity{
     private final String TAG = "LoggedIn";
     private TextView mLblUserIdValue;
     private TextView mLblUsernameValue;
+    private EditText parentName;
+    AuthService mAuthService;
     private ListView m_list;
     protected AuthService mAuthService;
 
@@ -43,6 +46,11 @@ public class LoggedIn extends ListActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
 
+        Toast.makeText(this, "LoggedIn OnCreate", Toast.LENGTH_SHORT).show();
+
+        /*m_orders = new ArrayList<Order>();
+        this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
+        setListAdapter(this, m_adapter);*/
         getListView().setOnItemClickListener(listlistener);
 
         //Because BaseActivity extension isnt possible
@@ -71,9 +79,10 @@ public class LoggedIn extends ListActivity{
 
 
         //get UI elements
-/*        mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
-        AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
+        mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
+
+        /*AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
 
         //Fetch auth data (the username) on load
@@ -90,8 +99,6 @@ public class LoggedIn extends ListActivity{
                 }
             }
         });*/
-
-
     }
 
     private Runnable returnRes = new Runnable() {
@@ -167,6 +174,7 @@ public class LoggedIn extends ListActivity{
     };
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -195,15 +203,8 @@ public class LoggedIn extends ListActivity{
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
-
-
-
     }
-
-
-
 
     public void open(View view) {
 
@@ -213,7 +214,7 @@ public class LoggedIn extends ListActivity{
 
     public void reg(View v)
     {
-        Intent register = new Intent(this, Register_child.class);
+        Intent register = new Intent(this, RegisterChild.class);
         startActivity(register);
     }
 }

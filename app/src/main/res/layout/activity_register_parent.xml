@@ -1,60 +1,59 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/regParentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.RegisterChild">
+    tools:context="dk.projekt.bachelor.wheresmyfamily.RegisterParent">
 
     <LinearLayout
-        android:id="@+id/parentNameLayout"
+        android:id="@+id/childNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/parentNameTextView"
+            android:id="@+id/childNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/parent_name_textView_title"/>
+            android:text="@string/child_name_textView_title"/>
 
         <EditText
-            android:id="@+id/parentNameInfo"
+            android:id="@+id/childNameInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_name_hint"
             android:inputType="text" />
-        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/parentPhoneLayout"
+        android:id="@+id/childPhoneLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/parentNameLayout">
+        android:layout_below="@+id/childNameLayout">
 
         <TextView
-            android:id="@+id/parentPhoneTextView"
+            android:id="@+id/childPhoneTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/parent_phone_textView_title"/>
+            android:text="@string/child_phone_textView_title"/>
 
         <EditText
-            android:id="@+id/parentPhoneInfo"
+            android:id="@+id/childPhoneInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_phone_hint"
             android:inputType="phone" />
-        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/parentPhoneLayout"
+        android:layout_below="@+id/childPhoneLayout"
         android:orientation="vertical"
         android:layout_marginTop="10dp">
 
@@ -75,5 +74,5 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/nfc" />
-        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
