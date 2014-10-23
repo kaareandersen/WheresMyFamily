@@ -29,7 +29,7 @@ public class LogInScreen extends BaseActivity {
 
     private final String TAG = "LogInScreen";
     private Button mBtnLogin;
-    private EditText mTxtUsername;
+    private EditText mTxtEmail;
     private EditText mTxtPassword;
     private Activity mActivity;
     //private AuthService mAuthService;
@@ -47,7 +47,7 @@ public class LogInScreen extends BaseActivity {
 
         //Get UI objects
         mBtnLogin = (Button) findViewById(R.id.btnSignIn);
-        mTxtUsername = (EditText) findViewById(R.id.etLogEmail);
+        mTxtEmail = (EditText) findViewById(R.id.etLogEmail);
         mTxtPassword = (EditText) findViewById(R.id.etLogPass);
 
         //Add on click listeners
@@ -81,13 +81,13 @@ public class LogInScreen extends BaseActivity {
         @Override
         public void onClick(View view) {
             if (mTxtPassword.getText().toString().equals("") ||
-                                mTxtUsername.getText().toString().equals("")) {
+                                mTxtEmail.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(),
                         "Email or Password not entered", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "Email or Password not entered");
                 return;
             }
-            mAuthService.login(mTxtUsername.getText().toString(), mTxtPassword.getText().toString(), new TableJsonOperationCallback() {
+            mAuthService.login(mTxtEmail.getText().toString(), mTxtPassword.getText().toString(), new TableJsonOperationCallback() {
                 @Override
                 public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
                     if (exception == null) {
@@ -106,12 +106,10 @@ public class LogInScreen extends BaseActivity {
                                     JsonArray results = result.getAsJsonArray();
                                     JsonElement item = results.get(0);
                                     boolean _child = Boolean.valueOf(item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean());
-                                    if (_child == true)
-                                    {
+                                    if (_child == true) {
                                         Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInChild.class);
                                         startActivity(loggedInIntent);
-                                    }
-                                    else{
+                                    } else {
                                         Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
                                         startActivity(loggedInIntent);
                                     }
