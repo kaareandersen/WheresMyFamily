@@ -63,7 +63,7 @@
             android:parentActivityName=".activities.Main" >
         </activity>
         <activity
-            android:name=".activities.LoggedIn"
+            android:name=".activities.LoggedInParent"
             android:label="@string/title_activity_logged_in" >
         </activity>
         <activity
@@ -91,7 +91,7 @@
         <activity
             android:name=".activities.RegisterChild"
             android:label="@string/title_activity_register_child"
-            android:parentActivityName=".activities.LoggedIn" >
+            android:parentActivityName=".activities.LoggedInParent" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 

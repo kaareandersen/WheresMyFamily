@@ -56,8 +56,7 @@ public class AuthService {
         mContext = context;
         try {
             mClient = new MobileServiceClient("https://wheresmyfamilymobileservice.azure-mobile.net/",
-                    "pxLbxStZdNLVcRfgvOBsuROQwhFukR85", mContext)
-                    .withFilter(new MyServiceFilter());
+                    "pxLbxStZdNLVcRfgvOBsuROQwhFukR85", mContext);
             mTableAccounts = mClient.getTable("Accounts");
             mTableAuthData = mClient.getTable("AuthData");
             mTableBadAuth = mClient.getTable("BadAuth");
@@ -118,11 +117,11 @@ public class AuthService {
         mClient.setCurrentUser(user);
 
         //Check for custom provider
-        String provider = userId.substring(0, userId.indexOf(":"));
-        if (provider.equals("Custom")) {
-            mProvider = null;
-            mIsCustomAuthProvider = true;
-        }
+//        String provider = userId.substring(0, userId.indexOf(":"));
+//        if (provider.equals("Custom")) {
+//            mProvider = null;
+//            mIsCustomAuthProvider = true;
+//        }
     }
 
     /***
@@ -155,6 +154,8 @@ public class AuthService {
      * @param password
      * @param confirm
      * @param email
+     * @param phone
+     * @param child
      * @param callback
      */
     public void registerUser(String username, String password, String confirm,

@@ -28,7 +28,7 @@ import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplicatio
 
 public class LoggedInChild extends BaseActivity {
 
-    private final String TAG = "LoggedIn";
+    private final String TAG = "LoggedInChild";
     private TextView mLblUsernameValue;
     Parent parent = new Parent();
     EditText parentInfoName;
@@ -37,7 +37,6 @@ public class LoggedInChild extends BaseActivity {
     EditText parentNameEditText;
     TextView parentPhoneTextView;
     EditText parentPhoneEditText;
-    AuthService mAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,18 +103,20 @@ public class LoggedInChild extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            mAuthService.logout(true);
-            return true;
+        switch (id) {
+            case R.id.action_logout:
+                mAuthService.logout(true);
+                return true;
+            case R.id.action_deleteusr:
+                mAuthService.deleteUser("Accounts");
+                return true;
+            case R.id.action_addChild:
+                Intent register = new Intent(this, RegisterParent.class);
+                startActivity(register);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void register_user(View v)
-    {
-        Intent register = new Intent(this, RegisterParent.class);
-        startActivity(register);
     }
 
     public void saveParent(Parent parent)

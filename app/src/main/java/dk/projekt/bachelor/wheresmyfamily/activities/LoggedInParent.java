@@ -22,13 +22,12 @@ import android.widget.Toast;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.helper.MyChild;
 
 
-public class LoggedIn extends ListActivity{
+public class LoggedInParent extends ListActivity{
 
-    private final String TAG = "LoggedIn";
+    private final String TAG = "LoggedInParent";
     private TextView mLblUserIdValue;
     private TextView mLblUsernameValue;
     private EditText parentName;
@@ -43,9 +42,9 @@ public class LoggedIn extends ListActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logged_in);
+        setContentView(R.layout.activity_logged_in_parent);
 
-        Toast.makeText(this, "LoggedIn OnCreate", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "LoggedInParent OnCreate", Toast.LENGTH_SHORT).show();
 
         /*m_orders = new ArrayList<Order>();
         this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
@@ -71,7 +70,7 @@ public class LoggedIn extends ListActivity{
         };
         Thread thread = new Thread(null, viewChild, "MagenToBackground");
         thread.start();
-        m_ProgressDialog = ProgressDialog.show(LoggedIn.this, "Please wait...", "Retrieving data ...", true);
+        m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Please wait...", "Retrieving data ...", true);
 
 
 
@@ -167,7 +166,7 @@ public class LoggedIn extends ListActivity{
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
             //Toast.makeText(getApplicationContext(), "You have clicked on " +
                    // ((MyChild)parent.getItemAtPosition(position)).getChildName(), Toast.LENGTH_SHORT).show();
-            Intent childClick = new Intent(LoggedIn.this, SwipeMenu.class);
+            Intent childClick = new Intent(LoggedInParent.this, SwipeMenu.class);
             startActivity(childClick);
         }
     };
