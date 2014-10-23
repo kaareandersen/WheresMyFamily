@@ -69,7 +69,7 @@
         <activity
             android:name=".activities.LoggedInChild"
             android:label="@string/title_activity_logged_in_child" >
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -82,7 +82,7 @@
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.wheresmyfamily:parentPhone"
                     android:scheme="vnd.android.nfc" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.SwipeMenu"
@@ -98,16 +98,23 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="text/plain" />
+                <!--<data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily:childname"
+                    android:scheme="vnd.android.nfc" />-->
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterParent"
+            android:name=".activities.RegisterParent"
             android:label="@string/title_activity_register_parent"
             android:parentActivityName=".activities.LoggedInChild">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+
             </intent-filter>
         </activity>
     </application>

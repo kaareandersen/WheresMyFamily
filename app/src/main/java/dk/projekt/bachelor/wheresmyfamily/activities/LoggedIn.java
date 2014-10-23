@@ -32,7 +32,6 @@ public class LoggedIn extends ListActivity{
     private TextView mLblUserIdValue;
     private TextView mLblUsernameValue;
     private EditText parentName;
-    AuthService mAuthService;
     private ListView m_list;
     protected AuthService mAuthService;
 
