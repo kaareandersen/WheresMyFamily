@@ -40,6 +40,7 @@ import dk.projekt.bachelor.wheresmyfamily.activities.Main;
 
 
 public class AuthService {
+
     private MobileServiceClient mClient;
     private MobileServiceJsonTable mTableAccounts;
     private MobileServiceJsonTable mTableAuthData;
@@ -74,9 +75,9 @@ public class AuthService {
         return mClient.getCurrentUser().getUserId();
     }
 
-    public void login(String username, String password, TableJsonOperationCallback callback) {
+    public void login(String email, String password, TableJsonOperationCallback callback) {
         JsonObject customUser = new JsonObject();
-        customUser.addProperty("username", username);
+        customUser.addProperty("email", email);
         customUser.addProperty("password", password);
         List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
         parameters.add(new Pair<String, String>("login", "true"));
