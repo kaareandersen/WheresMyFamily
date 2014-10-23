@@ -30,7 +30,7 @@ public class Main extends BaseActivity {
 
         //If user is already authenticated, bypass logging in
         if (mAuthService.isUserAuthenticated()) {
-            Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
+            Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInParent.class);
             startActivity(loggedInIntent);
         }
 

@@ -139,7 +139,7 @@ public class CreateUserScreen extends BaseActivity {
                                         startActivity(loggedInChildIntent);
                                     }
                                     else {
-                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
+                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInParent.class);
                                         startActivity(loggedInIntent);
                                     }
                                 } else {

@@ -110,7 +110,7 @@ public class LogInScreen extends BaseActivity {
                                         Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInChild.class);
                                         startActivity(loggedInIntent);
                                     } else {
-                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedIn.class);
+                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInParent.class);
                                         startActivity(loggedInIntent);
                                     }
                                 } else {
