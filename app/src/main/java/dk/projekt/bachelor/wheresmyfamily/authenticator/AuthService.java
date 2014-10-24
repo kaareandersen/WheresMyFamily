@@ -56,8 +56,8 @@ public class AuthService {
     public AuthService(Context context) {
         mContext = context;
         try {
-            mClient = new MobileServiceClient("https://wheresmyfamilymobileservice.azure-mobile.net/",
-                    "pxLbxStZdNLVcRfgvOBsuROQwhFukR85", mContext);
+            mClient = new MobileServiceClient("https://wheresmyfamilums.azure-mobile.net/",
+                    "NEZImchCPkZquedmjaxCBZzeplOtqR99", mContext);
             mTableAccounts = mClient.getTable("Accounts");
             mTableAuthData = mClient.getTable("AuthData");
             mTableBadAuth = mClient.getTable("BadAuth");
