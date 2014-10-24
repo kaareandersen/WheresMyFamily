@@ -19,6 +19,11 @@ import java.util.ArrayList;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
+
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -38,6 +43,8 @@ public class LoggedInParent extends ListActivity{
     private ArrayList<MyChild> m_My_children = null;
     private ChildAdapter m_adapter;
     private Runnable viewChild;
+    private String partiontkey;
+    private String rowKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +87,6 @@ public class LoggedInParent extends ListActivity{
 
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
-        /*AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
 
         //Fetch auth data (the username) on load
@@ -91,12 +97,13 @@ public class LoggedInParent extends ListActivity{
                 if (exception == null) {
                     JsonArray results = result.getAsJsonArray();
                     JsonElement item = results.get(0);
-                    mLblUsernameValue.setText(item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString());
+                    partiontkey  = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    rowKey = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
                 } else {
                     Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
                 }
             }
-        });*/
+        });
     }
 
     private Runnable returnRes = new Runnable() {
@@ -193,7 +200,7 @@ public class LoggedInParent extends ListActivity{
                 mAuthService.logout(true);
                 return true;
             case R.id.action_deleteusr:
-                mAuthService.deleteUser("Accounts");
+                mAuthService.deleteUser("accounts", rowKey, partiontkey);
                 return true;
             case R.id.action_addChild:
                 Intent register = new Intent(this, RegisterChild.class);

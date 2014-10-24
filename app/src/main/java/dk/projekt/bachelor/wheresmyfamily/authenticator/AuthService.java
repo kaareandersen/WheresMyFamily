@@ -32,6 +32,7 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilter;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterRequest;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponseCallback;
+import com.microsoft.windowsazure.mobileservices.TableDeleteCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.mobileservices.UserAuthenticationCallback;
@@ -171,9 +172,9 @@ public class AuthService {
         mTableAccounts.insert(newUser, callback);
     }
 
-   public void deleteUser(String tableName)
+   public void deleteUser(final String tableName, String rowKey, String partitionKey)
     {
-        /*String provider = mClient.getCurrentUser().getUserId().toString();
+        String provider = mClient.getCurrentUser().getUserId().toString();
         String userID = provider.substring(7);
         JsonObject delUser = new JsonObject();
         delUser.addProperty("id", userID);
@@ -192,7 +193,7 @@ public class AuthService {
                 //logout
                 logout(true);
             }
-        });*/
+        });
     }
 
     /**

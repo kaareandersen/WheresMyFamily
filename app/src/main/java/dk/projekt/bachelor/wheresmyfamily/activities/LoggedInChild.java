@@ -108,7 +108,7 @@ public class LoggedInChild extends BaseActivity {
                 mAuthService.logout(true);
                 return true;
             case R.id.action_deleteusr:
-                mAuthService.deleteUser("Accounts");
+               // mAuthService.deleteUser("Accounts");
                 return true;
             case R.id.action_addChild:
                 Intent register = new Intent(this, RegisterParent.class);
