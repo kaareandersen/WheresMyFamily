@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,11 +20,15 @@ import java.util.ArrayList;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.microsoft.windowsazure.messaging.NotificationHub;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
+import com.microsoft.windowsazure.notifications.NotificationsManager;
 
+import dk.projekt.bachelor.wheresmyfamily.MyHandler;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -45,6 +50,11 @@ public class LoggedInParent extends ListActivity{
     private Runnable viewChild;
     private String partiontkey;
     private String rowKey;
+
+    private String SENDER_ID = "911215571794";
+    private GoogleCloudMessaging mGcm;
+    private NotificationHub mHub;
+    private String mRegistrationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +90,12 @@ public class LoggedInParent extends ListActivity{
         m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Please wait...", "Retrieving data ...", true);
 
 
+        mGcm = GoogleCloudMessaging.getInstance(this);
 
+        String connectionString = "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
+        mHub = new NotificationHub("WheresMyFamiluMSHub", connectionString, this);
+        NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);
+        registerWithNotificationHubs();
 
 
         //get UI elements
@@ -104,6 +119,25 @@ public class LoggedInParent extends ListActivity{
                 }
             }
         });
+    }
+
+    @SuppressWarnings("unchecked")
+    private void registerWithNotificationHubs() {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object... params) {
+                try {
+                    mRegistrationId = mGcm.register(SENDER_ID);
+                    Log.i(TAG, "Registered with id: " + mRegistrationId);
+                    mHub.register(mRegistrationId, "parent");
+                    //mAuthService.callApi();
+                } catch (Exception e) {
+                    Log.e(TAG, "Issue registering with hub: " + e.getMessage());
+                    return e;
+                }
+                return null;
+            }
+        }.execute(null, null, null);
     }
 
     private Runnable returnRes = new Runnable() {
@@ -211,10 +245,9 @@ public class LoggedInParent extends ListActivity{
         }
     }
 
-    public void open(View view) {
+    public void callApi(View view) {
 
-        Intent intent = new Intent(this, SwipeMenu.class);
-        startActivity(intent);
+        mAuthService.callApi();
     }
 
     public void reg(View v)

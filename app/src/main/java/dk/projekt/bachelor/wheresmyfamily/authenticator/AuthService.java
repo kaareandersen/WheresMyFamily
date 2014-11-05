@@ -22,7 +22,9 @@ import android.util.Pair;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.MobileServiceAuthenticationProvider;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.MobileServiceJsonTable;
@@ -62,6 +64,7 @@ public class AuthService {
             mTableAuthData = mClient.getTable("AuthData");
             mTableBadAuth = mClient.getTable("BadAuth");
             mTableTableRows = mClient.getTable("TableRows");
+
         } catch (MalformedURLException e) {
             Log.e(TAG, "There was an error creating the Mobile Service.  Verify the URL");
         }
@@ -73,6 +76,18 @@ public class AuthService {
 
     public String getUserId() {
         return mClient.getCurrentUser().getUserId();
+    }
+
+    public void callApi()
+    {
+        mClient.invokeApi("pushnotificationapi",
+                new ApiJsonOperationCallback() {
+                    @Override
+                    public void onCompleted(JsonElement jsonData, Exception error,
+                                            ServiceFilterResponse response) {
+                        Log.i("JsonData", jsonData.getAsJsonObject().get("message").getAsString());
+                    }
+                });
     }
 
     public void login(String email, String password, TableJsonOperationCallback callback) {
@@ -168,7 +183,6 @@ public class AuthService {
         newUser.addProperty("email", email);
         newUser.addProperty("phone", phone);
         newUser.addProperty("child", child);
-
         mTableAccounts.insert(newUser, callback);
     }
 

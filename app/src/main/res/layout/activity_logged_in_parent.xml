@@ -39,6 +39,8 @@
                 android:layout_height="fill_parent"
                 android:text="@string/main_no_items"/>
 
+
+
             <!--<TextView
                 android:id="@+id/lblUsername"
                 android:layout_width="wrap_content"
@@ -53,13 +55,14 @@
                 android:layout_alignParentTop="true"
                 android:text="TextView" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="Test"
-                android:clickable="true"
-                android:onClick="open"/>-->
+            -->
         </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Test"
+            android:clickable="true"
+            android:onClick="callApi"/>
     </RelativeLayout>
 </RelativeLayout>
