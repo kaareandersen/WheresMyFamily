@@ -15,7 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,13 +29,14 @@ import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
-import dk.projekt.bachelor.wheresmyfamily.helper.MyChild;
 
 
-public class LoggedInParent extends ListActivity{
+public class LoggedInParent extends ListActivity {
 
     private final String TAG = "LoggedInParent";
     private TextView mLblUserIdValue;
@@ -40,10 +46,10 @@ public class LoggedInParent extends ListActivity{
     protected AuthService mAuthService;
 
     private ProgressDialog m_ProgressDialog = null;
-    private ArrayList<MyChild> m_My_children = null;
+    private ArrayList<Child> m_My_children = null;
     private ChildAdapter m_adapter;
     private Runnable viewChild;
-    private String partiontkey;
+    private String partitionKey;
     private String rowKey;
 
     @Override
@@ -53,9 +59,8 @@ public class LoggedInParent extends ListActivity{
 
         Toast.makeText(this, "LoggedInParent OnCreate", Toast.LENGTH_SHORT).show();
 
-        /*m_orders = new ArrayList<Order>();
-        this.m_adapter = new OrderAdapter(this, R.layout.row, m_orders);
-        setListAdapter(this, m_adapter);*/
+        m_My_children = loadChildren();
+
         getListView().setOnItemClickListener(listlistener);
 
         //Because BaseActivity extension isnt possible
@@ -63,25 +68,23 @@ public class LoggedInParent extends ListActivity{
         myApp.setCurrentActivity(this);
         mAuthService = myApp.getAuthService();
 
-        m_My_children = new ArrayList<MyChild>();
         this.m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
         ListView myList=(ListView)findViewById(android.R.id.list);
         myList.setAdapter(m_adapter);
-        // setListAdapter(this, m_adapter);
 
         viewChild = new Runnable() {
             @Override
             public void run() {
-                getChild();
+                try {
+                    getChild();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         };
         Thread thread = new Thread(null, viewChild, "MagenToBackground");
         thread.start();
         m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Please wait...", "Retrieving data ...", true);
-
-
-
-
 
         //get UI elements
 
@@ -97,13 +100,22 @@ public class LoggedInParent extends ListActivity{
                 if (exception == null) {
                     JsonArray results = result.getAsJsonArray();
                     JsonElement item = results.get(0);
-                    partiontkey  = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    partitionKey = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
                     rowKey = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
                 } else {
                     Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        m_My_children = loadChildren();
     }
 
     private Runnable returnRes = new Runnable() {
@@ -119,29 +131,57 @@ public class LoggedInParent extends ListActivity{
         }
     };
 
-    private void getChild(){
-        try {
-            m_My_children = new ArrayList<MyChild>();
-            MyChild o1 = new MyChild();
-            o1.setChildName("Mowgli");
-            o1.setChildStatus("Home");
-            MyChild o2 = new MyChild();
-            o2.setChildName("Kresten");
-            o2.setChildStatus("unknown");
-            m_My_children.add(o1);
-            m_My_children.add(o2);
+    private void getChild() throws FileNotFoundException, IOException {
+        try
+        {
+            m_My_children = loadChildren();
+
+            /*Child test = new Child();
+            test.setChildName("Per");
+            test.setPhone("12345678");
+            m_My_children.add(test);
+
+            saveChildren(m_My_children);*/
+
+            // m_My_children = loadChildren();
+
             Thread.sleep(2000);
             Log.i("ARRAY", "" + m_My_children.size());
-        }
-        catch (Exception e){
+        } catch (Exception e){
             Log.e("BACKGROUND_PROC", e.getMessage());
         }
         runOnUiThread(returnRes);
     }
 
-    private class ChildAdapter extends ArrayAdapter<MyChild>{
-        private ArrayList<MyChild> items;
-        public ChildAdapter(Context context, int textViewResourceId, ArrayList<MyChild> items){
+    public void saveChildren(ArrayList<Child> myChildren)
+    {
+        try
+        {
+            InternalStorage.writeObject(this, "Children", myChildren);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Child> loadChildren()
+    {
+        ArrayList<Child> retVal = null;
+
+        try
+        {
+            retVal = (ArrayList<Child>) InternalStorage.readObject(this, "Children");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return retVal == null ? new ArrayList<Child>() : retVal;
+    }
+
+    private class ChildAdapter extends ArrayAdapter<Child>{
+        private ArrayList<Child> items;
+        public ChildAdapter(Context context, int textViewResourceId, ArrayList<Child> items){
             super(context, textViewResourceId,items);
             this.items = items;
         }
@@ -152,7 +192,7 @@ public class LoggedInParent extends ListActivity{
                 LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.row, null);
             }
-            MyChild c = items.get(position);
+            Child c = items.get(position);
             if (c != null){
                 TextView tt = (TextView) v.findViewById(R.id.toptext);
                 TextView bt = (TextView) v.findViewById(R.id.bottomtext);
@@ -172,13 +212,11 @@ public class LoggedInParent extends ListActivity{
         @Override
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
             //Toast.makeText(getApplicationContext(), "You have clicked on " +
-                   // ((MyChild)parent.getItemAtPosition(position)).getChildName(), Toast.LENGTH_SHORT).show();
+                   // ((Child)parent.getItemAtPosition(Position)).getChildName(), Toast.LENGTH_SHORT).show();
             Intent childClick = new Intent(LoggedInParent.this, SwipeMenu.class);
             startActivity(childClick);
         }
     };
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -200,7 +238,7 @@ public class LoggedInParent extends ListActivity{
                 mAuthService.logout(true);
                 return true;
             case R.id.action_deleteusr:
-                mAuthService.deleteUser("accounts", rowKey, partiontkey);
+                mAuthService.deleteUser("accounts", rowKey, partitionKey);
                 return true;
             case R.id.action_addChild:
                 Intent register = new Intent(this, RegisterChild.class);

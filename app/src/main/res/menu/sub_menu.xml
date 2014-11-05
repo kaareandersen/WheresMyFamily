@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.LoggedInParent">
+    <item
+        android:id="@+id/action_sub_menu"
+        android:title="SubMenu"
+        android:icon="@drawable/phone_icon2"
+        android:showAsAction="always"/>
+
+</menu>

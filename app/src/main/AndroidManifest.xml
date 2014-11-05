@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.nfc" />
     <uses-feature
@@ -45,7 +46,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".position"
+            android:name=".DataModel.Position"
             android:label="@string/title_activity_position" >
         </activity>
         <activity
@@ -65,6 +66,20 @@
         <activity
             android:name=".activities.LoggedInParent"
             android:label="@string/title_activity_logged_in" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <!--<data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Child:name"
+                    android:scheme="vnd.android.nfc" />
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.wheresmyfamily.DataModel.Child:phone"
+                    android:scheme="vnd.android.nfc" />-->
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.LoggedInChild"
@@ -74,14 +89,14 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data
+                <!--<data
                     android:host="ext"
-                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily:parentName"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Parent:parentname"
                     android:scheme="vnd.android.nfc" />
                 <data
                     android:host="ext"
-                    android:pathPrefix="/app/dk.projekt.wheresmyfamily:parentPhone"
-                    android:scheme="vnd.android.nfc" />
+                    android:pathPrefix="/app/dk.projekt.wheresmyfamily.DataModel.Parent:parentphone"
+                    android:scheme="vnd.android.nfc" />-->
             </intent-filter>
         </activity>
         <activity
@@ -98,10 +113,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="text/plain" />
+
                 <!--<data
                     android:host="ext"
-                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily:childname"
-                    android:scheme="vnd.android.nfc" />-->
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Child:childname"
+                    android:scheme="vnd.android.nfc"
+                    />
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Child:childphone"
+                    android:scheme="vnd.android.nfc"
+                    />-->
+
             </intent-filter>
         </activity>
         <activity
@@ -115,6 +138,15 @@
 
                 <data android:mimeType="text/plain" />
 
+                <!--<data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Parent:parentname"
+                    android:scheme="vnd.android.nfc"
+                    />
+                <data
+                    android:host="ext"
+                    android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Parent:parentphone"
+                    android:scheme="vnd.android.nfc" />-->
             </intent-filter>
         </activity>
     </application>

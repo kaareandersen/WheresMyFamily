@@ -15,19 +15,20 @@ import java.io.ObjectOutputStream;
  */
 public final class InternalStorage
 {
-    public static void writeObject(Context context, String key, Object object) throws IOException
+    public static void writeObject(Context context, String fileName, Object object) throws IOException
     {
-        FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
+        FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(object);
         oos.close();
         fos.close();
     }
 
-    public static Object readObject(Context context, String key) throws IOException, ClassNotFoundException
+    public static Object readObject(Context context, String fileName) throws IOException, ClassNotFoundException
     {
-        FileInputStream fis = context.openFileInput(key);
+        FileInputStream fis = context.openFileInput(fileName);
         ObjectInputStream ois = new ObjectInputStream(fis);
+        // String[] children = (String[]) ois.readObject();
         Object object = ois.readObject();
         return object;
     }

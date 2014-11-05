@@ -23,6 +23,7 @@ import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
@@ -44,13 +45,12 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     private final String TAG = "AuthService";
     Parent parent = new Parent();
     Child child = new Child();
+    ArrayList<Child> myChildren = new ArrayList<Child>();
     Boolean isUserParent;
     String userName;
     String userPhone;
-
+    String userMail;
     NfcAdapter nfcAdapter;
-
-    public RegisterChild() {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +69,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         parentPhoneTextView = (TextView) findViewById(R.id.parentPhoneTextView);
         parentPhoneEditText = (EditText) findViewById(R.id.parentPhoneInfo);
 
+        myChildren = loadChildren();
         parent = loadParent();
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -108,10 +109,11 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
                 {
                     JsonArray results = result.getAsJsonArray();
                     JsonElement item = results.get(0);
-                    String userName = item.getAsJsonObject().getAsJsonPrimitive(
+                    userName = item.getAsJsonObject().getAsJsonPrimitive(
                             "UserName").getAsString();
-                    String userPhone = item.getAsJsonObject().getAsJsonPrimitive(
+                    userPhone = item.getAsJsonObject().getAsJsonPrimitive(
                             "Phone").getAsString();
+                    userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
 
                     isUserParent = !item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean();
 
@@ -157,6 +159,8 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
         Toast.makeText(this, "RegisterChild onPause", Toast.LENGTH_SHORT).show();
 
+        saveChildren(myChildren);
+
         saveParent(parent);
 
         nfcAdapter.disableForegroundDispatch(this);
@@ -198,6 +202,15 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         byte[] parentNameOut = stringOut.getBytes();
         byte[] parentPhoneOut = parentPhoneString.getBytes();
 
+        /*return new NdefMessage
+            (
+                new NdefRecord[]
+                        {
+                                NdefRecord.createExternal("app/dk.projekt.bachelor.wheresmyfamily", "ParentName", parentNameOut),
+                                NdefRecord.createExternal("app/dk.projekt.bachelor.wheresmyfamily", "ParentPhone", parentPhoneOut)
+                        }
+            );*/
+
         return new NdefMessage(
                 new NdefRecord
                         (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
@@ -205,6 +218,16 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
                 new NdefRecord
                         (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
                         new byte[]{}, parentPhoneOut));
+
+        /*return new NdefMessage
+                (
+                        new NdefRecord[]
+                                {
+                                        NdefRecord.createMime("app/dk.projekt.bachelor.wheresmyfamily", parentNameOut),
+                                        NdefRecord.createMime("app/dk.projekt.bachelor.wheresmyfamily", parentPhoneOut)
+                                        // NdefRecord.createApplicationRecord("dk.projekt.bachelor.wheresmyfamily")
+                                }
+                );*/
     }
 
     @Override
@@ -223,14 +246,16 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
+        // NdefRecord NdefRecord_2 = inNdefRecords[2];
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
+        // userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        child = new Child(userName, userPhone, null);
+        myChildren.add(new Child(userName, userPhone));
 
-        saveChild(child);
+        saveChildren(myChildren);
 
         Toast.makeText(this, "Dit barn " + child.name + " Tlf. " + child.phone + " er nu registréret",
                 Toast.LENGTH_SHORT).show();
@@ -274,41 +299,30 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         return retVal == null ? new Parent() : retVal;
     }
 
-    public void saveChild(Child _child)
+    public void saveChildren(ArrayList<Child> myChildren)
     {
-        // Comment
         try
         {
-            InternalStorage.writeObject(this, "Child", child);
-        }
-        catch(IOException e)
-        {
+            InternalStorage.writeObject(this, "Children", myChildren);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public Child loadChild()
+    public ArrayList<Child> loadChildren()
     {
-        Child retVal = null;
+        ArrayList<Child> retVal = null;
 
         try
         {
-            retVal = (Child) InternalStorage.readObject(this, "Child");
-        }
-        catch(FileNotFoundException fe)
-        {
-            fe.printStackTrace();
-        }
-        catch (IOException e)
-        {
+            retVal = (ArrayList<Child>) InternalStorage.readObject(this, "Children");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        catch (ClassNotFoundException ce)
-        {
-            ce.printStackTrace();
-        }
 
-        return retVal == null ? new Child() : retVal;
+        return retVal == null ? new ArrayList<Child>() : retVal;
     }
 
     @Override

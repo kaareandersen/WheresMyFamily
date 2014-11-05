@@ -9,14 +9,32 @@ public class Child implements Serializable {
 
     public String name;
     public String phone;
+    public String eMail;
     public String deviceID;
+    public String status;
 
     public Child() {};
 
-    public Child(String _name, String _phone, String _deviceID)
+    public Child(String _name, String _phone)
     {
         name = _name;
         phone = _phone;
-        deviceID = _deviceID;
     }
+
+    // region Get and set
+    public String getChildName() {
+        return name;
+    }
+    public void setChildName(String childName) {
+        this.name = childName;
+    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String geteMail() { return eMail; }
+    public void seteMail(String eMail) { this.eMail = eMail; }
+    public String getChildStatus() {
+        return status;
+    }
+    public void setChildStatus(String childStatus) { this.status = childStatus; }
+    //endregion
 }
