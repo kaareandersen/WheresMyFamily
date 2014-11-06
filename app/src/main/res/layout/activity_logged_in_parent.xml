@@ -39,6 +39,31 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="@string/main_no_items"/>
+
+
+
+            <!--<TextView
+                android:id="@+id/lblUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username" />
+
+            <TextView
+                android:id="@+id/lblUsernameValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="TextView" />
+
+            -->
         </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Test"
+            android:clickable="true"
+            android:onClick="callApi"/>
     </RelativeLayout>
 </RelativeLayout>
