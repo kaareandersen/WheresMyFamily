@@ -1,7 +1,7 @@
 package dk.projekt.bachelor.wheresmyfamily.DataModel;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import android.content.Context;
+
 import java.io.Serializable;
 
 /**
@@ -19,4 +19,22 @@ public class Parent implements Serializable {
         name = _name;
         phone = _phone;
     }
+
+    //region Get and set
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    //endregion
 }

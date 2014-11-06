@@ -33,10 +33,8 @@ public class LoggedInChild extends BaseActivity {
     Parent parent = new Parent();
     EditText parentInfoName;
     EditText parentInfoPhone;
-    TextView parentNameTextView;
-    EditText parentNameEditText;
-    TextView parentPhoneTextView;
-    EditText parentPhoneEditText;
+    private String childName;
+    private String childPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +70,6 @@ public class LoggedInChild extends BaseActivity {
                 }
             }
         });
-
-        // saveParent(parent);
     }
 
     @Override
@@ -81,6 +77,7 @@ public class LoggedInChild extends BaseActivity {
         super.onResume();
 
         Toast.makeText(this, "LoggedInChild OnResume", Toast.LENGTH_SHORT).show();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         parent = loadParent();
 
@@ -138,9 +135,6 @@ public class LoggedInChild extends BaseActivity {
         try
         {
             retVal = (Parent) InternalStorage.readObject(this, "Parent");
-             /*parentNameEditText.setText(retVal.name);
-             parentPhoneEditText.setText(retVal.phone);*/
-
         }
         catch(FileNotFoundException fe)
         {
@@ -155,9 +149,6 @@ public class LoggedInChild extends BaseActivity {
             ce.printStackTrace();
         }
 
-        if(retVal == null)
-            return new Parent();
-        else
-            return retVal;
+        return retVal == null ? new Parent() : retVal;
     }
 }
