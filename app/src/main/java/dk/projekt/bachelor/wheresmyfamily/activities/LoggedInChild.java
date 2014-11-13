@@ -1,15 +1,20 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.MapFragment;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
@@ -20,39 +25,48 @@ import java.io.IOException;
 
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
+import dk.projekt.bachelor.wheresmyfamily.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
-public class LoggedInChild extends BaseActivity {
+public class LoggedInChild extends BaseActivity implements LocationListener {
 
     private final String TAG = "LoggedInChild";
     private TextView mLblUsernameValue;
     Parent parent = new Parent();
     EditText parentInfoName;
     EditText parentInfoPhone;
-    private String childName;
-    private String childPhone;
+    private String provider;
+    LocationManager locationManager;
+    Location currentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_child);
 
-        //get UI elements
+        // Reference UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
         parentInfoName = (EditText) findViewById(R.id.parentinput);
         parentInfoPhone = (EditText) findViewById(R.id.phoneinput);
 
         Toast.makeText(this, "LoggedInChild OnCreate", Toast.LENGTH_SHORT).show();
 
+        MapFragment mapFragment = MapFragment.newInstance();
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+
+
+        // Get parent info
         parent = loadParent();
 
         parentInfoName.setText(parent.name);
         parentInfoPhone.setText(parent.phone);
 
+
+        // Authenticate
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
 
@@ -70,6 +84,18 @@ public class LoggedInChild extends BaseActivity {
                 }
             }
         });
+
+        // Setup location using  Google's location manager
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
     }
 
     @Override
@@ -79,10 +105,25 @@ public class LoggedInChild extends BaseActivity {
         Toast.makeText(this, "LoggedInChild OnResume", Toast.LENGTH_SHORT).show();
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Get and show parent info
         parent = loadParent();
 
         parentInfoName.setText(parent.name);
         parentInfoPhone.setText(parent.phone);
+
+        // Define the criteria on how to select the location provider
+        Criteria criteria = new Criteria();
+        provider =  locationManager.getBestProvider(criteria, false);
+
+        currentLocation = locationManager.getLastKnownLocation(provider);
+
+        if(currentLocation != null)
+        {
+            System.out.println("Udbyder " + provider + " er valgt");
+            onLocationChanged(currentLocation);
+        }
+        else
+            Toast.makeText(this, "Position utilgængelig", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -150,5 +191,11 @@ public class LoggedInChild extends BaseActivity {
         }
 
         return retVal == null ? new Parent() : retVal;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        currentLocation = location;
     }
 }
