@@ -1,0 +1,155 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity"
+    android:background="#ffffff">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/linearLayout">
+
+    <EditText
+        android:id="@+id/txtEvent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_top_bg"
+        android:padding="10dp"
+        android:hint="Titel"
+        android:textColorHint="#bbbbbb"
+        android:singleLine="true"/>
+
+        <Spinner
+            android:id="@+id/spinnerPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_default_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Lokalitet"
+            android:textColorHint="#bbbbbb"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/txtChild"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Barn"
+            android:clickable="true"
+            android:editable="false"
+            android:textColorHint="#bbbbbb"/>
+
+        <EditText
+            android:id="@+id/txtStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_top_bg"
+            android:layout_marginTop="12dp"
+            android:padding="10dp"
+            android:hint="Start Dato"
+            android:clickable="true"
+            android:focusableInTouchMode="false"
+            android:editable="false"
+            android:textColorHint="#bbbbbb"/>
+
+        <EditText
+            android:id="@+id/txtStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Start Tid"
+            android:clickable="true"
+            android:focusableInTouchMode="false"
+            android:editable="false"
+            android:textColorHint="#bbbbbb"/>
+
+        <EditText
+            android:id="@+id/txtEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_top_bg"
+            android:layout_marginTop="12dp"
+            android:padding="10dp"
+            android:hint="Slut Dato"
+            android:clickable="true"
+            android:focusableInTouchMode="false"
+            android:editable="false"
+            android:textColorHint="#bbbbbb"/>
+
+        <EditText
+            android:id="@+id/txtEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_bottom_bg"
+            android:layout_marginTop="-2dp"
+            android:padding="10dp"
+            android:hint="Slut Tid"
+            android:clickable="true"
+            android:focusableInTouchMode="false"
+            android:editable="false"
+            android:textColorHint="#bbbbbb"/>
+
+        <Spinner
+            android:id="@+id/spinnerRepeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_default_bg"
+            android:layout_marginTop="12dp"
+            android:padding="10dp"
+            android:hint="Gentag"
+            android:clickable="true"
+            android:editable="false"
+            android:textColorHint="#bbbbbb"/>
+
+<!--        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="12dp">
+            <Button
+                android:id="@+id/btnMainSignIn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_margin="4dp"&lt;!&ndash;&ndash;&gt;
+                android:text="Anuller"
+                android:background="@drawable/button_default_bg"
+                style="@style/DefaultButtonText"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:id="@+id/btnSignUp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_margin="4dp"
+                android:text="Ok"
+                android:background="@drawable/button_default_bg"
+                style="@style/DefaultButtonText"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>-->
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

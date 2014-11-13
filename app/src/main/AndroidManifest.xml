@@ -16,13 +16,12 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE" />
-    <permission android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE"
+
+    <permission
+        android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-
-
     <permission
         android:name="dk.projekt.bachelor.wheresmyfamily.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -61,11 +60,7 @@
             android:label="@string/title_activity_position" >
         </activity>
         <activity
-            android:name=".calendar"
-            android:label="@string/title_activity_calendar" >
-        </activity>
-        <activity
-            android:name=".activities.CreateUserScreen"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.CreateUserScreen"
             android:label="@string/title_activity_sign_up_screen"
             android:parentActivityName=".activities.Main" >
         </activity>
@@ -111,7 +106,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SwipeMenu"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.SwipeMenu"
             android:label="@string/title_activity_swipe_menu" >
         </activity>
         <activity
@@ -139,9 +134,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegisterParent"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.RegisterParent"
             android:label="@string/title_activity_register_parent"
-            android:parentActivityName=".activities.LoggedInChild">
+            android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -161,13 +156,20 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.microsoft.windowsazure.notifications.NotificationsBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="dk.projekt.bachelor.wheresmyfamily" />
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".activities.NewCalEventActivity"
+            android:label="@string/title_activity_new_cal_event">
+        </activity>
     </application>
+
 </manifest>
