@@ -1,8 +1,10 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableDeleteCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
@@ -55,6 +58,7 @@ public class LoggedInParent extends ListActivity {
     private Runnable viewChild;
     private String partitionKey;
     private String rowKey;
+    private String id;
 
     private String SENDER_ID = "911215571794";
     private GoogleCloudMessaging mGcm;
@@ -133,8 +137,6 @@ public class LoggedInParent extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         m_My_children = loadChildren();
     }
@@ -269,7 +271,7 @@ public class LoggedInParent extends ListActivity {
                 mAuthService.logout(true);
                 return true;
             case R.id.action_deleteusr:
-                mAuthService.deleteUser("accounts", rowKey, partitionKey);
+                deleteDialogBox();
                 return true;
             case R.id.action_addChild:
                 Intent register = new Intent(this, RegisterChild.class);
@@ -289,5 +291,34 @@ public class LoggedInParent extends ListActivity {
     {
         Intent register = new Intent(this, RegisterChild.class);
         startActivity(register);
+    }
+
+    public void deleteDialogBox(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Bekræft Sletning af Brugerprofil");
+        builder.setMessage("Er du sikker?");
+
+        builder.setPositiveButton("JA", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing but close the dialog
+                mAuthService.deleteUser();
+                dialog.dismiss();
+            }
+
+        });
+
+        builder.setNegativeButton("NEJ", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity" >
+    <item
+        android:id="@+id/action_save"
+        android:title="Gem"
+        android:showAsAction="always"
+        android:orderInCategory="1" /> />
+</menu>

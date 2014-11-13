@@ -25,6 +25,7 @@
             android:background="@drawable/edittext_top_bg"
             android:padding="10dp"
             android:hint="Email"
+            android:inputType="textEmailAddress"
             android:textColorHint="#bbbbbb"
             android:drawableLeft="@drawable/email"
             android:singleLine="true"/>
@@ -37,6 +38,7 @@
             android:layout_marginTop="-2dp"
             android:padding="10dp"
             android:hint="Bruger Navn"
+            android:inputType="textPersonName"
             android:textColorHint="#bbbbbb"
             android:drawableLeft="@drawable/user"
             android:singleLine="true"/>
@@ -78,7 +80,7 @@
             android:textColorHint="#bbbbbb"
             android:drawableLeft="@drawable/ic_action_phone"
             android:singleLine="true"
-            android:inputType="number"/>
+            android:inputType="phone"/>
 
         <CheckBox
             android:layout_width="wrap_content"

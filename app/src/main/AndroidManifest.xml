@@ -32,7 +32,7 @@
     <application
         android:name=".authenticator.AuthenticationApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/family_white"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -49,11 +49,7 @@
             android:label="@string/title_activity_position" >
         </activity>
         <activity
-            android:name=".calendar"
-            android:label="@string/title_activity_calendar" >
-        </activity>
-        <activity
-            android:name=".activities.CreateUserScreen"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.CreateUserScreen"
             android:label="@string/title_activity_sign_up_screen"
             android:parentActivityName=".activities.Main" >
         </activity>
@@ -70,16 +66,14 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <!--
-                <data
+                <!--<data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Child:name"
                     android:scheme="vnd.android.nfc" />
                 <data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.wheresmyfamily.DataModel.Child:phone"
-                    android:scheme="vnd.android.nfc" />
-                -->
+                    android:scheme="vnd.android.nfc" />-->
             </intent-filter>
         </activity>
         <activity
@@ -90,20 +84,18 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <!--
-                <data
+                <!--<data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Parent:parentname"
                     android:scheme="vnd.android.nfc" />
                 <data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.wheresmyfamily.DataModel.Parent:parentphone"
-                    android:scheme="vnd.android.nfc" />
-                -->
+                    android:scheme="vnd.android.nfc" />-->
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SwipeMenu"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.SwipeMenu"
             android:label="@string/title_activity_swipe_menu" >
         </activity>
         <activity
@@ -117,8 +109,7 @@
 
                 <data android:mimeType="text/plain" />
 
-                <!--
-                <data
+                <!--<data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Child:childname"
                     android:scheme="vnd.android.nfc"
@@ -127,15 +118,15 @@
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Child:childphone"
                     android:scheme="vnd.android.nfc"
-                    />
-                -->
+                    />-->
 
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegisterParent"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.RegisterParent"
             android:label="@string/title_activity_register_parent"
             android:parentActivityName=".activities.LoggedInChild" >
+            android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -143,8 +134,7 @@
 
                 <data android:mimeType="text/plain" />
 
-                <!--
-                <data
+                <!--<data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Parent:parentname"
                     android:scheme="vnd.android.nfc"
@@ -152,8 +142,7 @@
                 <data
                     android:host="ext"
                     android:pathPrefix="/app/dk.projekt.bachelor.wheresmyfamily.DataModel.Parent:parentphone"
-                    android:scheme="vnd.android.nfc" />
-                -->
+                    android:scheme="vnd.android.nfc" />-->
             </intent-filter>
         </activity>
 
@@ -185,6 +174,10 @@
         <activity
             android:name=".activities.LocationActivity"
             android:label="@string/title_activity_location" >
+        </activity>
+        <activity
+            android:name=".activities.NewCalEventActivity"
+            android:label="@string/title_activity_new_cal_event">
         </activity>
     </application>
 

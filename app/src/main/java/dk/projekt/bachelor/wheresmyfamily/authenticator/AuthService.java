@@ -47,8 +47,7 @@ public class AuthService {
     private MobileServiceClient mClient;
     private MobileServiceJsonTable mTableAccounts;
     private MobileServiceJsonTable mTableAuthData;
-    private MobileServiceJsonTable mTableBadAuth;
-    private MobileServiceJsonTable mTableTableRows;
+    private MobileServiceJsonTable mTableCalendarEvents;
     private Context mContext;
     private final String TAG = "AuthService";
     private boolean mShouldRetryAuth;
@@ -62,9 +61,7 @@ public class AuthService {
                     "NEZImchCPkZquedmjaxCBZzeplOtqR99", mContext);
             mTableAccounts = mClient.getTable("Accounts");
             mTableAuthData = mClient.getTable("AuthData");
-            mTableBadAuth = mClient.getTable("BadAuth");
-            mTableTableRows = mClient.getTable("TableRows");
-
+            mTableCalendarEvents = mClient.getTable("CalendarEvents");
         } catch (MalformedURLException e) {
             Log.e(TAG, "There was an error creating the Mobile Service.  Verify the URL");
         }
@@ -98,6 +95,15 @@ public class AuthService {
         parameters.add(new Pair<String, String>("login", "true"));
 
         mTableAccounts.insert(customUser, parameters, callback);
+    }
+
+    public void sendEmailPassW(String email, TableJsonOperationCallback callback) {
+        JsonObject emailPassWord = new JsonObject();
+        emailPassWord.addProperty("email", email);
+        List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
+        parameters.add(new Pair<String, String>("email", "true"));
+
+        mTableAccounts.insert(emailPassWord, parameters, callback);
     }
 
     public void getAuthData(TableJsonQueryCallback callback) {
@@ -186,26 +192,19 @@ public class AuthService {
         mTableAccounts.insert(newUser, callback);
     }
 
-   public void deleteUser(final String tableName, String rowKey, String partitionKey)
+   public void deleteUser()
     {
-        String provider = mClient.getCurrentUser().getUserId().toString();
-        String userID = provider.substring(7);
-        JsonObject delUser = new JsonObject();
-        delUser.addProperty("id", userID);
+        String id = getUserId();
+        String[] sep = id.split(":");
 
-        List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
-        parameters.add(new Pair<String, String>("tableName", tableName));
-        parameters.add(new Pair<String, String>("rowKey", rowKey));
-        parameters.add(new Pair<String, String>("partitionKey", partitionKey));
-        mTableAccounts.delete(delUser, parameters, new TableDeleteCallback() {
+        mTableAccounts.delete(sep[1], new TableDeleteCallback() {
             @Override
             public void onCompleted(Exception exception, ServiceFilterResponse response) {
-                if (exception != null) {
-                    Log.e(TAG, exception.getCause().getMessage());
-                    return;
+                if (exception == null) {
+                    Log.i(TAG, "Object deleted");
+                    //logout
+                    logout(true);
                 }
-                //logout
-                logout(true);
             }
         });
     }
@@ -236,6 +235,38 @@ public class AuthService {
             logoutIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(logoutIntent);
         }
+    }
+
+    public void newCalEvent(String partitionkey, String rowkey,
+                             String eventname, String location, String child, String startdate, String starttime,
+                             String enddate, String endtime, String repeat,
+                             TableJsonOperationCallback callback) {
+        JsonObject newEvent = new JsonObject();
+        newEvent.addProperty("PartitionKey", partitionkey);
+        newEvent.addProperty("RowKey", rowkey);
+        newEvent.addProperty("EventName", eventname);
+        newEvent.addProperty("Location", location);
+        newEvent.addProperty("Child", child);
+        newEvent.addProperty("StartDate", startdate);
+        newEvent.addProperty("StartTime", starttime);
+        newEvent.addProperty("EndDate", enddate);
+        newEvent.addProperty("EndTime", endtime);
+        newEvent.addProperty("Repeat", repeat);
+        mTableCalendarEvents.insert(newEvent, callback);
+    }
+
+    public void getCalendarTableRows(String id) {
+        mTableCalendarEvents.lookUp(id, new TableJsonOperationCallback() {
+            @Override
+            public void onCompleted(JsonObject jsonObject, Exception exception,
+                                    ServiceFilterResponse response) {
+                if (exception == null) {
+
+                } else {
+                    Log.e(TAG, "There was an error registering the event: " + exception.getMessage());
+                }
+            }
+        });
     }
 
     /**
@@ -327,4 +358,6 @@ public class AuthService {
             });
         }
     }
+
+
 }

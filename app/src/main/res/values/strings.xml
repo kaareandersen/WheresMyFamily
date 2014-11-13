@@ -2,7 +2,7 @@
 <resources>
 
     <!-- app -->
-    <string name="app_name">WheresMyFamily</string>
+    <string name="app_name">Wheres My Family</string>
 
     <!-- acttivity_register_child2 -->
     <string name="register_barn_title">Registrér Barn</string>
@@ -78,14 +78,14 @@
     <string name="title_activity_sign_in_screen">Log Ind</string>
 
     <!-- logged_in -->
-    <string name="title_activity_logged_in">Wheres My Family</string>
-    <string name="main_no_items">No children to display</string>
+    <string name="title_activity_logged_in">Oversigt</string>
+    <string name="main_no_items">Der er ikke gemt nogen børn</string>
 
     <!-- logged_in_child -->
     <string name="title_activity_logged_in_child">LoggedInChild</string>
 
     <!-- parent_info -->
-    <string name="title_activity_parent_info">ParentInfo</string>
+    <string name="title_activity_parent_info">Forælder Info</string>
     <string name="parent_info_headline">Kontaktinformation</string>
     <string name="parent_phone">Forælder telefon</string>
     <string name="parent_name">Forælder navn</string>
@@ -95,6 +95,7 @@
     <string name="title_activity_swipe_menu">SwipeMenu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_register_parent">RegisterParent</string>
+    <string name="title_activity_register_parent">Registrer Forælder</string>
     <string name="register_with_gcm">Register with GCM</string>
     <string name="not_registered">Not yet registered</string>
     <string name="register_with_no_tags">Register without Tags</string>
@@ -103,5 +104,8 @@
     <string name="status_registered_with_tags">Registered with TAGS</string>
     <string name="status_registered_with_no_tags">Registered with NO tags</string>
     <string name="title_activity_location">LocationActivity</string>
+    <string name="title_activity_my_calender">Kalender</string>
+    <string name="title_activity_new_cal_event">Opret Begivenhed</string>
+    <string name="SaveEventErrorMessage1">You must enter all fields to save event</string>
 
 </resources>

@@ -9,6 +9,8 @@ import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
@@ -31,6 +34,7 @@ public class LogInScreen extends BaseActivity {
     private Button mBtnLogin;
     private EditText mTxtEmail;
     private EditText mTxtPassword;
+    private TextView mTxtForgetPass;
     private Activity mActivity;
     //private AuthService mAuthService;
 
@@ -47,11 +51,14 @@ public class LogInScreen extends BaseActivity {
 
         //Get UI objects
         mBtnLogin = (Button) findViewById(R.id.btnSignIn);
+
         mTxtEmail = (EditText) findViewById(R.id.etLogEmail);
         mTxtPassword = (EditText) findViewById(R.id.etLogPass);
+        mTxtForgetPass = (TextView) findViewById(R.id.txtForgetPass);
 
         //Add on click listeners
         mBtnLogin.setOnClickListener(loginClickListener);
+        mTxtForgetPass.setOnClickListener(loginClickListener);
     }
 
 
@@ -77,56 +84,99 @@ public class LogInScreen extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    View.OnClickListener loginClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (mTxtPassword.getText().toString().equals("") ||
-                                mTxtEmail.getText().toString().equals("")) {
-                Toast.makeText(getApplicationContext(),
-                        "Email or Password not entered", Toast.LENGTH_SHORT).show();
-                Log.w(TAG, "Email or Password not entered");
-                return;
-            }
-            mAuthService.login(mTxtEmail.getText().toString(), mTxtPassword.getText().toString(), new TableJsonOperationCallback() {
-                @Override
-                public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
-                    if (exception == null) {
-                        //If they've registered successfully, we'll save and set the userdata and then
-                        //show the logged in activity
-                        mAuthService.setUserAndSaveData(jsonObject);
-                        AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
-                        AuthService authService = myApp.getAuthService();
+    public void sendEmail(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-                        //Fetch auth data (the username) on load
-                        authService.getAuthData(new TableJsonQueryCallback() {
+        alert.setTitle("Send password");
+        alert.setMessage("Skriv din email for at modtage dit password");
+
+// Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        //Pass email to azure
+                        mAuthService.sendEmailPassW(value, new TableJsonOperationCallback() {
                             @Override
-                            public void onCompleted(JsonElement result, int count, Exception exception,
-                                                    ServiceFilterResponse response) {
-                                if (exception == null) {
-                                    JsonArray results = result.getAsJsonArray();
-                                    JsonElement item = results.get(0);
-                                    boolean _child = Boolean.valueOf(item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean());
-                                    if (_child == true) {
-                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInChild.class);
-                                        startActivity(loggedInIntent);
-                                    } else {
-                                        Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInParent.class);
-                                        startActivity(loggedInIntent);
-                                    }
-                                } else {
-                                    Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
+                            public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
+                                if (exception == null){
+
+                                }
+                                else {
+                                    Log.e(TAG, "There was an exception sending email: " + exception.getMessage());
                                 }
                             }
                         });
-
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Error loggin in: " + exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
-                        Log.e(TAG, "Error loggin in: " + exception.getMessage());
                     }
+                });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+    }
+
+    View.OnClickListener loginClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view == mBtnLogin) {
+                if (mTxtPassword.getText().toString().equals("") ||
+                        mTxtEmail.getText().toString().equals("")) {
+                    Toast.makeText(getApplicationContext(),
+                            "Email or Password not entered", Toast.LENGTH_SHORT).show();
+                    Log.w(TAG, "Email or Password not entered");
+                    return;
                 }
-            });
+                mAuthService.login(mTxtEmail.getText().toString(), mTxtPassword.getText().toString(), new TableJsonOperationCallback() {
+                    @Override
+                    public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
+                        if (exception == null) {
+                            //If they've registered successfully, we'll save and set the userdata and then
+                            //show the logged in activity
+                            mAuthService.setUserAndSaveData(jsonObject);
+                            AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
+                            AuthService authService = myApp.getAuthService();
+
+                            //Fetch auth data (the username) on load
+                            authService.getAuthData(new TableJsonQueryCallback() {
+                                @Override
+                                public void onCompleted(JsonElement result, int count, Exception exception,
+                                                        ServiceFilterResponse response) {
+                                    if (exception == null) {
+                                        JsonArray results = result.getAsJsonArray();
+                                        JsonElement item = results.get(0);
+                                        boolean _child = Boolean.valueOf(item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean());
+                                        if (_child == true) {
+                                            Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInChild.class);
+                                            startActivity(loggedInIntent);
+                                        } else {
+                                            Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInParent.class);
+                                            startActivity(loggedInIntent);
+                                        }
+                                    } else {
+                                        Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
+                                    }
+                                }
+                            });
+
+
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Error loggin in: " + exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
+                            Log.e(TAG, "Error loggin in: " + exception.getMessage());
+                        }
+                    }
+                });
+            }
+            if (view == mTxtForgetPass){
+                sendEmail();
+            }
         }
     };
+
 }
