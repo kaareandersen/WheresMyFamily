@@ -27,6 +27,11 @@ public class MyHandler extends NotificationsHandler {
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
         String nhMessage = bundle.getString("msg");
+        String[] sepMessage = nhMessage.split(":");
+
+        if(sepMessage[0].equals("NewEvent")){
+            nhMessage = "Du har modtaget en ny begivenhed";
+        }
         Log.d(TAG, "onReceive");
         sendNotification(nhMessage);
     }
