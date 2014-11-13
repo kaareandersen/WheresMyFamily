@@ -136,6 +136,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         });
 
         parent = loadParent();
+        myChildren = loadChildren();
 
         try
         {
@@ -257,7 +258,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
         saveChildren(myChildren);
 
-        Toast.makeText(this, "Dit barn " + child.name + " Tlf. " + child.phone + " er nu registréret",
+        Toast.makeText(this, "Dit barn " + userName + " Tlf. " + userPhone + " er nu registréret",
                 Toast.LENGTH_SHORT).show();
 
         isNFCMessageNew = false;

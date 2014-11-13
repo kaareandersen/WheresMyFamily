@@ -4,24 +4,19 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.ArrayAdapter;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -32,8 +27,13 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
+import dk.projekt.bachelor.wheresmyfamily.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.MyHandler;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
@@ -125,6 +125,9 @@ public class LoggedInParent extends ListActivity {
                 }
             }
         });
+
+        Intent intent = new Intent(this, LocationService.class);
+        startService(intent);
     }
 
     @Override
@@ -172,15 +175,6 @@ public class LoggedInParent extends ListActivity {
         try
         {
             m_My_children = loadChildren();
-
-            /*Child test = new Child();
-            test.setChildName("Per");
-            test.setPhone("12345678");
-            m_My_children.add(test);
-
-            saveChildren(m_My_children);*/
-
-            // m_My_children = loadChildren();
 
             Thread.sleep(2000);
             Log.i("ARRAY", "" + m_My_children.size());
@@ -250,7 +244,7 @@ public class LoggedInParent extends ListActivity {
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
             //Toast.makeText(getApplicationContext(), "You have clicked on " +
                    // ((Child)parent.getItemAtPosition(Position)).getChildName(), Toast.LENGTH_SHORT).show();
-            Intent childClick = new Intent(LoggedInParent.this, SwipeMenu.class);
+            Intent childClick = new Intent(LoggedInParent.this, LocationActivity.class);
             startActivity(childClick);
         }
     };
@@ -275,7 +269,7 @@ public class LoggedInParent extends ListActivity {
                 mAuthService.logout(true);
                 return true;
             case R.id.action_deleteusr:
-                mAuthService.deleteUser("accounts", rowKey, partiontkey);
+                mAuthService.deleteUser("accounts", rowKey, partitionKey);
                 return true;
             case R.id.action_addChild:
                 Intent register = new Intent(this, RegisterChild.class);
