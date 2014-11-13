@@ -136,8 +136,6 @@ public class LoggedInParent extends ListActivity {
     protected void onResume() {
         super.onResume();
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
         m_My_children = loadChildren();
     }
 

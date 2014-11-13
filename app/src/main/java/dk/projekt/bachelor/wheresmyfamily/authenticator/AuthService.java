@@ -97,6 +97,15 @@ public class AuthService {
         mTableAccounts.insert(customUser, parameters, callback);
     }
 
+    public void sendEmailPassW(String email, TableJsonOperationCallback callback) {
+        JsonObject emailPassWord = new JsonObject();
+        emailPassWord.addProperty("email", email);
+        List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
+        parameters.add(new Pair<String, String>("email", "true"));
+
+        mTableAccounts.insert(emailPassWord, parameters, callback);
+    }
+
     public void getAuthData(TableJsonQueryCallback callback) {
         mTableAuthData.where().execute(callback);
     }
