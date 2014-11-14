@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import dk.projekt.bachelor.wheresmyfamily.CalendarActivity;
+import dk.projekt.bachelor.wheresmyfamily.OverviewActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 
 public class LocationActivity extends FragmentActivity implements
@@ -164,6 +166,16 @@ public class LocationActivity extends FragmentActivity implements
                         .target(mCurrentLocation).zoom(17).bearing(90).tilt(30).build();
                 map.animateCamera(
                         CameraUpdateFactory.newCameraPosition(myPosition));
+                break;
+            case R.id.action_overview:
+                Intent overview = new Intent(this, OverviewActivity.class);
+                startActivity(overview);
+                break;
+            case R.id.action_calendar:
+                Intent caldendar = new Intent(this, CalendarActivity.class);
+                startActivity(caldendar);
+                break;
+            case R.id.action_map:
                 break;
         }
 

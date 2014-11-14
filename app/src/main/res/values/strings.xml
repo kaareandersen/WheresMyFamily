@@ -106,5 +106,6 @@
     <string name="title_activity_my_calender">Kalender</string>
     <string name="title_activity_new_cal_event">Opret Begivenhed</string>
     <string name="SaveEventErrorMessage1">You must enter all fields to save event</string>
+    <string name="title_activity_overview">OverviewActivity</string>
 
 </resources>
