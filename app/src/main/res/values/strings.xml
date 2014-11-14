@@ -94,7 +94,6 @@
     <!-- swipe_menu -->
     <string name="title_activity_swipe_menu">SwipeMenu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_register_parent">RegisterParent</string>
     <string name="title_activity_register_parent">Registrer Forælder</string>
     <string name="register_with_gcm">Register with GCM</string>
     <string name="not_registered">Not yet registered</string>

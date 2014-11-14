@@ -59,11 +59,22 @@
             -->
         </LinearLayout>
         <Button
+            android:id="@+id/test_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:text="Test"
             android:clickable="true"
             android:onClick="callApi"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="Opret fast sted"
+            android:clickable="true"
+            android:onClick="createLocation"
+            />
     </RelativeLayout>
 </RelativeLayout>
