@@ -38,6 +38,7 @@ import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.OverviewActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -246,7 +247,7 @@ public class LoggedInParent extends ListActivity {
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
             //Toast.makeText(getApplicationContext(), "You have clicked on " +
                    // ((Child)parent.getItemAtPosition(Position)).getChildName(), Toast.LENGTH_SHORT).show();
-            Intent childClick = new Intent(LoggedInParent.this, LocationActivity.class);
+            Intent childClick = new Intent(LoggedInParent.this, OverviewActivity.class);
             startActivity(childClick);
         }
     };

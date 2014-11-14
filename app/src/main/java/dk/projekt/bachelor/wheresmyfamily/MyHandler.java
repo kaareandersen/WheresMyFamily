@@ -26,14 +26,15 @@ public class MyHandler extends NotificationsHandler {
     @Override
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
+        String newMessage = null;
         String nhMessage = bundle.getString("msg");
         String[] sepMessage = nhMessage.split(":");
 
         if(sepMessage[0].equals("NewEvent")){
-            nhMessage = "Du har modtaget en ny begivenhed";
+            newMessage = "Du har modtaget en ny kalender begivenhed";
         }
         Log.d(TAG, "onReceive");
-        sendNotification(nhMessage);
+        sendNotification(newMessage);
     }
 
     private void sendNotification(String msg) {
@@ -47,7 +48,7 @@ public class MyHandler extends NotificationsHandler {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("Notification Hub Demo")
+                        .setContentTitle("Wheres My Family")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg);

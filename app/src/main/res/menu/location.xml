@@ -1,6 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/menu_settings"
+        android:orderInCategory="4"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_place"
+        android:title="Settings">
+        <menu>
+    <item
         android:id="@+id/menu_sethybrid"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -45,10 +52,25 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="Line connecting 2 points"/>
-    <item
-        android:id="@+id/menu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="menu_settings"/>
+        </menu>
+    </item>
+
+    <item android:id="@+id/action_overview"
+        android:title="Oversigt"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_view_as_list"/>
+
+    <item android:id="@+id/action_calendar"
+        android:title="Kalender"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_go_to_today"/>
+
+    <item android:id="@+id/action_map"
+        android:title="Map"
+        android:orderInCategory="3"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_map"/>
 
 </menu>
