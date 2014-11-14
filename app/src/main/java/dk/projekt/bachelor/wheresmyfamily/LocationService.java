@@ -75,10 +75,12 @@ public class LocationService extends Service implements
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            Log.e(TAG, "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: " + location.getAccuracy());
+
+
+            /*Log.e(TAG, "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: " + location.getAccuracy());
             String locationMsg = "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: "
                     + location.getAccuracy() + " Bearing" + location.getBearing();
-            Toast.makeText(this, locationMsg, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, locationMsg, Toast.LENGTH_LONG).show();*/
 
         }
 

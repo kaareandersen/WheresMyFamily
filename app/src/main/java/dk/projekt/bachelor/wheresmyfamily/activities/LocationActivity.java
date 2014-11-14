@@ -17,6 +17,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.HistoryApi;
+import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -41,7 +44,10 @@ public class LocationActivity extends FragmentActivity implements
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
     LocationClient mLocationClient;
+    LocationListener locationListener;
     LatLng mCurrentLocation;
+    HistoryApi historyApi;
+    GoogleApiClient googleApiClient;
 
     // Define an object that holds accuracy and frequency parameters
     LocationRequest mLocationRequest;
@@ -62,6 +68,8 @@ public class LocationActivity extends FragmentActivity implements
 
     String provider;
     LocationManager locationManager;
+
+    DataReadRequest dataReadRequest;
     //endregion
 
 
@@ -70,31 +78,19 @@ public class LocationActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
-        // Location myLocation = new Location(locationManager.getLastKnownLocation(provider));
+        // Initialize the location
+        if (mLocationClient == null)
+            mLocationClient = new LocationClient(this, this, this);
 
-        // Initialize the location fields
-        if (mCurrentLocation != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(locationManager.getLastKnownLocation(provider));
-        }
 
-        /*mCurrentLocation = new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(),
-                locationManager.getLastKnownLocation(provider).getLongitude());*/
+
         map = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
-        map.addMarker(new MarkerOptions().position(GOLDEN_GATE_BRIDGE));
+
         if (map == null) {
             Toast.makeText(this, "Google Maps not available",
                     Toast.LENGTH_LONG).show();
         }
-
-        /*
-         * Create a new location client, using the enclosing class to
-         * handle callbacks.
-         */
-        mLocationClient = new LocationClient(this, this, this);
-
-        // mCurrentLocation = mLocationClient.getLastLocation();
 
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create();
@@ -106,12 +102,7 @@ public class LocationActivity extends FragmentActivity implements
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        /*if(map == null)
-            MapsInitializer.initialize(this);*/
-        // map = getSupportFragmentManager().findFragmentById(R.id.map);
-        /*Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);*/
-
+        mLocationClient.requestLocationUpdates(mLocationRequest, this);
     }
 
 
@@ -131,6 +122,15 @@ public class LocationActivity extends FragmentActivity implements
 
             case R.id.menu_sethybrid:
                 map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
+            case R.id.menu_set_normal:
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case R.id.menu_set_satellite:
+                map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case R.id.menu_set_terrain:
+                map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 break;
             case R.id.menu_showtraffic:
                 map.setTrafficEnabled(true);
@@ -185,6 +185,8 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        provider = LocationManager.GPS_PROVIDER;
     }
 
     @Override
@@ -227,7 +229,6 @@ public class LocationActivity extends FragmentActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
         /*
          * Google Play services can resolve some errors it detects.
          * If the error has a resolution, try sending an Intent to
@@ -255,11 +256,11 @@ public class LocationActivity extends FragmentActivity implements
              */
             Toast.makeText(this, connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        // location = locationManager.getLastKnownLocation(provider);
 
         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
     }
@@ -310,7 +311,6 @@ public class LocationActivity extends FragmentActivity implements
                         onActivityResult(requestCode, resultCode, data);
                         break;
                 }
-
         }
     }
 

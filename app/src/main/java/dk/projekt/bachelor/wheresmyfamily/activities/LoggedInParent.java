@@ -26,7 +26,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.TableDeleteCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
@@ -213,6 +212,8 @@ public class LoggedInParent extends ListActivity {
         return retVal == null ? new ArrayList<Child>() : retVal;
     }
 
+
+
     private class ChildAdapter extends ArrayAdapter<Child>{
         private ArrayList<Child> items;
         public ChildAdapter(Context context, int textViewResourceId, ArrayList<Child> items){
@@ -322,4 +323,10 @@ public class LoggedInParent extends ListActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public void createLocation(View view)
+    {
+
+    }
+
 }
