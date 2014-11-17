@@ -1,5 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,6 +40,8 @@ public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         LocationListener {
+
+    ActionBar actionBar;
 
     //region Fields
     private final static int
@@ -78,6 +82,9 @@ public class LocationActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         // Initialize the location
         if (mLocationClient == null)
             mLocationClient = new LocationClient(this, this, this);
@@ -102,7 +109,7 @@ public class LocationActivity extends FragmentActivity implements
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+        //mLocationClient.requestLocationUpdates(mLocationRequest, this);
     }
 
 
@@ -348,6 +355,27 @@ public class LocationActivity extends FragmentActivity implements
             }
 
             return false;
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_MOVE) {
+            toggleActionBar();
+        }
+        return true;
+    }
+
+    private void toggleActionBar() {
+        ActionBar actionBar = getActionBar();
+
+        if(actionBar != null) {
+            if(actionBar.isShowing()) {
+                actionBar.hide();
+            }
+            else {
+                actionBar.show();
+            }
         }
     }
 }

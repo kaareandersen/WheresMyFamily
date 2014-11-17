@@ -1,21 +1,58 @@
 package dk.projekt.bachelor.wheresmyfamily;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.view.View.OnClickListener;
 
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
+import dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.RegisterChild;
 
 
-public class OverviewActivity extends Activity {
+public class OverviewActivity extends Activity implements OnClickListener{
+
+    ImageButton btnTackPic;
+    ImageView ivThumbnailPhoto;
+    Bitmap bitMap;
+    static int TAKE_PICTURE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        btnTackPic = (ImageButton) findViewById(R.id.btnTakePic);
+        ivThumbnailPhoto = (ImageView) findViewById(R.id.ivThumbnailPhoto);
+
+        // add onclick listener to the button
+        btnTackPic.setOnClickListener(this);
+
+        ImageButton button = (ImageButton) findViewById(R.id.callchild);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:22494307"));
+                startActivity(callIntent);
+            }
+
+        });
     }
 
 
@@ -49,5 +86,30 @@ public class OverviewActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // on button "btnTackPic" is clicked
+    @Override
+    public void onClick(View view) {
+
+        // create intent with ACTION_IMAGE_CAPTURE action
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // start camera activity
+        startActivityForResult(intent, TAKE_PICTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        if (requestCode == TAKE_PICTURE && resultCode== RESULT_OK && intent != null){
+            // get bundle
+            Bundle extras = intent.getExtras();
+
+            // get bitmap
+            bitMap = (Bitmap) extras.get("data");
+            ivThumbnailPhoto.setImageBitmap(bitMap);
+
+        }
     }
 }

@@ -51,7 +51,7 @@
     <string name="title_activity_calendar_view">calendar_view</string>
     <string name="calendar_add_event_button_text">+</string>
     <string name="title_activity_position">position</string>
-    <string name="title_activity_calendar">calendar</string>
+    <string name="title_activity_calendar">Kalender</string>
     <string name="title_activity_child__start__screen">Child_Start_Screen</string>
     <string name="title_activity_parent__start__screen">Parent_Start_Screen</string>
     <string name="action_logout">Log Ud</string>
@@ -87,8 +87,8 @@
     <!-- parent_info -->
     <string name="title_activity_parent_info">Forælder Info</string>
     <string name="parent_info_headline">Kontaktinformation</string>
-    <string name="parent_phone">Forælder telefon</string>
-    <string name="parent_name">Forælder navn</string>
+    <string name="parent_phone">Forælder telefon:</string>
+    <string name="parent_name">Forælder navn:</string>
     <string name="submit_button_title">Tilføj</string>
 
     <!-- swipe_menu -->
@@ -102,10 +102,10 @@
     <string name="status_registered">Registered with GCM</string>
     <string name="status_registered_with_tags">Registered with TAGS</string>
     <string name="status_registered_with_no_tags">Registered with NO tags</string>
-    <string name="title_activity_location">LocationActivity</string>
+    <string name="title_activity_location">Kort</string>
     <string name="title_activity_my_calender">Kalender</string>
     <string name="title_activity_new_cal_event">Opret Begivenhed</string>
     <string name="SaveEventErrorMessage1">You must enter all fields to save event</string>
-    <string name="title_activity_overview">OverviewActivity</string>
+    <string name="title_activity_overview">Oversigt</string>
 
 </resources>

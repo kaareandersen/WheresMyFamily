@@ -39,6 +39,7 @@ import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.mobileservices.UserAuthenticationCallback;
 
+import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 import dk.projekt.bachelor.wheresmyfamily.activities.Main;
 
 
@@ -255,18 +256,10 @@ public class AuthService {
         mTableCalendarEvents.insert(newEvent, callback);
     }
 
-    public void getCalendarTableRows(String id) {
-        mTableCalendarEvents.lookUp(id, new TableJsonOperationCallback() {
-            @Override
-            public void onCompleted(JsonObject jsonObject, Exception exception,
-                                    ServiceFilterResponse response) {
-                if (exception == null) {
+    public void getCalendarEvent(String id, TableJsonOperationCallback callback) {
 
-                } else {
-                    Log.e(TAG, "There was an error registering the event: " + exception.getMessage());
-                }
-            }
-        });
+        mTableCalendarEvents.lookUp(id,  callback);
+
     }
 
     /**
