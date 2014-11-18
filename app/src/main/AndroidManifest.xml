@@ -25,7 +25,6 @@
     <uses-permission android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.nfc" />
     <uses-feature android:name="android.hardware.camera" />
