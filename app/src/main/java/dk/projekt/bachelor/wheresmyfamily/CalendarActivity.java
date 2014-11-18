@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
+import dk.projekt.bachelor.wheresmyfamily.activities.OverviewActivity;
 
 
 public class CalendarActivity extends Activity {
