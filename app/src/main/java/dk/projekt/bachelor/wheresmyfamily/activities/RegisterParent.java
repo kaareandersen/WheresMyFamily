@@ -36,6 +36,7 @@ import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback
 {
 
+    //region Fields
     NfcAdapter nfcAdapter;
     Boolean isUserChild;
     private Boolean isNFCMessageNew = true;
@@ -47,6 +48,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     EditText childNameEditText;
     String userName;
     String userPhone;
+    //endregion
 
     public RegisterParent(){}
 

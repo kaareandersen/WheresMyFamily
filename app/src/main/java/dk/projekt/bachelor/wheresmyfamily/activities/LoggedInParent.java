@@ -37,7 +37,6 @@ import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.MyHandler;
-import dk.projekt.bachelor.wheresmyfamily.OverviewActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -102,7 +101,8 @@ public class LoggedInParent extends ListActivity {
 
         mGcm = GoogleCloudMessaging.getInstance(this);
 
-        String connectionString = "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
+        String connectionString =
+                "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
         mHub = new NotificationHub("WheresMyFamiluMSHub", connectionString, this);
         NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);
         registerWithNotificationHubs();
@@ -211,7 +211,6 @@ public class LoggedInParent extends ListActivity {
 
         return retVal == null ? new ArrayList<Child>() : retVal;
     }
-
 
 
     private class ChildAdapter extends ArrayAdapter<Child>{
@@ -326,7 +325,8 @@ public class LoggedInParent extends ListActivity {
 
     public void createLocation(View view)
     {
-
+        Intent intent = new Intent(this, OverviewActivity.class);
+        startActivity(intent);
     }
 
 }

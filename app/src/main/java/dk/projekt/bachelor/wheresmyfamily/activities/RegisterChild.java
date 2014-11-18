@@ -37,6 +37,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         NfcAdapter.OnNdefPushCompleteCallback
 {
 
+    //region Fields
     TextView parentNameTextView;
     TextView parentPhoneTextView;
     EditText parentPhoneEditText;
@@ -51,6 +52,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     String userPhone;
     String userMail;
     NfcAdapter nfcAdapter;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

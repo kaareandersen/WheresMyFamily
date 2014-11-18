@@ -6,42 +6,50 @@
         android:showAsAction="always"
         android:icon="@drawable/ic_action_place"
         android:title="Settings">
+    </item>
+
+    <item android:id="@+id/map_mode"
+        android:showAsAction="never"
+        android:title="@string/menu_map_mode_title">
         <menu>
-    <item
-        android:id="@+id/menu_sethybrid"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Hybrid Mode"/>
-    <item
-        android:id="@+id/menu_set_normal"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Normal mode" />
-    <item
-        android:id="@+id/menu_set_satellite"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Satellite mode" />
-    <item
-        android:id="@+id/menu_set_terrain"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Terrain mode" />
+            <item
+                android:id="@+id/menu_set_hybrid"
+                android:orderInCategory="100"
+                android:showAsAction="never"
+                android:title="@string/menu_hybrid_mode_title"/>
+            <item
+                android:id="@+id/menu_set_normal"
+                android:orderInCategory="100"
+                android:showAsAction="never"
+                android:title="@string/menu_normal_mode_title"/>
+            <item
+                android:id="@+id/menu_set_satellite"
+                android:orderInCategory="100"
+                android:showAsAction="never"
+                android:title="@string/menu_satellite_mode_title"/>
+            <item
+                android:id="@+id/menu_set_terrain"
+                android:orderInCategory="100"
+                android:showAsAction="never"
+                android:title="@string/menu_terrain_mode_title" />
+        </menu>
+    </item>
+
     <item
         android:id="@+id/menu_showtraffic"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Show Traffic"/>
+        android:title="@string/menu_show_traffic_title"/>
     <item
         android:id="@+id/menu_zoomin"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Zoom In"/>
+        android:title="@string/menu_zoom_in_title"/>
     <item
         android:id="@+id/menu_zoomout"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Zoom Out"/>
+        android:title="@string/menu_zoom_out_title"/>
     <item
         android:id="@+id/menu_gotolocation"
         android:orderInCategory="100"
@@ -53,11 +61,6 @@
         android:showAsAction="never"
         android:title="Add a marker"/>
     <item
-        android:id="@+id/menu_getcurrentlocation"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Get Current Location"/>
-    <item
         android:id="@+id/menu_showcurrentlocation"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -67,8 +70,7 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="Line connecting 2 points"/>
-        </menu>
-    </item>
+
 
     <item android:id="@+id/action_overview"
         android:title="Oversigt"

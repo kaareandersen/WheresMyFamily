@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -135,7 +136,6 @@
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.RegisterParent"
             android:label="@string/title_activity_register_parent"
             android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild" >
-            android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild" >
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
 
@@ -167,6 +167,7 @@
             </intent-filter>
         </receiver>
 
+
         <!-- Very important to work, this is API key got from google with tdc2k account AIzaSyBAyKrNp54ujj7t7M4oevL_zvuTgOFBjj0 -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -196,7 +197,7 @@
             android:label="@string/title_activity_new_cal_event" >
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.OverviewActivity"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.OverviewActivity"
             android:label="@string/title_activity_overview"
             android:uiOptions="splitActionBarWhenNarrow"
             android:parentActivityName=".activities.LoggedInParent">
@@ -213,6 +214,15 @@
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
         </activity>
+
+        <service
+            android:name="dk.projekt.bachelor.wheresmyfamily.ReceiveTransitionsIntentService"
+            android:exported="false" >
+        </service>
+        <service
+            android:name="dk.projekt.bachelor.wheresmyfamily.ActivityRecognitionIntentService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
