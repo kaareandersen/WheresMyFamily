@@ -176,7 +176,7 @@ public class LocationActivity extends FragmentActivity implements
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+        // mLocationClient.requestLocationUpdates(mLocationRequest, this);
 
 
         // Start with the request flag set to false
