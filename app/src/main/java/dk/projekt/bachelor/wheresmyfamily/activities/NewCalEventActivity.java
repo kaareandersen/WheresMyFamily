@@ -265,7 +265,7 @@ public class NewCalEventActivity extends BaseActivity implements
                                                 ServiceFilterResponse response) {
                             if (exception == null) {
                                 eventID = jsonObject.get("id").getAsString();
-                                readEvent();
+                                //readEvent();
                                 mActivity.finish();
                             } else {
                                 Toast.makeText(getApplicationContext(),
@@ -277,7 +277,7 @@ public class NewCalEventActivity extends BaseActivity implements
             }
         }
 
-    public void readEvent(){
-        mAuthService.getCalendarTableRows(eventID);
-    }
+   // public void readEvent(){
+   //     mAuthService.getCalendarEvent(eventID);
+   // }
 }

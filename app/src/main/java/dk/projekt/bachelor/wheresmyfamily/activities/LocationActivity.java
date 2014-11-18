@@ -1,5 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -50,6 +52,10 @@ import dk.projekt.bachelor.wheresmyfamily.ReceiveTransitionsIntentService;
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
+        LocationListener {
+
+    ActionBar actionBar;
+
         LocationClient.OnAddGeofencesResultListener,
         LocationListener
 {
@@ -148,6 +154,9 @@ public class LocationActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         // Initialize the location
         if (mLocationClient == null)
             mLocationClient = new LocationClient(this, this, this);
@@ -170,7 +179,8 @@ public class LocationActivity extends FragmentActivity implements
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        // mLocationClient.requestLocationUpdates(mLocationRequest, this);
+        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+    }
 
         // Start with the request flag set to false
         mInProgress = false;
@@ -1055,6 +1065,31 @@ public class LocationActivity extends FragmentActivity implements
 
             return false;
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_MOVE) {
+            toggleActionBar();
+        }
+        return true;
+    }
+
+    private void toggleActionBar() {
+        ActionBar actionBar = getActionBar();
+
+        if(actionBar != null) {
+            if(actionBar.isShowing()) {
+                actionBar.hide();
+            }
+            else {
+                actionBar.show();
+            }
+        }
+    }
+
+    public void receiveLocation(String location){
+        Toast.makeText(getApplicationContext(), "Location modtaget" + location, Toast.LENGTH_LONG).show();
     }
     //endregion
 }

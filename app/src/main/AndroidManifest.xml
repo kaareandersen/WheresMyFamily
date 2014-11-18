@@ -24,8 +24,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-feature android:name="android.hardware.nfc" />
+    <uses-feature android:name="android.hardware.camera" />
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -183,7 +186,8 @@
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity"
             android:label="@string/title_activity_location"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:parentActivityName=".activities.LoggedInParent">
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
@@ -195,7 +199,8 @@
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.OverviewActivity"
             android:label="@string/title_activity_overview"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:parentActivityName=".activities.LoggedInParent">
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
@@ -203,7 +208,8 @@
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.CalendarActivity"
             android:label="@string/title_activity_calendar"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:parentActivityName=".activities.LoggedInParent" >
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />

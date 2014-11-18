@@ -3,7 +3,7 @@
     <item
         android:id="@+id/menu_settings"
         android:orderInCategory="4"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:icon="@drawable/ic_action_place"
         android:title="Settings">
     </item>

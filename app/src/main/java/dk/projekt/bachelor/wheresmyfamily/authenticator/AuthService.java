@@ -39,6 +39,7 @@ import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.mobileservices.UserAuthenticationCallback;
 
+import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 import dk.projekt.bachelor.wheresmyfamily.activities.Main;
 
 
@@ -48,6 +49,7 @@ public class AuthService {
     private MobileServiceJsonTable mTableAccounts;
     private MobileServiceJsonTable mTableAuthData;
     private MobileServiceJsonTable mTableCalendarEvents;
+    private MobileServiceJsonTable mTablePushNotification;
     private Context mContext;
     private final String TAG = "AuthService";
     private boolean mShouldRetryAuth;
@@ -62,6 +64,7 @@ public class AuthService {
             mTableAccounts = mClient.getTable("Accounts");
             mTableAuthData = mClient.getTable("AuthData");
             mTableCalendarEvents = mClient.getTable("CalendarEvents");
+            mTablePushNotification = mClient.getTable("PushNotification");
         } catch (MalformedURLException e) {
             Log.e(TAG, "There was an error creating the Mobile Service.  Verify the URL");
         }
@@ -255,18 +258,29 @@ public class AuthService {
         mTableCalendarEvents.insert(newEvent, callback);
     }
 
-    public void getCalendarTableRows(String id) {
-        mTableCalendarEvents.lookUp(id, new TableJsonOperationCallback() {
-            @Override
-            public void onCompleted(JsonObject jsonObject, Exception exception,
-                                    ServiceFilterResponse response) {
-                if (exception == null) {
+    public void getCalendarEvent(String id, TableJsonOperationCallback callback) {
 
-                } else {
-                    Log.e(TAG, "There was an error registering the event: " + exception.getMessage());
-                }
-            }
-        });
+        mTableCalendarEvents.lookUp(id,  callback);
+
+    }
+
+    public void getLocation(String childEmail, TableJsonOperationCallback callback){
+        JsonObject getLoc = new JsonObject();
+        getLoc.addProperty("email", childEmail);
+        List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
+        parameters.add(new Pair<String, String>("getlocation", "true"));
+
+        mTablePushNotification.insert(getLoc, parameters, callback);
+    }
+
+    public void sendLocation(String parentEmail, String location, TableJsonOperationCallback callback) {
+        JsonObject sendLoc = new JsonObject();
+        sendLoc.addProperty("email", parentEmail);
+        sendLoc.addProperty("location", location);
+        List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
+        parameters.add(new Pair<String, String>("sendlocation", "true"));
+
+        mTablePushNotification.insert(sendLoc, parameters, callback);
     }
 
     /**
