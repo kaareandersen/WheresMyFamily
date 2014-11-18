@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
 
+import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInParent;
 
@@ -46,6 +47,18 @@ public class MyHandler extends NotificationsHandler {
             //i.putExtra("msgEvent", eventID);
             //ctx.startActivity(i);
         }
+        if(sepMessage[0].equals("GetLocation")){
+            newMessage = "Lokations anmodning modtaget";
+
+            ((LoggedInChild)ctx).sendLocation();
+        }
+        if (sepMessage[0].equals("SendLocation")){
+            String location = sepMessage[1];
+            newMessage = "Lokation modtaget";
+
+            ((LocationActivity)ctx).receiveLocation(location);
+        }
+
 
         Log.d(TAG, "onReceive");
         sendNotification(newMessage);

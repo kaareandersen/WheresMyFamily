@@ -300,4 +300,21 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
             }
         });
     }
+
+    public void sendLocation(){
+        String parentmail = "";
+        String location = "";
+        mAuthService.sendLocation(parentmail, location, new TableJsonOperationCallback() {
+            @Override
+            public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
+                if (exception == null){
+
+                }
+                else {
+                    Log.e(TAG, "There was an exception sending email: " + exception.getMessage());
+                }
+            }
+        });
+        Toast.makeText(getApplicationContext(), "Location sendt", Toast.LENGTH_LONG).show();
+    }
 }

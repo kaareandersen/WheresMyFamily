@@ -378,4 +378,8 @@ public class LocationActivity extends FragmentActivity implements
             }
         }
     }
+
+    public void receiveLocation(String location){
+        Toast.makeText(getApplicationContext(), "Location modtaget" + location, Toast.LENGTH_LONG).show();
+    }
 }
