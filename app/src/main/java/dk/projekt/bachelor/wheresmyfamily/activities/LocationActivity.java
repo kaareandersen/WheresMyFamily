@@ -51,14 +51,11 @@ import dk.projekt.bachelor.wheresmyfamily.ReceiveTransitionsIntentService;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener,
+        GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener,
         LocationListener {
 
     ActionBar actionBar;
 
-        LocationClient.OnAddGeofencesResultListener,
-        LocationListener
-{
     //region Fields
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
@@ -180,7 +177,7 @@ public class LocationActivity extends FragmentActivity implements
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
         mLocationClient.requestLocationUpdates(mLocationRequest, this);
-    }
+
 
         // Start with the request flag set to false
         mInProgress = false;
