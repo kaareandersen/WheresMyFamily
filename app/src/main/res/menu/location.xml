@@ -4,10 +4,10 @@
         android:id="@+id/menu_settings"
         android:orderInCategory="4"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_place"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:title="Settings">
-    </item>
 
+<menu>
     <item android:id="@+id/map_mode"
         android:showAsAction="never"
         android:title="@string/menu_map_mode_title">
@@ -70,7 +70,8 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="Line connecting 2 points"/>
-
+</menu>
+    </item>
 
     <item android:id="@+id/action_overview"
         android:title="Oversigt"
