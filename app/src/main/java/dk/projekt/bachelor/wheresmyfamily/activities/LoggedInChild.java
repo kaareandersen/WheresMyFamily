@@ -57,11 +57,14 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
     private GoogleCloudMessaging mGcm;
     private NotificationHub mHub;
     private String mRegistrationId;
+    public static LoggedInChild instance = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_child);
+
+        instance = this;
 
         //Notifacation hub Azure
         mGcm = GoogleCloudMessaging.getInstance(this);

@@ -41,7 +41,10 @@ public class MyHandler extends NotificationsHandler {
             newMessage = "Du har modtaget en ny kalender begivenhed";
             String eventID = sepMessage[1];
 
-            ((LoggedInChild)ctx).getEventId(eventID);
+            LoggedInChild loggedinchild = LoggedInChild.instance;
+            loggedinchild.getEventId(eventID);
+
+            //((LoggedInChild)ctx).getEventId(eventID);
 
             //Intent i = new Intent(ctx, LoggedInChild.class);
             //i.putExtra("msgEvent", eventID);
