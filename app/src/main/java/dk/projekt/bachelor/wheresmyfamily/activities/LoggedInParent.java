@@ -58,8 +58,8 @@ public class LoggedInParent extends ListActivity {
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
     private ChildAdapter m_adapter;
     private Runnable viewChild;
-    private String pEmail;
-    private String pUserName;
+    private String uEmail;
+    private String uName;
     private String id;
 
     private String SENDER_ID = "911215571794";
@@ -130,9 +130,9 @@ public class LoggedInParent extends ListActivity {
                 if (exception == null) {
                     JsonArray results = result.getAsJsonArray();
                     JsonElement item = results.get(0);
-                    pEmail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
-                    pUserName = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
-                    mNotificationHubController.registerWithNotificationHubs(pEmail);
+                    uEmail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    uName = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
+                    mNotificationHubController.registerWithNotificationHubs(uEmail);
                 } else {
                     Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
                 }
