@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Controller;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -44,7 +44,6 @@ public class NotificationHubController {
                     mRegistrationId = mGcm.register(SENDER_ID);
                     Log.i(TAG, "Registered with id: " + mRegistrationId + "Tag: " + email);
                     mHub.register(mRegistrationId, email);
-                    //mAuthService.callApi();
                 } catch (Exception e) {
                     Log.e(TAG, "Issue registering with hub: " + e.getMessage());
                     return e;

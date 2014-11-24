@@ -31,12 +31,12 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
-import dk.projekt.bachelor.wheresmyfamily.NotificationHubController;
-import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -100,10 +100,10 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
 
         // Authenticate
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
-        AuthService authService = myApp.getAuthService();
+        MobileServicesClient mobileServicesClient = myApp.getAuthService();
 
         //Fetch auth data (the username) on load
-           mAuthService.getAuthData(new TableJsonQueryCallback() {
+           mMobileServicesClient.getAuthData(new TableJsonQueryCallback() {
                @Override
                public void onCompleted(JsonElement result, int count, Exception exception,
                                        ServiceFilterResponse response) {
@@ -192,7 +192,7 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_logout:
-                mAuthService.logout(true);
+                mMobileServicesClient.logout(true);
                 mNotificationHubController.unRegisterNH();
                 return true;
             case R.id.action_deleteusr:
@@ -223,7 +223,7 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
 
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
-                mAuthService.deleteUser();
+                mMobileServicesClient.deleteUser();
                 mNotificationHubController.unRegisterNH();
                 dialog.dismiss();
             }

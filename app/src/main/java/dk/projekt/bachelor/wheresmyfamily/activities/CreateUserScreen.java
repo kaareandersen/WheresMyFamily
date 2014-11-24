@@ -119,7 +119,7 @@ public class CreateUserScreen extends BaseActivity {
                 Log.w(TAG, "The passwords you've entered don't match");
                 return;
             } else {
-                mAuthService.registerUser(mTxtUsername.getText().toString(),
+                mMobileServicesClient.registerUser(mTxtUsername.getText().toString(),
                         mTxtPassword.getText().toString(),
                         mTxtConfirm.getText().toString(),
                         mTxtEmail.getText().toString(),
@@ -130,7 +130,7 @@ public class CreateUserScreen extends BaseActivity {
                                                     ServiceFilterResponse response) {
                                 if (exception == null) {
 
-                                    mAuthService.setUserAndSaveData(jsonObject);
+                                    mMobileServicesClient.setUserAndSaveData(jsonObject);
 
                                     mActivity.finish();
 

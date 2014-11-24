@@ -3,17 +3,19 @@ package dk.projekt.bachelor.wheresmyfamily.authenticator;
 import android.app.Activity;
 import android.app.Application;
 
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
+
 public class AuthenticationApplication extends Application {
-    private AuthService mAuthService;
+    private MobileServicesClient mMobileServicesClient;
     private Activity mCurrentActivity;
 
     public AuthenticationApplication() {}
 
-    public AuthService getAuthService() {
-        if (mAuthService == null) {
-            mAuthService = new AuthService(this);
+    public MobileServicesClient getAuthService() {
+        if (mMobileServicesClient == null) {
+            mMobileServicesClient = new MobileServicesClient(this);
         }
-        return mAuthService;
+        return mMobileServicesClient;
     }
 
     public void setCurrentActivity(Activity activity) {

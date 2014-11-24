@@ -35,11 +35,11 @@ import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.NotificationHubController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -51,7 +51,7 @@ public class LoggedInParent extends ListActivity {
     private TextView mLblUsernameValue;
     private EditText parentName;
     private ListView m_list;
-    protected AuthService mAuthService;
+    protected MobileServicesClient mMobileServicesClient;
     protected NotificationHubController mNotificationHubController;
 
     private ProgressDialog m_ProgressDialog = null;
@@ -91,7 +91,7 @@ public class LoggedInParent extends ListActivity {
         //Because BaseActivity extension isnt possible
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         myApp.setCurrentActivity(this);
-        mAuthService = myApp.getAuthService();
+        mMobileServicesClient = myApp.getAuthService();
 
         this.m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
         ListView myList = (ListView)findViewById(android.R.id.list);
@@ -122,8 +122,8 @@ public class LoggedInParent extends ListActivity {
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
         //Fetch auth data (the username) on load
-        AuthService authService = myApp.getAuthService();
-        authService.getAuthData(new TableJsonQueryCallback() {
+        MobileServicesClient mobileServicesClient = myApp.getAuthService();
+        mobileServicesClient.getAuthData(new TableJsonQueryCallback() {
             @Override
             public void onCompleted(JsonElement result, int count, Exception exception,
                                     ServiceFilterResponse response) {
@@ -238,7 +238,7 @@ public class LoggedInParent extends ListActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_logout:
-                mAuthService.logout(true);
+                mMobileServicesClient.logout(true);
                 mNotificationHubController.unRegisterNH();
                 return true;
             case R.id.action_deleteusr:
@@ -255,7 +255,7 @@ public class LoggedInParent extends ListActivity {
 
     public void callApi(View view) {
 
-        mAuthService.callApi();
+        mMobileServicesClient.callApi();
     }
 
     public void reg(View v)
@@ -274,7 +274,7 @@ public class LoggedInParent extends ListActivity {
 
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
-                mAuthService.deleteUser();
+                mMobileServicesClient.deleteUser();
                 mNotificationHubController.unRegisterNH();
                 dialog.dismiss();
             }

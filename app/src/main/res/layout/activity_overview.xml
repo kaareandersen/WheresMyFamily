@@ -106,10 +106,12 @@
         </LinearLayout>
 
     <Button
+        android:id="@+id/btnaddplace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/overview_save_place_button"
         android:layout_below="@+id/overview_address_layout"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:onClick="onClick"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+
 </LinearLayout>

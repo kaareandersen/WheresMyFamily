@@ -6,12 +6,12 @@ package dk.projekt.bachelor.wheresmyfamily.helper;
 import android.app.Activity;
 import android.os.Bundle;
 
-import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 public class BaseActivity extends Activity {
 
-    protected AuthService mAuthService;
+    protected MobileServicesClient mMobileServicesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +19,6 @@ public class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         myApp.setCurrentActivity(this);
-        mAuthService = myApp.getAuthService();
+        mMobileServicesClient = myApp.getAuthService();
     }
 }
