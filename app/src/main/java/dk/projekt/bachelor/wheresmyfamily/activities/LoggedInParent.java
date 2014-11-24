@@ -36,7 +36,8 @@ import java.util.ArrayList;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.LocationService;
-import dk.projekt.bachelor.wheresmyfamily.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -50,13 +51,14 @@ public class LoggedInParent extends ListActivity {
     private EditText parentName;
     private ListView m_list;
     protected AuthService mAuthService;
+    protected NotificationHubController mNotificationHubController;
 
     private ProgressDialog m_ProgressDialog = null;
     private ArrayList<Child> m_My_children = null;
     private ChildAdapter m_adapter;
     private Runnable viewChild;
-    private String partitionKey;
-    private String rowKey;
+    private String pEmail;
+    private String pUserName;
     private String id;
 
     private String SENDER_ID = "911215571794";
@@ -74,6 +76,8 @@ public class LoggedInParent extends ListActivity {
         m_My_children = loadChildren();
 
         getListView().setOnItemClickListener(listlistener);
+
+        mNotificationHubController = new NotificationHubController(this);
 
         //Because BaseActivity extension isnt possible
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
@@ -98,16 +102,6 @@ public class LoggedInParent extends ListActivity {
         thread.start();
         m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Please wait...", "Retrieving data ...", true);
 
-
-        mGcm = GoogleCloudMessaging.getInstance(this);
-
-        String connectionString =
-                "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
-        mHub = new NotificationHub("WheresMyFamiluMSHub", connectionString, this);
-        NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);
-        registerWithNotificationHubs();
-
-
         //get UI elements
 
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
@@ -122,13 +116,15 @@ public class LoggedInParent extends ListActivity {
                 if (exception == null) {
                     JsonArray results = result.getAsJsonArray();
                     JsonElement item = results.get(0);
-                    partitionKey = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
-                    rowKey = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
+                    pEmail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    pUserName = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
+                    mNotificationHubController.registerWithNotificationHubs(pEmail);
                 } else {
                     Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
                 }
             }
         });
+
 
         Intent intent = new Intent(this, LocationService.class);
         startService(intent);
@@ -139,25 +135,6 @@ public class LoggedInParent extends ListActivity {
         super.onResume();
 
         m_My_children = loadChildren();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void registerWithNotificationHubs() {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... params) {
-                try {
-                    mRegistrationId = mGcm.register(SENDER_ID);
-                    Log.i(TAG, "Registered with id: " + mRegistrationId);
-                    mHub.register(mRegistrationId, "parent");
-                    //mAuthService.callApi();
-                } catch (Exception e) {
-                    Log.e(TAG, "Issue registering with hub: " + e.getMessage());
-                    return e;
-                }
-                return null;
-            }
-        }.execute(null, null, null);
     }
 
     private Runnable returnRes = new Runnable() {
@@ -270,6 +247,7 @@ public class LoggedInParent extends ListActivity {
         switch (id) {
             case R.id.action_logout:
                 mAuthService.logout(true);
+                mNotificationHubController.unRegisterNH();
                 return true;
             case R.id.action_deleteusr:
                 deleteDialogBox();
@@ -305,6 +283,7 @@ public class LoggedInParent extends ListActivity {
             public void onClick(DialogInterface dialog, int which) {
                 // Do nothing but close the dialog
                 mAuthService.deleteUser();
+                mNotificationHubController.unRegisterNH();
                 dialog.dismiss();
             }
 

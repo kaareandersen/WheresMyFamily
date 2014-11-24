@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -11,6 +11,7 @@ import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.OverviewActivity;

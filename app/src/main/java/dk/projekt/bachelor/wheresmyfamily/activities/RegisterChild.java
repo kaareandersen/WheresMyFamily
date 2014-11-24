@@ -63,8 +63,6 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
         setContentView(R.layout.activity_register_child2);
 
-        Toast.makeText(this, "RegisterChild onCreate", Toast.LENGTH_SHORT).show();
-
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
         parentNameEditText = (EditText)findViewById(R.id.parentNameInfo);
 
@@ -95,8 +93,6 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     @Override
     protected void onResume() {
         super.onResume();
-
-        Toast.makeText(this, "RegisterChild onResume", Toast.LENGTH_SHORT).show();
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();

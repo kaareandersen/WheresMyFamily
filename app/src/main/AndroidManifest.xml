@@ -205,7 +205,7 @@
                 android:value="splitActionBarWhenNarrow" />
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.CalendarActivity"
+            android:name=".activities.CalendarActivity"
             android:label="@string/title_activity_calendar"
             android:uiOptions="splitActionBarWhenNarrow"
             android:parentActivityName=".activities.LoggedInParent" >
