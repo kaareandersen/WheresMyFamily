@@ -5,36 +5,46 @@ import java.io.Serializable;
 /**
  * Created by Tommy on 24-09-2014.
  */
-public class Child implements Serializable {
+public class Child extends User implements Serializable {
 
-    public String name;
-    public String phone;
-    public String eMail;
-    public String deviceID;
-    public String status;
+    public String childName;
+    public String childPhone;
+    public String childEmail;
+    public String childStatus;
 
-    public Child() {};
+    public Child() {}
 
-    public Child(String _name, String _phone)
+    public Child(String _name, String _phone, String _email)
     {
-        name = _name;
-        phone = _phone;
+        setName(_name);
+        setPhone(_phone);
+        seteMail(_email);
     }
 
-    // region Get and set
-    public String getChildName() {
-        return name;
+    //region Get and set
+    public String getName() {
+        return childName;
     }
-    public void setChildName(String childName) {
-        this.name = childName;
+    public void setName(String name) {
+        this.childName = name;
     }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public String geteMail() { return eMail; }
-    public void seteMail(String eMail) { this.eMail = eMail; }
-    public String getChildStatus() {
-        return status;
+    public String getPhone() {
+        return childPhone;
     }
-    public void setChildStatus(String childStatus) { this.status = childStatus; }
+    public void setPhone(String phone) {
+        this.childPhone = phone;
+    }
+    public String geteMail() {
+        return childEmail;
+    }
+    public void seteMail(String eMail) {
+        this.childEmail = eMail;
+    }
+    public String getStatus() {
+        return childStatus;
+    }
+    public void setStatus(String status) {
+        this.childStatus = status;
+    }
     //endregion
 }

@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,21 +30,23 @@ import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import org.json.JSONArray;
 
-import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
+import java.util.ArrayList;
+
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
-import dk.projekt.bachelor.wheresmyfamily.LocationService;
+import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.MyHandler;
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
+import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class LoggedInChild extends BaseActivity implements LocationListener {
 
+    //region Fields
     private final String TAG = "LoggedInChild";
     private TextView mLblUsernameValue,parentInfoName, parentInfoPhone;
     Parent parent = new Parent();
@@ -58,6 +59,15 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
     private NotificationHub mHub;
     private String mRegistrationId;
     public static LoggedInChild instance = null;
+
+    JSONArray mChildren = new JSONArray();
+    ArrayList<Parent> mParents = new ArrayList<Parent>();
+    String childrenPrefName = "myChildren";
+    String parentsPrefName = "myParents";
+    String childrenKey = "childrenInfo";
+    String parentsKey = "parentsInfo";
+    UserInfoStorage storage = new UserInfoStorage();
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,18 +88,19 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
         parentInfoName = (TextView) findViewById(R.id.parentinput);
         parentInfoPhone = (TextView) findViewById(R.id.phoneinput);
 
-        Toast.makeText(this, "LoggedInChild OnCreate", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "LoggedInChild OnCreate", Toast.LENGTH_SHORT).show();
 
         MapFragment mapFragment = MapFragment.newInstance();
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
-
         // Get parent info
-        parent = loadParent();
+        mParents = storage.loadParents(this);
 
-        parentInfoName.setText(parent.name);
-        parentInfoPhone.setText(parent.phone);
-
+        if(mParents.size() > 0)
+        {
+            parentInfoName.setText(mParents.get(0).getName());
+            parentInfoPhone.setText(mParents.get(0).getPhone());
+        }
 
         // Authenticate
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
@@ -129,7 +140,7 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
             public void onClick(View arg0) {
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + parent.phone));
+                callIntent.setData(Uri.parse("tel:" + parent.parentPhone));
                 startActivity(callIntent);
             }
 
@@ -140,13 +151,16 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
     protected void onResume() {
         super.onResume();
 
-        Toast.makeText(this, "LoggedInChild OnResume", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "LoggedInChild OnResume", Toast.LENGTH_SHORT).show();
 
         // Get and show parent info
-        parent = loadParent();
+        mParents = storage.loadParents(this);
 
-        parentInfoName.setText(parent.name);
-        parentInfoPhone.setText(parent.phone);
+        if(mParents.size() > 0)
+        {
+            parentInfoName.setText(mParents.get(0).getName());
+            parentInfoPhone.setText(mParents.get(0).getPhone());
+        }
 
         // Define the criteria on how to select the location provider
         Criteria criteria = new Criteria();
@@ -192,42 +206,6 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public void saveParent(Parent parent)
-    {
-        try
-        {
-            InternalStorage.writeObject(this, "Parent", parent);
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public Parent loadParent()
-    {
-        Parent retVal = null;
-
-        try
-        {
-            retVal = (Parent) InternalStorage.readObject(this, "Parent");
-        }
-        catch(FileNotFoundException fe)
-        {
-            fe.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException ce)
-        {
-            ce.printStackTrace();
-        }
-
-        return retVal == null ? new Parent() : retVal;
     }
 
     @Override
@@ -286,9 +264,6 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
 
     public void getEventId(String eventID){
 
-        //Bundle bundle = getIntent().getExtras();
-        //String message = bundle.getString("message");
-
         mAuthService.getCalendarEvent (eventID, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception,
@@ -320,4 +295,40 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
         });
         Toast.makeText(getApplicationContext(), "Location sendt", Toast.LENGTH_LONG).show();
     }
+
+    /*public void saveParent(Parent parent)
+    {
+        try
+        {
+            InternalStorage.writeObject(this, "Parent", parent);
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public Parent loadParent()
+    {
+        Parent retVal = null;
+
+        try
+        {
+            retVal = (Parent) InternalStorage.readObject(this, "Parent");
+        }
+        catch(FileNotFoundException fe)
+        {
+            fe.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException ce)
+        {
+            ce.printStackTrace();
+        }
+
+        return retVal == null ? new Parent() : retVal;
+    }*/
 }

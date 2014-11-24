@@ -188,7 +188,7 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
             double upperRightLatitude= 0;
             double upperRightLongitude= 0;*/
             // Geocoding = get GPS coordinates from address
-            addresses = geocoder.getFromLocationName(str, 100);
+            addresses = geocoder.getFromLocationName(str, 1);
             if(addresses.size() > 0)
             {
                 double latitude = addresses.get(0).getLatitude();

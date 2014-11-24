@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import dk.projekt.bachelor.wheresmyfamily.LocationService;
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 public class Main extends BaseActivity {
 

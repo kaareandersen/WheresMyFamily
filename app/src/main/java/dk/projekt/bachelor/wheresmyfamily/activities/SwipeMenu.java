@@ -9,12 +9,10 @@ import android.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import dk.projekt.bachelor.wheresmyfamily.LocationService;
+import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.fragments.MapFragment;
 import dk.projekt.bachelor.wheresmyfamily.helper.TabPagerAdapter;
 
 

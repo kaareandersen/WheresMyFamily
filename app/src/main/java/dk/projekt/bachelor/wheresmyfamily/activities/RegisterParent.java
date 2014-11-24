@@ -20,20 +20,19 @@ import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
-public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback
+public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback,
+        NfcAdapter.OnNdefPushCompleteCallback // FIXME
 {
 
     //region Fields
@@ -48,6 +47,13 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     EditText childNameEditText;
     String userName;
     String userPhone;
+    ArrayList<Child> mChildren = new ArrayList<Child>();
+    ArrayList<Parent> mParents = new ArrayList<Parent>();
+    String childrenPrefName = "myChildren";
+    String parentsPrefName = "myParents";
+    String childrenKey = "childrenInfo";
+    String parentsKey = "parentsInfo";
+    UserInfoStorage storage = new UserInfoStorage();
     //endregion
 
     public RegisterParent(){}
@@ -60,12 +66,12 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        Toast.makeText(this, "RegisterParent OnCreate", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "RegisterParent OnCreate", Toast.LENGTH_SHORT).show();
 
         childNameEditText = (EditText) findViewById(R.id.childNameInfo);
         childPhoneEditText = (EditText) findViewById(R.id.childPhoneInfo);
 
-        myChildren = loadChildren();
+        mChildren = storage.loadChildren(this);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -76,7 +82,8 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
                     Toast.LENGTH_LONG).show();
             startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
         }
-        else{
+        else
+        {
             Toast.makeText(RegisterParent.this,
                     "Klar til registréring af forælder",
                     Toast.LENGTH_LONG).show();
@@ -88,9 +95,9 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     protected void onResume() {
         super.onResume();
 
-        Toast.makeText(this, "RegisterParent OnResume", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "RegisterParent OnResume", Toast.LENGTH_SHORT).show();
 
-        myChildren = loadChildren();
+        mChildren = storage.loadChildren(this);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         AuthService authService = myApp.getAuthService();
@@ -115,9 +122,10 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
                     if(isUserChild)
                     {
-                        myChildren.add(new Child(userName, userPhone));
+                        mChildren.add(new Child(userName, userPhone, null));
 
-                        saveChildren(myChildren);
+                        // saveChildren(myChildren);
+                        storage.saveChildren(getApplicationContext(), mChildren);
 
                         childNameEditText.setText(userName);
                         childPhoneEditText.setText(userPhone);
@@ -151,18 +159,18 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     protected void onPause() {
         super.onPause();
 
-        Toast.makeText(this, "RegisterParent OnPause", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "RegisterParent OnPause", Toast.LENGTH_SHORT).show();
 
-        saveChildren(myChildren);
+        storage.saveChildren(this, mChildren);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        Toast.makeText(this, "RegisterParent OnRestart", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "RegisterParent OnRestart", Toast.LENGTH_SHORT).show();
 
-        myChildren = loadChildren();
+        mChildren = storage.loadChildren(this);
     }
 
     @Override
@@ -200,14 +208,6 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         byte[] childNameOut = stringOut.getBytes();
         byte[] childPhoneOut = childPhoneString.getBytes();
 
-        /*return new NdefMessage
-                (
-                new NdefRecord[]
-                        {
-                        NdefRecord.createExternal("app/dk.projekt.bachelor.wheresmyfamily", "ChildName", childNameOut),
-                        NdefRecord.createExternal("app/dk.projekt.bachelor.wheresmyfamily", "ChildPhone", childPhoneOut)
-                        }
-                );*/
         return new NdefMessage
                 (
                  new NdefRecord
@@ -217,17 +217,6 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
                         (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
                                 new byte[]{}, childPhoneOut)
                 );
-
-        /*return new NdefMessage
-                (
-                        new NdefRecord[]
-                                {
-                                        NdefRecord.createMime("app/dk.projekt.bachelor.wheresmyfamily", childNameOut),
-                                        NdefRecord.createMime("app/dk.projekt.bachelor.wheresmyfamily", childPhoneOut)
-                                        // NdefRecord.createApplicationRecord("dk.projekt.bachelor.wheresmyfamily")
-                                }
-                );*/
-
     }
 
     void processIntent(Intent intent)
@@ -245,14 +234,19 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        parent = new Parent(userName, userPhone);
-
-        saveParent(parent);
+        mParents.add(new Parent(userName, userPhone, null));
+        storage.saveParents(this, mParents);
 
         isNFCMessageNew = false;
     }
 
-    public void saveParent(Parent parent)
+    @Override
+    public void onNdefPushComplete(NfcEvent nfcEvent) {
+        Toast.makeText(this, "Dit barn " + parent.parentName + " Tlf. " + parent.parentPhone + " er nu registréret",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /*public void saveParent(Parent parent)
     {
         try
         {
@@ -312,5 +306,5 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         }
 
         return retVal == null ? new ArrayList<Child>() : retVal;
-    }
+    }*/
 }
