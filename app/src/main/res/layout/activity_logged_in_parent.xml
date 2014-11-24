@@ -40,8 +40,6 @@
                 android:layout_height="fill_parent"
                 android:text="@string/main_no_items"/>
 
-
-
             <!--<TextView
                 android:id="@+id/lblUsername"
                 android:layout_width="wrap_content"
@@ -54,9 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:text="TextView" />
-
-            -->
+                android:text="TextView" />-->
         </LinearLayout>
         <Button
             android:id="@+id/test_button"
@@ -66,15 +62,5 @@
             android:text="Test"
             android:clickable="true"
             android:onClick="callApi"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:text="Opret fast sted"
-            android:clickable="true"
-            android:onClick="createLocation"
-            />
     </RelativeLayout>
 </RelativeLayout>

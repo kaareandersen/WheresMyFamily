@@ -177,7 +177,7 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name="dk.projekt.bachelor.wheresmyfamily.LocationService"
+            android:name=".Services.LocationService"
             android:enabled="true"
             android:exported="true" >
         </service>
@@ -215,11 +215,11 @@
         </activity>
 
         <service
-            android:name="dk.projekt.bachelor.wheresmyfamily.ReceiveTransitionsIntentService"
+            android:name=".Services.ReceiveTransitionsIntentService"
             android:exported="false" >
         </service>
         <service
-            android:name="dk.projekt.bachelor.wheresmyfamily.ActivityRecognitionIntentService"
+            android:name=".Services.ActivityRecognitionIntentService"
             android:exported="false" >
         </service>
     </application>

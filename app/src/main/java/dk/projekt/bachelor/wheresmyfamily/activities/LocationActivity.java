@@ -44,10 +44,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.projekt.bachelor.wheresmyfamily.ActivityRecognitionIntentService;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.ReceiveTransitionsIntentService;
+import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
@@ -147,6 +148,11 @@ public class LocationActivity extends FragmentActivity implements
     LocationManager locationManager;
 
     DataReadRequest dataReadRequest;
+
+    public static final String myPrefs = "PrefsFile";
+    SharedPreferences.Editor prefsEditor;
+    SharedPreferences prefs;
+    Child myChild;
     //endregion
 
     //region Lifecycle events

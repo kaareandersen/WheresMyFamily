@@ -1,6 +1,6 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Services;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
-public class LocationService extends Service implements
+public class LocationService extends IntentService implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         LocationListener {
@@ -23,11 +23,12 @@ public class LocationService extends Service implements
     private boolean currentlyProcessingLocation = false;
     private LocationRequest locationRequest;
     private LocationClient locationClient;
-    private int locationRequestInterval = 10000;
-    private int fastestLocationRequestInterval = 10000;
+    private int locationRequestInterval = 1000000;
+    private int fastestLocationRequestInterval = 1000000;
     private int mStartId;
 
     public LocationService() {
+        super(TAG);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class LocationService extends Service implements
         if (!currentlyProcessingLocation) {
             currentlyProcessingLocation = true;
             startTracking();
-            currentlyProcessingLocation = true;
+            // currentlyProcessingLocation = true;
         }
 
         // mStartId = startId;
@@ -47,6 +48,11 @@ public class LocationService extends Service implements
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         return null;
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+
     }
 
     @Override
@@ -70,6 +76,7 @@ public class LocationService extends Service implements
         Log.e(TAG, "onDisconnected");
 
         Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show();
+        locationClient = null;
     }
 
     @Override

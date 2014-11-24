@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
