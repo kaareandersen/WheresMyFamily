@@ -34,12 +34,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
-import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -74,6 +74,7 @@ public class LoggedInParent extends ListActivity {
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
     UserInfoStorage storage = new UserInfoStorage();
+    Child currentChild = new Child();
     //endregion
 
     @Override
@@ -139,6 +140,8 @@ public class LoggedInParent extends ListActivity {
             }
         });
 
+        registerForContextMenu(getListView());
+
         Intent intent = new Intent(this, LocationService.class);
         startService(intent);
     }
@@ -148,6 +151,13 @@ public class LoggedInParent extends ListActivity {
         super.onResume();
 
         m_My_children = storage.loadChildren(this);
+
+        for(int i = 0; i < m_My_children.size(); i++)
+        {
+            // Set current user to none
+            m_My_children.get(i).setIsCurrent(false);
+        }
+
     }
 
     private Runnable returnRes = new Runnable() {
@@ -214,10 +224,11 @@ public class LoggedInParent extends ListActivity {
     private AdapterView.OnItemClickListener listlistener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
-            //Toast.makeText(getApplicationContext(), "You have clicked on " +
-                   // ((Child)parent.getItemAtPosition(Position)).getChildName(), Toast.LENGTH_SHORT).show();
             Intent childClick = new Intent(LoggedInParent.this, OverviewActivity.class);
             startActivity(childClick);
+
+            // Set selected user to current user
+            m_My_children.get(position).setIsCurrent(true);
         }
     };
 

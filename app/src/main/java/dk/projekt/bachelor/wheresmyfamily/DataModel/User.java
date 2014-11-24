@@ -7,19 +7,22 @@ import java.io.Serializable;
  */
 public class User implements Serializable {
 
-    String userName;
-    String userPhone;
-    String userEmail;
+    private String userName;
+    private String userPhone;
+    private String userEmail;
+    private Boolean isCurrent;
 
     public User(){}
 
-    public User(String _userName, String _userPhone, String _userEmail)
+    public User(String _userName, String _userPhone, String _userEmail, boolean _isCurrent)
     {
         setName(_userName);
         setPhone(_userPhone);
         setEmail(_userEmail);
+        setIsCurrent(_isCurrent);
     }
 
+    //region Get and set
     public String getName() {
         return userName;
     }
@@ -38,4 +41,11 @@ public class User implements Serializable {
     public void setEmail(String userEmail) {
         this.userEmail = userEmail;
     }
+    public Boolean getIsCurrent() {
+        return isCurrent;
+    }
+    public void setIsCurrent(Boolean isCurrent) {
+        this.isCurrent = isCurrent;
+    }
+    //endregion
 }

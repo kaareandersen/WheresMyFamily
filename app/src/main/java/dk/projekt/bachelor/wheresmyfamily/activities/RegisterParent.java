@@ -34,7 +34,6 @@ import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback,
         NfcAdapter.OnNdefPushCompleteCallback // FIXME
 {
-
     //region Fields
     NfcAdapter nfcAdapter;
     Boolean isUserChild;
@@ -117,13 +116,13 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
                             "UserName").getAsString();
                     String userPhone = item.getAsJsonObject().getAsJsonPrimitive(
                             "Phone").getAsString();
-                    String userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    // String userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
 
                     isUserChild = item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean();
 
                     if(isUserChild)
                     {
-                        mChildren.add(new Child(userName, userPhone, userMail));
+                        mChildren.add(new Child(userName, userPhone, null, null));
 
                         // saveChildren(myChildren);
                         storage.saveChildren(getApplicationContext(), mChildren);
@@ -229,15 +228,15 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
-        NdefRecord NdefRecord_2 = inNdefRecords[2];
+        // NdefRecord NdefRecord_2 = inNdefRecords[2];
 
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
-        userMail = new String(NdefRecord_2.getPayload());
+        // userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        mParents.add(new Parent(userName, userPhone, userMail));
+        mParents.add(new Parent(userName, userPhone, null, null));
         storage.saveParents(this, mParents);
 
         isNFCMessageNew = false;
@@ -245,7 +244,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
-        Toast.makeText(this, "Dit barn " + parent.parentName + " Tlf. " + parent.parentPhone + " er nu registréret",
+        Toast.makeText(this, "Din forælder " + parent.getName() + " Tlf. " + parent.getPhone() + " er nu registréret",
                 Toast.LENGTH_SHORT).show();
     }
 

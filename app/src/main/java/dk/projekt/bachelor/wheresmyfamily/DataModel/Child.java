@@ -7,44 +7,53 @@ import java.io.Serializable;
  */
 public class Child extends User implements Serializable {
 
-    public String childName;
-    public String childPhone;
-    public String childEmail;
-    public String childStatus;
+    private String childName;
+    private String childPhone;
+    private String childEmail;
+    private Boolean isCurrentChild;
 
     public Child() {}
 
-    public Child(String _name, String _phone, String _email)
+    public Child(String _name, String _phone, String _email, Boolean _isCurrentChild)
     {
         setName(_name);
         setPhone(_phone);
-        seteMail(_email);
+        setEmail(_email);
+        setIsCurrent(_isCurrentChild);
     }
 
     //region Get and set
+    @Override
     public String getName() {
         return childName;
     }
+    @Override
     public void setName(String name) {
         this.childName = name;
     }
+    @Override
     public String getPhone() {
         return childPhone;
     }
+    @Override
     public void setPhone(String phone) {
         this.childPhone = phone;
     }
-    public String geteMail() {
+    @Override
+    public String getEmail() {
         return childEmail;
     }
-    public void seteMail(String eMail) {
+    @Override
+    public void setEmail(String eMail) {
         this.childEmail = eMail;
     }
-    public String getStatus() {
-        return childStatus;
+    @Override
+    public Boolean getIsCurrent() {
+        return isCurrentChild;
     }
-    public void setStatus(String status) {
-        this.childStatus = status;
+    @Override
+    public void setIsCurrent(Boolean isCurrent) {
+        this.isCurrentChild = isCurrent;
     }
     //endregion
 }

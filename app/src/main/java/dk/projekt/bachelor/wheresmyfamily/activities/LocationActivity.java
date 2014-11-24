@@ -192,7 +192,6 @@ public class LocationActivity extends FragmentActivity implements
 
         // mLocationClient.requestLocationUpdates(mLocationRequest, this);
 
-
         // Start with the request flag set to false
         mInProgress = false;
 
@@ -250,15 +249,6 @@ public class LocationActivity extends FragmentActivity implements
                 break;
             case R.id.menu_set_terrain:
                 map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                break;
-            case R.id.menu_showtraffic:
-                map.setTrafficEnabled(true);
-                break;
-            case R.id.menu_zoomin:
-                map.animateCamera(CameraUpdateFactory.zoomIn());
-                break;
-            case R.id.menu_zoomout:
-                map.animateCamera(CameraUpdateFactory.zoomOut());
                 break;
             case R.id.menu_gotolocation:
                 CameraPosition cameraPosition = new CameraPosition.Builder()
