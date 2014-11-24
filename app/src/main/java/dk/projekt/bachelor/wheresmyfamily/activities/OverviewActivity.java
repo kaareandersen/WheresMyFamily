@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import dk.projekt.bachelor.wheresmyfamily.CalendarActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
 
 

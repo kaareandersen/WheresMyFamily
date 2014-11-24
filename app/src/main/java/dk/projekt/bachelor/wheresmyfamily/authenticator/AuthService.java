@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
 import android.webkit.CookieManager;
@@ -90,14 +91,27 @@ public class AuthService {
                 });
     }
 
-    public void login(String email, String password, TableJsonOperationCallback callback) {
-        JsonObject customUser = new JsonObject();
-        customUser.addProperty("email", email);
-        customUser.addProperty("password", password);
-        List<Pair<String,String>> parameters = new ArrayList<Pair<String, String>>();
-        parameters.add(new Pair<String, String>("login", "true"));
 
-        mTableAccounts.insert(customUser, parameters, callback);
+    @SuppressWarnings("unchecked")
+    public void login(final String email, final String password, final TableJsonOperationCallback callback) {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object... params) {
+            try {
+                JsonObject customUser = new JsonObject();
+                customUser.addProperty("email", email);
+                customUser.addProperty("password", password);
+                List<Pair<String, String>> parameters = new ArrayList<Pair<String, String>>();
+                parameters.add(new Pair<String, String>("login", "true"));
+
+                mTableAccounts.insert(customUser, parameters, callback);
+            } catch (Exception e) {
+                Log.e(TAG, "Issue registering with hub: " + e.getMessage());
+                return e;
+            }
+            return null;
+            }
+        }.execute(null, null, null);
     }
 
     public void sendEmailPassW(String email, TableJsonOperationCallback callback) {

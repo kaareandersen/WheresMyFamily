@@ -2,7 +2,6 @@ package dk.projekt.bachelor.wheresmyfamily;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,9 +14,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
 
+import dk.projekt.bachelor.wheresmyfamily.activities.CalendarActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
-import dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity;
-import dk.projekt.bachelor.wheresmyfamily.activities.RegisterChild;
 
 
 public class OverviewActivity extends Activity implements OnClickListener{

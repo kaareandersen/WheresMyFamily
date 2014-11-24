@@ -1,6 +1,5 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,11 +11,11 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
 
+import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
+import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInParent;
-
-import static dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild.*;
 
 
 /**
@@ -33,6 +32,7 @@ public class MyHandler extends NotificationsHandler {
     public void onReceive(Context context, Bundle bundle) {
         ctx = context;
         mHandler = this;
+        PushNotificationController pushNotificationController = new PushNotificationController(ctx);
         String newMessage = null;
         String nhMessage = bundle.getString("msg");
         String[] sepMessage = nhMessage.split(":");
@@ -41,25 +41,24 @@ public class MyHandler extends NotificationsHandler {
             newMessage = "Du har modtaget en ny kalender begivenhed";
             String eventID = sepMessage[1];
 
-            LoggedInChild loggedinchild = LoggedInChild.instance;
-            loggedinchild.getEventId(eventID);
+            //LoggedInChild loggedinchild = LoggedInChild.instance;
+            //loggedinchild.getEventId(eventID);
 
-            //((LoggedInChild)ctx).getEventId(eventID);
+            pushNotificationController.getEventId(eventID);
 
-            //Intent i = new Intent(ctx, LoggedInChild.class);
-            //i.putExtra("msgEvent", eventID);
-            //ctx.startActivity(i);
         }
         if(sepMessage[0].equals("GetLocation")){
             newMessage = "Lokations anmodning modtaget";
 
-            ((LoggedInChild)ctx).sendLocation();
+            LoggedInChild loggedinchild = LoggedInChild.instance;
+            loggedinchild.getAndPushLocation();
         }
-        if (sepMessage[0].equals("SendLocation")){
+        if (sepMessage[0].equals("ReceiveLocation")){
             String location = sepMessage[1];
             newMessage = "Lokation modtaget";
 
-            ((LocationActivity)ctx).receiveLocation(location);
+            LocationActivity locationactivity = LocationActivity.instance;
+            locationactivity.receiveLocation(location);
         }
 
 

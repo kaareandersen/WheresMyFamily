@@ -41,10 +41,10 @@ public class NewCalEventActivity extends BaseActivity implements
 
     // Variable for storing current date and time
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private String spinnerLoc, spinnerRep, PartitionKey, RowKey, Child, eventID;
+    private String spinnerLoc, spinnerRep, pEmail, cEmail, selectedChild, eventID;
 
     private String[] location = { "Lokation", "Skole", "Hjem", "Grim Ven", "Saltmine" };
-    private String[] repeat = { "Ja" , "Nej"};
+    private String[] repeat = {"", "Ja" , "Nej"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +96,7 @@ public class NewCalEventActivity extends BaseActivity implements
                     JsonElement item = results.get(0);
                     String email = item.getAsJsonObject().getAsJsonPrimitive(
                             "Email").getAsString();
-                    RowKey = email;
+                    pEmail = email;
                 }
                 else
                 {
@@ -106,8 +106,10 @@ public class NewCalEventActivity extends BaseActivity implements
             }
         });
 
-        PartitionKey = "Test@test";
-        Child = "Mowgli";
+        //TODO
+        //Sættes til de rigtige barne værdier
+        cEmail = "q@q.dk";
+        selectedChild = "Lucas";
     }
 
 
@@ -252,8 +254,8 @@ public class NewCalEventActivity extends BaseActivity implements
             Log.w(TAG, "You must enter all fields to save event");
             return;
         } else {
-            mAuthService.newCalEvent(PartitionKey, RowKey, txtEvent.getText().toString(),
-                    spinnerLoc, Child,
+            mAuthService.newCalEvent(pEmail, cEmail, txtEvent.getText().toString(),
+                    spinnerLoc, selectedChild,
                     txtStartDate.getText().toString(),
                     txtStartTime.getText().toString(),
                     txtEndDate.getText().toString(),
@@ -265,7 +267,8 @@ public class NewCalEventActivity extends BaseActivity implements
                                                 ServiceFilterResponse response) {
                             if (exception == null) {
                                 eventID = jsonObject.get("id").getAsString();
-                                //readEvent();
+                                //TODO
+                                //Gem id i shared preff her!!
                                 mActivity.finish();
                             } else {
                                 Toast.makeText(getApplicationContext(),
@@ -276,8 +279,4 @@ public class NewCalEventActivity extends BaseActivity implements
                     });
             }
         }
-
-   // public void readEvent(){
-   //     mAuthService.getCalendarEvent(eventID);
-   // }
 }

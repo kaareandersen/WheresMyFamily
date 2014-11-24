@@ -47,6 +47,8 @@ import java.util.List;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.CalendarActivity;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.ActivityRecognitionIntentService;
+import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 
@@ -56,6 +58,8 @@ public class LocationActivity extends FragmentActivity implements
         LocationListener {
 
     ActionBar actionBar;
+
+    protected PushNotificationController pushNotificationController;
 
     //region Fields
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -138,6 +142,8 @@ public class LocationActivity extends FragmentActivity implements
     // Store the current activity recognition client
     private ActivityRecognitionClient mActivityRecognitionClient;
 
+    public static LocationActivity instance = null;
+
     Address address;
 
     String provider;
@@ -157,18 +163,12 @@ public class LocationActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        instance = this;
+
+        pushNotificationController = new PushNotificationController(this);
+
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        /*myChild = new Child("Test", "1234");
-
-        prefs = getSharedPreferences(myPrefs, MODE_PRIVATE);
-
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(myChild);
-        prefsEditor.putString("myChild", json);
-        prefsEditor.commit();*/
 
         // Initialize the location
         if (mLocationClient == null)
@@ -309,11 +309,6 @@ public class LocationActivity extends FragmentActivity implements
         mLocationClient.connect();
 
         provider = LocationManager.GPS_PROVIDER;
-
-        /*Gson gson = new Gson();
-        String json = prefs.getString("myChild", "");
-        Child obj = gson.fromJson(json, Child.class);
-        Toast.makeText(this, obj.getChildName() + obj.getPhone(), Toast.LENGTH_SHORT).show();*/
     }
 
     @Override
@@ -1106,7 +1101,17 @@ public class LocationActivity extends FragmentActivity implements
         }
     }
 
+    public void askForLocation(){
+        //TODO
+        String childemail = "";
+        pushNotificationController.askForLocationFromChild(childemail);
+
+        Toast.makeText(getApplicationContext(), "Ask for location", Toast.LENGTH_LONG).show();
+    }
+
     public void receiveLocation(String location){
+        //TODO
+        //DO something
         Toast.makeText(getApplicationContext(), "Location modtaget" + location, Toast.LENGTH_LONG).show();
     }
     //endregion
