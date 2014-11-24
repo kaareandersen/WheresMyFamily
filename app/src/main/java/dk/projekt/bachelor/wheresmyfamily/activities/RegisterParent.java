@@ -47,6 +47,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     EditText childNameEditText;
     String userName;
     String userPhone;
+    String userMail;
     ArrayList<Child> mChildren = new ArrayList<Child>();
     ArrayList<Parent> mParents = new ArrayList<Parent>();
     String childrenPrefName = "myChildren";
@@ -122,7 +123,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
                     if(isUserChild)
                     {
-                        mChildren.add(new Child(userName, userPhone, null));
+                        mChildren.add(new Child(userName, userPhone, userMail));
 
                         // saveChildren(myChildren);
                         storage.saveChildren(getApplicationContext(), mChildren);
@@ -228,13 +229,15 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
+        NdefRecord NdefRecord_2 = inNdefRecords[2];
 
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
+        userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        mParents.add(new Parent(userName, userPhone, null));
+        mParents.add(new Parent(userName, userPhone, userMail));
         storage.saveParents(this, mParents);
 
         isNFCMessageNew = false;

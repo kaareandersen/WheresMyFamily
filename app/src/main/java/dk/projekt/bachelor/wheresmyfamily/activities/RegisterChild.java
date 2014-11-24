@@ -12,7 +12,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +39,8 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     //region Fields
     TextView parentNameTextView;
     TextView parentPhoneTextView;
-    EditText parentPhoneEditText;
-    EditText parentNameEditText;
+    TextView parentPhoneEditText;
+    TextView parentNameEditText;
     private boolean isNFCMessageNew = true;
     private final String TAG = "AuthService";
     Parent parent = new Parent();
@@ -72,10 +71,10 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         // Toast.makeText(this, "RegisterChild onCreate", Toast.LENGTH_SHORT).show();
 
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
-        parentNameEditText = (EditText)findViewById(R.id.parentNameInfo);
+        parentNameEditText = (TextView)findViewById(R.id.parentNameInfo);
 
         parentPhoneTextView = (TextView) findViewById(R.id.parentPhoneTextView);
-        parentPhoneEditText = (EditText) findViewById(R.id.parentPhoneInfo);
+        parentPhoneEditText = (TextView) findViewById(R.id.parentPhoneInfo);
 
         mChildren = storage.loadChildren(this);
 
@@ -224,14 +223,14 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
-        // NdefRecord NdefRecord_2 = inNdefRecords[2];
+        NdefRecord NdefRecord_2 = inNdefRecords[2];
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
-        // userMail = new String(NdefRecord_2.getPayload());
+        userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        mChildren.add(new Child(userName, userPhone, null));
+        mChildren.add(new Child(userName, userPhone, userMail));
 
         storage.saveChildren(this, mChildren);
 
