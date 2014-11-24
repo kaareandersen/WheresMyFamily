@@ -140,8 +140,6 @@ public class LoggedInParent extends ListActivity {
             }
         });
 
-        registerForContextMenu(getListView());
-
         Intent intent = new Intent(this, LocationService.class);
         startService(intent);
     }
@@ -152,11 +150,17 @@ public class LoggedInParent extends ListActivity {
 
         m_My_children = storage.loadChildren(this);
 
-        for(int i = 0; i < m_My_children.size(); i++)
+        // If any children are registered
+        if(m_My_children.size() > 0)
         {
-            // Set current user to none
-            m_My_children.get(i).setIsCurrent(false);
+            // Since we are on the home page, set current user to none
+            for(int i = 0; i < m_My_children.size(); i++)
+            {
+                m_My_children.get(i).setIsCurrent(false);
+            }
         }
+
+
 
     }
 
