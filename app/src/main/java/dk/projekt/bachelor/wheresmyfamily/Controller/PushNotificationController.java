@@ -1,7 +1,6 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Controller;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,8 +8,7 @@ import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
-import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 
 /**
  * Created by KaareAndersen on 20/11/14.
@@ -19,16 +17,16 @@ public class PushNotificationController {
 
     private final static String TAG = "PushNotificationController";
     private static Context mContext;
-    private static AuthService mAuthService;
+    private static MobileServicesClient mMobileServicesClient;
 
     public PushNotificationController(Context context) {
         mContext = context;
-        mAuthService = new AuthService(mContext);
+        mMobileServicesClient = new MobileServicesClient(mContext);
     }
 
     public void getEventId(String eventID){
 
-        mAuthService.getCalendarEvent (eventID, new TableJsonOperationCallback() {
+        mMobileServicesClient.getCalendarEvent (eventID, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception,
                                     ServiceFilterResponse response) {
@@ -45,7 +43,7 @@ public class PushNotificationController {
 
     //Skal hente lokation på barnets telefon
     public void sendLocationFromChild(String parentEmail, String location){
-        mAuthService.sendLocation(parentEmail, location, new TableJsonOperationCallback() {
+        mMobileServicesClient.sendLocation(parentEmail, location, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
                 if (exception == null){
@@ -61,7 +59,7 @@ public class PushNotificationController {
 
 
     public void askForLocationFromChild(String childEmail){
-        mAuthService.getLocation(childEmail, new TableJsonOperationCallback() {
+        mMobileServicesClient.getLocation(childEmail, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
                 if (exception == null){

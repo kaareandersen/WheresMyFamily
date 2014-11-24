@@ -36,7 +36,7 @@ public class Main extends BaseActivity {
         btnLoginWithEmail = (Button) findViewById(R.id.btnMainSignIn);
 
         //If user is already authenticated, bypass logging in
-        if (mAuthService.isUserAuthenticated()) {
+        if (mMobileServicesClient.isUserAuthenticated()) {
             Intent loggedInIntent = new Intent(getApplicationContext(), LoggedInParent.class);
             startActivity(loggedInIntent);
         }

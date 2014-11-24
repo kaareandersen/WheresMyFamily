@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;

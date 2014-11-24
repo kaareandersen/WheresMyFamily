@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
 
-import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;

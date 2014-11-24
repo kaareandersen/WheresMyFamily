@@ -29,7 +29,7 @@ import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -43,7 +43,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     EditText parentPhoneEditText;
     EditText parentNameEditText;
     private boolean isNFCMessageNew = true;
-    private final String TAG = "AuthService";
+    private final String TAG = "RegisterChild";
     Parent parent = new Parent();
     Child child = new Child();
     Boolean isUserParent;
@@ -105,10 +105,10 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         // Toast.makeText(this, "RegisterChild onResume", Toast.LENGTH_SHORT).show();
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
-        AuthService authService = myApp.getAuthService();
+        MobileServicesClient mobileServicesClient = myApp.getAuthService();
 
         //Fetch auth data (the username) on load
-        authService.getAuthData(new TableJsonQueryCallback() {
+        mobileServicesClient.getAuthData(new TableJsonQueryCallback() {
             @Override
             public void onCompleted(JsonElement result, int count, Exception exception,
                                     ServiceFilterResponse response)

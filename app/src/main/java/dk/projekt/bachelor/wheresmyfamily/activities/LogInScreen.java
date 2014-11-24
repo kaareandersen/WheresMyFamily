@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
+import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -36,7 +36,6 @@ public class LogInScreen extends BaseActivity {
     private EditText mTxtPassword;
     private TextView mTxtForgetPass;
     private Activity mActivity;
-    //private AuthService mAuthService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +97,7 @@ public class LogInScreen extends BaseActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
                         //Pass email to azure
-                        mAuthService.sendEmailPassW(value, new TableJsonOperationCallback() {
+                        mMobileServicesClient.sendEmailPassW(value, new TableJsonOperationCallback() {
                             @Override
                             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
                                 if (exception == null){
@@ -132,18 +131,18 @@ public class LogInScreen extends BaseActivity {
                     Log.w(TAG, "Email or Password not entered");
                     return;
                 }
-                mAuthService.login(mTxtEmail.getText().toString(), mTxtPassword.getText().toString(), new TableJsonOperationCallback() {
+                mMobileServicesClient.login(mTxtEmail.getText().toString(), mTxtPassword.getText().toString(), new TableJsonOperationCallback() {
                     @Override
                     public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
                         if (exception == null) {
                             //If they've registered successfully, we'll save and set the userdata and then
                             //show the logged in activity
-                            mAuthService.setUserAndSaveData(jsonObject);
+                            mMobileServicesClient.setUserAndSaveData(jsonObject);
                             AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
-                            AuthService authService = myApp.getAuthService();
+                            MobileServicesClient mobileServicesClient = myApp.getAuthService();
 
                             //Fetch auth data (the username) on load
-                            authService.getAuthData(new TableJsonQueryCallback() {
+                            mobileServicesClient.getAuthData(new TableJsonQueryCallback() {
                                 @Override
                                 public void onCompleted(JsonElement result, int count, Exception exception,
                                                         ServiceFilterResponse response) {

@@ -85,7 +85,7 @@ public class NewCalEventActivity extends BaseActivity implements
 
 
         //Fetch auth data (the username) on load
-        mAuthService.getAuthData(new TableJsonQueryCallback() {
+        mMobileServicesClient.getAuthData(new TableJsonQueryCallback() {
             @Override
             public void onCompleted(JsonElement result, int count, Exception exception,
                                     ServiceFilterResponse response)
@@ -254,7 +254,7 @@ public class NewCalEventActivity extends BaseActivity implements
             Log.w(TAG, "You must enter all fields to save event");
             return;
         } else {
-            mAuthService.newCalEvent(pEmail, cEmail, txtEvent.getText().toString(),
+            mMobileServicesClient.newCalEvent(pEmail, cEmail, txtEvent.getText().toString(),
                     spinnerLoc, selectedChild,
                     txtStartDate.getText().toString(),
                     txtStartTime.getText().toString(),

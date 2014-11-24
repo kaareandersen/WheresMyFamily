@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily.authenticator;
+package dk.projekt.bachelor.wheresmyfamily;
 
 /**
  * Created by KaareAndersen on 25/09/14.
@@ -42,9 +42,10 @@ import com.microsoft.windowsazure.mobileservices.UserAuthenticationCallback;
 
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 import dk.projekt.bachelor.wheresmyfamily.activities.Main;
+import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
-public class AuthService {
+public class MobileServicesClient {
 
     private MobileServiceClient mClient;
     private MobileServiceJsonTable mTableAccounts;
@@ -52,12 +53,12 @@ public class AuthService {
     private MobileServiceJsonTable mTableCalendarEvents;
     private MobileServiceJsonTable mTablePushNotification;
     private Context mContext;
-    private final String TAG = "AuthService";
+    private final String TAG = "MobileServicesClient";
     private boolean mShouldRetryAuth;
     private boolean mIsCustomAuthProvider = false;
     private MobileServiceAuthenticationProvider mProvider;
 
-    public AuthService(Context context) {
+    public MobileServicesClient(Context context) {
         mContext = context;
         try {
             mClient = new MobileServiceClient("https://wheresmyfamilums.azure-mobile.net/",

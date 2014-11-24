@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,10 +17,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +47,13 @@ import dk.projekt.bachelor.wheresmyfamily.R;
 
 public class OverviewActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener
 {
+
+    Button btnAddPlace;
+    ImageButton btnTackPic;
+    ImageView ivThumbnailPhoto;
+    Bitmap bitMap;
+    static int TAKE_PICTURE = 1;
+
     EditText placeField;
     AutoCompleteTextView autoCompView;
     Child child = new Child();
@@ -63,6 +74,14 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         autoCompView = (AutoCompleteTextView) findViewById(R.id.address_autocomplete_edit_text);
         autoCompView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
         autoCompView.setOnItemClickListener(this);
+
+
+        btnTackPic = (ImageButton) findViewById(R.id.btnTakePic);
+        btnAddPlace = (Button) findViewById(R.id.btnaddplace);
+        ivThumbnailPhoto = (ImageView) findViewById(R.id.ivThumbnailPhoto);
+
+        // add onclick listener to the button
+        btnTackPic.setOnClickListener(this);
 
         ImageButton button = (ImageButton) findViewById(R.id.callchild);
         button.setOnClickListener(new View.OnClickListener() {
@@ -112,14 +131,25 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(this, LocationActivity.class);
-        intent.putExtra("Place", placeField.getText());
 
-        LocationActivity locationActivity = new LocationActivity();
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, ConnectionResult.SUCCESS,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if(view == btnAddPlace) {
+            Intent intent = new Intent(this, LocationActivity.class);
+            intent.putExtra("Place", placeField.getText());
 
-        locationActivity.createGeofences(pendingIntent);
+            LocationActivity locationActivity = new LocationActivity();
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, ConnectionResult.SUCCESS,
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            locationActivity.createGeofences(pendingIntent);
+        }
+        if(view == btnTackPic) {
+            // create intent with ACTION_IMAGE_CAPTURE action
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            // start camera activity
+            startActivityForResult(intent, TAKE_PICTURE);
+        }
+
     }
 
     private ArrayList<String> autocomplete(String input)
@@ -280,6 +310,20 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
                 }};
 
             return filter;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+
+        if (requestCode == TAKE_PICTURE && resultCode== RESULT_OK && intent != null){
+            // get bundle
+            Bundle extras = intent.getExtras();
+
+            // get bitmap
+            bitMap = (Bitmap) extras.get("data");
+            ivThumbnailPhoto.setImageBitmap(bitMap);
+
         }
     }
 }
