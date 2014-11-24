@@ -25,20 +25,16 @@ import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
-import com.microsoft.windowsazure.notifications.NotificationsManager;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
-import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
-import dk.projekt.bachelor.wheresmyfamily.MyHandler;
-import dk.projekt.bachelor.wheresmyfamily.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -142,7 +138,7 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
             public void onClick(View arg0) {
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + parent.parentPhone));
+                callIntent.setData(Uri.parse("tel:" + parent.getPhone()));
                 startActivity(callIntent);
             }
 
@@ -252,33 +248,7 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
         String parentemail = "";
         String location = "";
 
-        mAuthService.getCalendarEvent (eventID, new TableJsonOperationCallback() {
-            @Override
-            public void onCompleted(JsonObject jsonObject, Exception exception,
-                                    ServiceFilterResponse response) {
-                if (exception == null) {
-                    jsonObject.get("id");
-                    Toast.makeText(getApplicationContext(), "Kalender hentet", Toast.LENGTH_LONG).show();
         pushNotificationController.sendLocationFromChild(parentemail, location);
-
-
-    }
-
-    public void sendLocation(){
-        String parentmail = "";
-        String location = "";
-        mAuthService.sendLocation(parentmail, location, new TableJsonOperationCallback() {
-            @Override
-            public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
-                if (exception == null){
-
-                }
-                else {
-                    Log.e(TAG, "There was an exception sending email: " + exception.getMessage());
-                }
-            }
-        });
-        Toast.makeText(getApplicationContext(), "Location sendt", Toast.LENGTH_LONG).show();
     }
 
     /*public void saveParent(Parent parent)

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
 
 
@@ -42,6 +45,7 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 {
     EditText placeField;
     AutoCompleteTextView autoCompView;
+    Child child = new Child();
 
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
@@ -59,6 +63,19 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         autoCompView = (AutoCompleteTextView) findViewById(R.id.address_autocomplete_edit_text);
         autoCompView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
         autoCompView.setOnItemClickListener(this);
+
+        ImageButton button = (ImageButton) findViewById(R.id.callchild);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + child.childPhone));
+                startActivity(callIntent);
+            }
+
+        });
     }
 
     @Override

@@ -44,12 +44,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
-import dk.projekt.bachelor.wheresmyfamily.CalendarActivity;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 
 public class LocationActivity extends FragmentActivity implements

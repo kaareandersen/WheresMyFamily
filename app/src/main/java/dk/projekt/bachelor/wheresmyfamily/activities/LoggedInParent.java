@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.JsonArray;
@@ -35,14 +33,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
-import dk.projekt.bachelor.wheresmyfamily.MyHandler;
-import dk.projekt.bachelor.wheresmyfamily.InternalStorage;
-import dk.projekt.bachelor.wheresmyfamily.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -122,11 +117,8 @@ public class LoggedInParent extends ListActivity {
                 "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
         mHub = new NotificationHub("WheresMyFamiluMSHub", connectionString, this);
         NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);
-        registerWithNotificationHubs();
-
 
         //get UI elements
-
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
 
         //Fetch auth data (the username) on load
