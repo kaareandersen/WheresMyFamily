@@ -39,7 +39,7 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 

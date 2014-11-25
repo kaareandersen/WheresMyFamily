@@ -3,7 +3,7 @@ package dk.projekt.bachelor.wheresmyfamily.authenticator;
 import android.app.Activity;
 import android.app.Application;
 
-import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 
 public class AuthenticationApplication extends Application {
     private MobileServicesClient mMobileServicesClient;

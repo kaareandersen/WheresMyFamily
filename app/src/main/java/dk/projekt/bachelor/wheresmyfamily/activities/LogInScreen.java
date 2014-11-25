@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
