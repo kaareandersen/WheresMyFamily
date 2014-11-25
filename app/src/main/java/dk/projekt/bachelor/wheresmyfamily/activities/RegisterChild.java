@@ -120,13 +120,13 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
                             "UserName").getAsString();
                     userPhone = item.getAsJsonObject().getAsJsonPrimitive(
                             "Phone").getAsString();
-                    userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    // userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
 
                     isUserParent = !item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean();
 
                     if(isUserParent)
                     {
-                        mParents.add(new Parent(userName, userPhone, userMail));
+                        mParents.add(new Parent(userName, userPhone, null, null));
                         storage.saveParents(getApplicationContext(), mParents);
 
                         parentNameEditText.setText(userName);
@@ -223,14 +223,14 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
-        NdefRecord NdefRecord_2 = inNdefRecords[2];
+        // NdefRecord NdefRecord_2 = inNdefRecords[2];
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
-        userMail = new String(NdefRecord_2.getPayload());
+        // userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        mChildren.add(new Child(userName, userPhone, userMail));
+        mChildren.add(new Child(userName, userPhone, null, null));
 
         storage.saveChildren(this, mChildren);
 
@@ -243,7 +243,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
 
-        Toast.makeText(this, "Dit barn " + child.childName + " Tlf. " + child.childPhone + " er nu registréret",
+        Toast.makeText(this, "Dit barn " + child.getName() + " Tlf. " + child.getPhone() + " er nu registréret",
                 Toast.LENGTH_SHORT).show();
     }
 

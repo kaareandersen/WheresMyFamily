@@ -35,7 +35,7 @@
         </menu>
     </item>
 
-    <item
+    <!--<item
         android:id="@+id/menu_showtraffic"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -49,27 +49,27 @@
         android:id="@+id/menu_zoomout"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/menu_zoom_out_title"/>
+        android:title="@string/menu_zoom_out_title"/>-->
     <item
         android:id="@+id/menu_gotolocation"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Go to a location"/>
-    <item
+        android:title="Min position"/>
+    <!--<item
         android:id="@+id/menu_addmarker"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Add a marker"/>
+        android:title="Add a marker"/>-->
     <item
         android:id="@+id/menu_showcurrentlocation"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Show Current Location"/>
-    <item
+        android:title="Vis nuværende position"/>
+    <!--<item
         android:id="@+id/menu_lineconnecttwopoints"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Line connecting 2 points"/>
+        android:title="Line connecting 2 points"/>-->
 </menu>
     </item>
 

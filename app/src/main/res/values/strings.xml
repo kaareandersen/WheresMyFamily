@@ -109,10 +109,10 @@
     <string name="title_activity_overview">Oversigt</string>
 
     <!--Location-->
-    <string name="menu_hybrid_mode_title">HybridMode</string>
-    <string name="menu_normal_mode_title">Normal mode</string>
-    <string name="menu_satellite_mode_title">Satellite mode</string>
-    <string name="menu_terrain_mode_title">Terrain mode</string>
+    <string name="menu_hybrid_mode_title">Hybrid</string>
+    <string name="menu_normal_mode_title">Normal</string>
+    <string name="menu_satellite_mode_title">Satellit</string>
+    <string name="menu_terrain_mode_title">Terræn</string>
     <string name="menu_map_mode_title">Map mode</string>
     <string name="menu_show_traffic_title">Show traffic</string>
     <string name="menu_zoom_in_title">Zoom in</string>

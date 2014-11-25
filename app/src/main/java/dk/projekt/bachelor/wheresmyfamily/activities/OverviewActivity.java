@@ -90,7 +90,7 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
             public void onClick(View arg0) {
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + child.childPhone));
+                callIntent.setData(Uri.parse("tel:" + child.getPhone()));
                 startActivity(callIntent);
             }
 

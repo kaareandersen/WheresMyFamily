@@ -84,11 +84,6 @@ public class LocationService extends IntentService implements
         if (location != null) {
 
 
-            /*Log.e(TAG, "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: " + location.getAccuracy());
-            String locationMsg = "position: " + location.getLatitude() + ", " + location.getLongitude() + " accuracy: "
-                    + location.getAccuracy() + " Bearing" + location.getBearing();
-            Toast.makeText(this, locationMsg, Toast.LENGTH_LONG).show();*/
-
         }
 
     }
