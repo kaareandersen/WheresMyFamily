@@ -49,7 +49,7 @@ public class MobileServicesClient {
             mTableAccounts = mClient.getTable("Accounts");
             mTableAuthData = mClient.getTable("AuthData");
             mTableCalendarEvents = mClient.getTable("CalendarEvents");
-            mTablePushNotification = mClient.getTable("PushNotification");
+            mTablePushNotification = mClient.getTable("PushNotifacation");
         } catch (MalformedURLException e) {
             Log.e(TAG, "There was an error creating the Mobile Service.  Verify the URL");
         }
@@ -261,7 +261,7 @@ public class MobileServicesClient {
                return null;
            }
        }.execute(null, null, null);
-    }
+   }
 
     /**
      * Handles logging the user out including:
