@@ -12,22 +12,52 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
+    <RelativeLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:id="@+id/linearLayout">
+        android:id="@+id/relativwLayouttop">
 
-    <EditText
-        android:id="@+id/txtEvent"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittext_top_bg"
-        android:padding="10dp"
-        android:hint="Titel"
-        android:textColorHint="#bbbbbb"
-        android:singleLine="true"/>
+        <LinearLayout
+            android:id="@+id/overview_place_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_headline_layout"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/overview_place_text_view"
+            android:text="Navn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+        <EditText
+            android:id="@+id/txtEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_top_bg"
+            android:padding="10dp"
+            android:hint="Navn på Begivenhed"
+            android:textColorHint="#bbbbbb"
+            android:singleLine="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_place_layout"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Lokation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
         <Spinner
             android:id="@+id/spinnerPlace"
@@ -38,20 +68,63 @@
             android:padding="10dp"
             android:hint="Lokalitet"
             android:textColorHint="#bbbbbb"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnnewlocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="4dp"
+            android:text="Ny lokation"
+            style="@style/DefaultButtonText"
+            android:background="@drawable/button_default_bg"
+            android:layout_below="@+id/overview_location"
+            android:layout_alignParentRight="true"/>
+
+        <LinearLayout
+            android:id="@+id/overview_child"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/btnnewlocation"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Barn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
         <EditText
             android:id="@+id/txtChild"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bottom_bg"
+            android:background="@drawable/edittext_default_bg"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
-            android:hint="Barn"
+            android:hint="Valgte Barn"
             android:clickable="true"
             android:editable="false"
-            android:textColorHint="#bbbbbb"/>
+            android:textColorHint="#bbbbbb"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/overview_startdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_child"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Start Dato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
         <EditText
             android:id="@+id/txtStartDate"
             android:layout_width="match_parent"
@@ -59,24 +132,56 @@
             android:background="@drawable/edittext_top_bg"
             android:layout_marginTop="12dp"
             android:padding="10dp"
-            android:hint="Start Dato"
+            android:hint="Vælg Start Dato"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:editable="false"
-            android:textColorHint="#bbbbbb"/>
+            android:textColorHint="#bbbbbb"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_starttime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_startdate"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Start Tid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
         <EditText
             android:id="@+id/txtStartTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bottom_bg"
+            android:background="@drawable/edittext_default_bg"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
-            android:hint="Start Tid"
+            android:hint="Vælg Start Tidspunkt"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:editable="false"
-            android:textColorHint="#bbbbbb"/>
+            android:textColorHint="#bbbbbb"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_enddate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_starttime"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Slut Dato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
         <EditText
             android:id="@+id/txtEndDate"
@@ -85,24 +190,56 @@
             android:background="@drawable/edittext_top_bg"
             android:layout_marginTop="12dp"
             android:padding="10dp"
-            android:hint="Slut Dato"
+            android:hint="Vælg Slut Dato"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:editable="false"
-            android:textColorHint="#bbbbbb"/>
+            android:textColorHint="#bbbbbb"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_endtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_enddate"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Slut Tid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
         <EditText
             android:id="@+id/txtEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bottom_bg"
+            android:background="@drawable/edittext_default_bg"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
-            android:hint="Slut Tid"
+            android:hint="Vælg Slut Tidspunkt"
             android:clickable="true"
             android:focusableInTouchMode="false"
             android:editable="false"
-            android:textColorHint="#bbbbbb"/>
+            android:textColorHint="#bbbbbb"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/overview_endtime"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:text="Gentag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
         <Spinner
             android:id="@+id/spinnerRepeat"
@@ -114,41 +251,12 @@
             android:hint="Gentag"
             android:clickable="true"
             android:editable="false"
-            android:textColorHint="#bbbbbb"/>
+            android:textColorHint="#bbbbbb"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="20dp"/>
+        </LinearLayout>
 
-<!--        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="12dp">
-            <Button
-                android:id="@+id/btnMainSignIn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_margin="4dp"&lt;!&ndash;&ndash;&gt;
-                android:text="Anuller"
-                android:background="@drawable/button_default_bg"
-                style="@style/DefaultButtonText"
-                android:layout_weight="1"
-                />
-
-            <Button
-                android:id="@+id/btnSignUp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_margin="4dp"
-                android:text="Ok"
-                android:background="@drawable/button_default_bg"
-                style="@style/DefaultButtonText"
-                android:layout_weight="1"
-                />
-
-        </LinearLayout>-->
-
-    </LinearLayout>
+    </RelativeLayout>
 
     </ScrollView>
 

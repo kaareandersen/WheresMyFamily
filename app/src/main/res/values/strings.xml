@@ -108,7 +108,7 @@
     <string name="SaveEventErrorMessage1">You must enter all fields to save event</string>
     <string name="title_activity_overview">Oversigt</string>
 
-    <!--Location-->
+    <!-- Location -->
     <string name="menu_hybrid_mode_title">Hybrid</string>
     <string name="menu_normal_mode_title">Normal</string>
     <string name="menu_satellite_mode_title">Satellit</string>
@@ -118,12 +118,13 @@
     <string name="menu_zoom_in_title">Zoom in</string>
     <string name="menu_zoom_out_title">Zoom out</string>
 
-    <!--Overview-->
+    <!-- Overview -->
     <string name="overview_title_edit_text">Tilføj et nyt sted</string>
     <string name="overview_place_text_view">Sted</string>
     <string name="overview_place_hint_text">Navn på sted, f.eks hjem, skole etc.</string>
     <string name="overview_address_text_view">Adresse</string>
     <string name="overview_address_hint_text">Skriv adresse</string>
     <string name="overview_save_place_button">Tilføj til mine steder</string>
+    <string name="title_activity_new_location">NewLocation</string>
 
 </resources>
