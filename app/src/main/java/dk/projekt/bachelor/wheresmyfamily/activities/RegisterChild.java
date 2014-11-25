@@ -41,6 +41,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     TextView parentPhoneTextView;
     TextView parentPhoneEditText;
     TextView parentNameEditText;
+    TextView parentEmailTextView;
     private boolean isNFCMessageNew = true;
     private final String TAG = "RegisterChild";
     Parent parent = new Parent();
@@ -75,6 +76,8 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
         parentPhoneTextView = (TextView) findViewById(R.id.parentPhoneTextView);
         parentPhoneEditText = (TextView) findViewById(R.id.parentPhoneInfo);
+
+        parentEmailTextView = (TextView) findViewById(R.id.parentEmailInfo);
 
         mChildren = storage.loadChildren(this);
 
@@ -120,17 +123,18 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
                             "UserName").getAsString();
                     userPhone = item.getAsJsonObject().getAsJsonPrimitive(
                             "Phone").getAsString();
-                    // userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
+                    userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
 
                     isUserParent = !item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean();
 
                     if(isUserParent)
                     {
-                        mParents.add(new Parent(userName, userPhone, null, null));
+                        mParents.add(new Parent(userName, userPhone, userMail, null));
                         storage.saveParents(getApplicationContext(), mParents);
 
                         parentNameEditText.setText(userName);
                         parentPhoneEditText.setText(userPhone);
+                        parentEmailTextView.setText(userMail);
                     }
                 }
                 else
@@ -165,8 +169,6 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     protected void onPause() {
         super.onPause();
 
-        // Toast.makeText(this, "RegisterChild onPause", Toast.LENGTH_SHORT).show();
-
         storage.saveChildren(this, mChildren);
 
         nfcAdapter.disableForegroundDispatch(this);
@@ -193,11 +195,13 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
-        String stringOut = parentNameEditText.getText().toString();
+        String parentNameString = parentNameEditText.getText().toString();
         String parentPhoneString = parentPhoneEditText.getText().toString();
+        String parentEmailString = parentEmailTextView.getText().toString();
 
-        byte[] parentNameOut = stringOut.getBytes();
+        byte[] parentNameOut = parentNameString.getBytes();
         byte[] parentPhoneOut = parentPhoneString.getBytes();
+        byte[] parentEmailOut = parentEmailString.getBytes();
 
         return new NdefMessage(
                 new NdefRecord
@@ -205,7 +209,10 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
                                 new byte[] {}, parentNameOut),
                 new NdefRecord
                         (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
-                        new byte[]{}, parentPhoneOut));
+                                new byte[]{}, parentPhoneOut),
+                new NdefRecord
+                        (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                                new byte[]{} ,parentEmailOut));
     }
 
     @Override
@@ -223,14 +230,14 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
-        // NdefRecord NdefRecord_2 = inNdefRecords[2];
+        NdefRecord NdefRecord_2 = inNdefRecords[2];
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
-        // userMail = new String(NdefRecord_2.getPayload());
+        userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        mChildren.add(new Child(userName, userPhone, null, null));
+        mChildren.add(new Child(userName, userPhone, userMail, null));
 
         storage.saveChildren(this, mChildren);
 

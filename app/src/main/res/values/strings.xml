@@ -24,10 +24,12 @@
     <string name="title_activity_register_child">Registrér barn</string>
     <string name="parent_name_textView_title">Forælder navn</string>
     <string name="parent_phone_textView_title">Telefonnummer</string>
+    <string name="parent_email_textView_title">Email</string>
 
     <!-- activity_register_parent -->
     <string name="child_name_textView_title">Barnets navn</string>
     <string name="child_phone_textView_title">Telefonnummer</string>
+    <string name="child_email_textView_title">Email</string>
 
     <!-- child_overview -->
     <string name="title_activity_child_overview">child_overview</string>

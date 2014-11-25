@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/parent_name_textView_title"/>
 
-        <EditText
+        <TextView
             android:id="@+id/parentNameInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:text="@string/parent_phone_textView_title"/>
 
-        <EditText
+        <TextView
             android:id="@+id/parentPhoneInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -50,11 +50,30 @@
             android:hint="@string/register_child_phone_hint"
             android:inputType="phone" />
         </LinearLayout>
+    <LinearLayout
+        android:id="@+id/parentEmailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/parentPhoneLayout">
+
+        <TextView
+            android:id="@+id/parentEmailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/parent_email_textView_title"/>
+
+        <TextView
+            android:id="@+id/parentEmailInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:inputType="textEmailAddress" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/parentPhoneLayout"
+        android:layout_below="@+id/parentEmailLayout"
         android:orientation="vertical"
         android:layout_marginTop="10dp">
 

@@ -245,10 +245,10 @@ public class LoggedInChild extends BaseActivity implements LocationListener {
 
     public void getAndPushLocation(){
         //TODO
-        String parentemail = "";
-        String location = "";
+        String parentEmail = mParents.get(0).getEmail();
+        String location = currentLocation.toString();
 
-        pushNotificationController.sendLocationFromChild(parentemail, location);
+        pushNotificationController.sendLocationFromChild(parentEmail, location);
     }
 
     /*public void saveParent(Parent parent)

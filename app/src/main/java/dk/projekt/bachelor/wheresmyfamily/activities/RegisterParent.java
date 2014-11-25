@@ -12,7 +12,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -42,8 +42,9 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     ArrayList<Child> myChildren = new ArrayList<Child>();
     Parent parent = new Parent();
     private final String TAG = "RegisterParent";
-    EditText childPhoneEditText;
-    EditText childNameEditText;
+    TextView childPhoneInfoText;
+    TextView childNameInfoText;
+    TextView childEmailInfoText;
     String userName;
     String userPhone;
     String userMail;
@@ -68,8 +69,9 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         // Toast.makeText(this, "RegisterParent OnCreate", Toast.LENGTH_SHORT).show();
 
-        childNameEditText = (EditText) findViewById(R.id.childNameInfo);
-        childPhoneEditText = (EditText) findViewById(R.id.childPhoneInfo);
+        childNameInfoText = (TextView) findViewById(R.id.childNameInfo);
+        childPhoneInfoText = (TextView) findViewById(R.id.childPhoneInfo);
+        childEmailInfoText = (TextView) findViewById(R.id.childEmailInfo);
 
         mChildren = storage.loadChildren(this);
 
@@ -116,19 +118,20 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
                             "UserName").getAsString();
                     String userPhone = item.getAsJsonObject().getAsJsonPrimitive(
                             "Phone").getAsString();
-                    // String userMail = item.getAsJsonObject().getAsJsonPrimitive("Email").getAsString();
-
-                    isUserChild = item.getAsJsonObject().getAsJsonPrimitive("Child").getAsBoolean();
+                    String userMail = item.getAsJsonObject().getAsJsonPrimitive(
+                            "Email").getAsString();
+                    isUserChild = item.getAsJsonObject().getAsJsonPrimitive(
+                            "Child").getAsBoolean();
 
                     if(isUserChild)
                     {
-                        mChildren.add(new Child(userName, userPhone, null, null));
+                        mChildren.add(new Child(userName, userPhone, userMail, null));
 
-                        // saveChildren(myChildren);
                         storage.saveChildren(getApplicationContext(), mChildren);
 
-                        childNameEditText.setText(userName);
-                        childPhoneEditText.setText(userPhone);
+                        childNameInfoText.setText(userName);
+                        childPhoneInfoText.setText(userPhone);
+                        childEmailInfoText.setText(userMail);
                     }
                 }
                 else
@@ -168,8 +171,6 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     protected void onRestart() {
         super.onRestart();
 
-        // Toast.makeText(this, "RegisterParent OnRestart", Toast.LENGTH_SHORT).show();
-
         mChildren = storage.loadChildren(this);
     }
 
@@ -202,20 +203,25 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent)
     {
-        String stringOut = childNameEditText.getText().toString();
-        String childPhoneString = childPhoneEditText.getText().toString();
+        String childNameString = childNameInfoText.getText().toString();
+        String childPhoneString = childPhoneInfoText.getText().toString();
+        String childEmailString = childEmailInfoText.getText().toString();
 
-        byte[] childNameOut = stringOut.getBytes();
+        byte[] childNameOut = childNameString.getBytes();
         byte[] childPhoneOut = childPhoneString.getBytes();
+        byte[] childEmailOut = childEmailString.getBytes();
 
         return new NdefMessage
                 (
                  new NdefRecord
                          (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
-                                new byte[] {}, childNameOut),
-                new NdefRecord
-                        (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
-                                new byte[]{}, childPhoneOut)
+                                 new byte[]{}, childNameOut),
+                 new NdefRecord
+                         (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                                 new byte[]{}, childPhoneOut),
+                 new NdefRecord
+                         (NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                                 new byte[]{}, childEmailOut)
                 );
     }
 
@@ -228,15 +234,15 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         NdefRecord[] inNdefRecords = inNdefMessage.getRecords();
         NdefRecord NdefRecord_0 = inNdefRecords[0];
         NdefRecord NdefRecord_1 = inNdefRecords[1];
-        // NdefRecord NdefRecord_2 = inNdefRecords[2];
+        NdefRecord NdefRecord_2 = inNdefRecords[2];
 
         userName = new String(NdefRecord_0.getPayload());
         userPhone = new String(NdefRecord_1.getPayload());
-        // userMail = new String(NdefRecord_2.getPayload());
+        userMail = new String(NdefRecord_2.getPayload());
 
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
-        mParents.add(new Parent(userName, userPhone, null, null));
+        mParents.add(new Parent(userName, userPhone, userMail, null));
         storage.saveParents(this, mParents);
 
         isNFCMessageNew = false;
