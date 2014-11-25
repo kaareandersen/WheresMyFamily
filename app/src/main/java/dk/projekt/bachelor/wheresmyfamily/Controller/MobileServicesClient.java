@@ -4,10 +4,6 @@ package dk.projekt.bachelor.wheresmyfamily.Controller;
  * Created by KaareAndersen on 25/09/14.
  */
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,6 +23,10 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableDeleteCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
+
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dk.projekt.bachelor.wheresmyfamily.activities.Main;
 

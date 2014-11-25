@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="@string/child_name_textView_title"/>
 
-        <EditText
+        <TextView
             android:id="@+id/childNameInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -41,13 +41,33 @@
             android:layout_height="wrap_content"
             android:text="@string/child_phone_textView_title"/>
 
-        <EditText
+        <TextView
             android:id="@+id/childPhoneInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_phone_hint"
             android:inputType="phone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/childEmailLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/childPhoneLayout">
+
+        <TextView
+            android:id="@+id/childEmailTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/child_email_textView_title"/>
+
+        <TextView
+            android:id="@+id/childEmailInfo"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:inputType="textEmailAddress" />
     </LinearLayout>
 
     <LinearLayout

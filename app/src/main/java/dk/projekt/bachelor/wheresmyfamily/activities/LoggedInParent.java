@@ -267,6 +267,13 @@ public class LoggedInParent extends ListActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        storage.saveChildren(this, m_My_children);
+    }
+
     public void callApi(View view) {
 
         mMobileServicesClient.callApi();

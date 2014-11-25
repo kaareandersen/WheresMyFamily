@@ -133,22 +133,6 @@ public final class UserInfoStorage
         }
     }
 
-    public void addChild(Context context, Child child) {
-        List<Child> favorites = loadChildren(context);
-        if (favorites == null)
-            favorites = new ArrayList<Child>();
-        favorites.add(child);
-        saveChildren(context, favorites);
-    }
-
-    public void removeChild(Context context, Child child) {
-        ArrayList<Child> favorites = loadChildren(context);
-        if (favorites != null) {
-            favorites.remove(child);
-            saveChildren(context, favorites);
-        }
-    }
-
     public void saveParents(Context context, List<Parent> parents) {
         SharedPreferences settings;
         SharedPreferences.Editor editor;
@@ -201,6 +185,22 @@ public final class UserInfoStorage
         if (parents != null) {
             parents.remove(parent);
             saveParents(context, parents);
+        }
+    }
+
+    public void addChild(Context context, Child child) {
+        List<Child> favorites = loadChildren(context);
+        if (favorites == null)
+            favorites = new ArrayList<Child>();
+        favorites.add(child);
+        saveChildren(context, favorites);
+    }
+
+    public void removeChild(Context context, Child child) {
+        ArrayList<Child> favorites = loadChildren(context);
+        if (favorites != null) {
+            favorites.remove(child);
+            saveChildren(context, favorites);
         }
     }
 }
