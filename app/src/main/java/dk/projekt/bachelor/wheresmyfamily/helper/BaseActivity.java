@@ -6,7 +6,7 @@ package dk.projekt.bachelor.wheresmyfamily.helper;
 import android.app.Activity;
 import android.os.Bundle;
 
-import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 public class BaseActivity extends Activity {

@@ -34,12 +34,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.LocationService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -74,7 +76,6 @@ public class LoggedInParent extends ListActivity {
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
     UserInfoStorage storage = new UserInfoStorage();
-    Child currentChild = new Child();
     //endregion
 
     @Override

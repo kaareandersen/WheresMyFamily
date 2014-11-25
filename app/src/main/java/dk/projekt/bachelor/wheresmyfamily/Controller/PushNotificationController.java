@@ -8,8 +8,6 @@ import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
-import dk.projekt.bachelor.wheresmyfamily.MobileServicesClient;
-
 /**
  * Created by KaareAndersen on 20/11/14.
  */

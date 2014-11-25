@@ -12,9 +12,6 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
-import dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity;
-import dk.projekt.bachelor.wheresmyfamily.activities.OverviewActivity;
 
 
 public class CalendarActivity extends Activity {
