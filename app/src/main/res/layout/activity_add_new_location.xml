@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.AddNewLocation">
+
+    <LinearLayout
+        android:id="@+id/overview_place_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/overview_headline_layout"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/overview_place_text_view"
+            android:text="@string/overview_place_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+        <EditText
+            android:id="@+id/place_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/overview_place_hint_text"
+            android:inputType="textCapSentences"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/overview_address_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/overview_place_layout"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_address_text_view" />
+        <AutoCompleteTextView
+            android:id="@+id/address_autocomplete_edit_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/overview_address_hint_text"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:inputType="textCapSentences"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnaddplace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/overview_save_place_button"
+        android:layout_below="@+id/overview_address_layout"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:padding="10dp"
+        android:layout_margin="4dp"
+        style="@style/DefaultButtonText"
+        android:background="@drawable/button_default_bg"/>
+
+</RelativeLayout>

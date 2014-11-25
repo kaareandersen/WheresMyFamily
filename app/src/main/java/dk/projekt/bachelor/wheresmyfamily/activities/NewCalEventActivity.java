@@ -4,12 +4,14 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -38,6 +40,7 @@ public class NewCalEventActivity extends BaseActivity implements
     // Widget GUI
     private EditText txtStartDate, txtStartTime, txtEndDate, txtEndTime, txtEvent;
     private Spinner spinnerLocation, spinnerRepeat;
+    private Button btnNewLocation;
 
     // Variable for storing current date and time
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -61,11 +64,13 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEndDate = (EditText) findViewById(R.id.txtEndDate);
         txtEndTime = (EditText) findViewById(R.id.txtEndTime);
         txtEvent = (EditText) findViewById(R.id.txtEvent);
+        btnNewLocation= (Button) findViewById(R.id.btnaddplace);
 
         txtStartDate.setOnClickListener(this);
         txtStartTime.setOnClickListener(this);
         txtEndDate.setOnClickListener(this);
         txtEndTime.setOnClickListener(this);
+        btnNewLocation.setOnClickListener(this);
 
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
@@ -226,6 +231,10 @@ public class NewCalEventActivity extends BaseActivity implements
                         }
                     }, mHour, mMinute, true);
             tpd.show();
+        }
+        if (v == btnNewLocation) {
+            Intent newLocationIntent = new Intent(getApplicationContext(), AddNewLocation.class);
+            startActivity(newLocationIntent);
         }
     }
 
