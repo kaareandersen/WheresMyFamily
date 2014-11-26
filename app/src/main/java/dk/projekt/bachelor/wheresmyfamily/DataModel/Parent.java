@@ -28,32 +28,36 @@ public class Parent extends User implements Serializable {
         return parentName;
     }
     @Override
-    public void setName(String name) {
+    public User setName(String name) {
         this.parentName = name;
+        return this;
     }
     @Override
     public String getPhone() {
         return parentPhone;
     }
     @Override
-    public void setPhone(String phone) {
+    public User setPhone(String phone) {
         this.parentPhone = phone;
+        return this;
     }
     @Override
     public String getEmail() {
         return parentEmail;
     }
     @Override
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.parentEmail = email;
+        return this;
     }
     @Override
     public Boolean getIsCurrent() {
         return isCurrentParent;
     }
     @Override
-    public void setIsCurrent(Boolean isCurrent) {
+    public User setIsCurrent(Boolean isCurrent) {
         this.isCurrentParent = isCurrent;
+        return this;
     }
     //endregion
 }

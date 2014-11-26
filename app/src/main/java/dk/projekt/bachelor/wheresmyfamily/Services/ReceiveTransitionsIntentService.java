@@ -87,7 +87,7 @@ public class ReceiveTransitionsIntentService extends IntentService
              else
             {
                 // An invalid transition was reported
-                Log.e("ReceiveTransitionsIntentService", "Geofence transition error: " +
+                Log.e("ReceiveTransitionsIntentService", "WmfGeofence transition error: " +
                         Integer.toString(transitionType));
             }
         }

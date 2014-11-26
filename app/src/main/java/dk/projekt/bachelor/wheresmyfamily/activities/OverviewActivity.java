@@ -12,9 +12,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 
 
 public class OverviewActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener
@@ -25,14 +29,27 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
     static int TAKE_PICTURE = 1;
     Child child = new Child();
 
+    ArrayList<Child> myChildren = new ArrayList<Child>();
+    UserInfoStorage storage = new UserInfoStorage();
+    Child currentChild = new Child();
+
+    TextView childNameTextView;
+    TextView childPhoneTextView;
+    TextView childPositionTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
+        myChildren = storage.loadChildren(this);
+
         btnTackPic = (ImageButton) findViewById(R.id.btnTakePic);
 
         ivThumbnailPhoto = (ImageView) findViewById(R.id.ivThumbnailPhoto);
+        childNameTextView = (TextView) findViewById(R.id.overview_child_name);
+        childPhoneTextView = (TextView) findViewById(R.id.overview_child_phone);
+        childPositionTextView = (TextView) findViewById(R.id.overview_child_position);
 
         // add onclick listener to the button
         btnTackPic.setOnClickListener(this);
@@ -49,6 +66,20 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
             }
 
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        myChildren = storage.loadChildren(this);
+
+        Child temp = new Child();
+        currentChild = temp.getCurrentChild(myChildren);
+
+        childNameTextView.setText(currentChild.getName());
+        childPhoneTextView.setText(currentChild.getPhone());
+        childPositionTextView.setText(currentChild.getEmail());
     }
 
     @Override
