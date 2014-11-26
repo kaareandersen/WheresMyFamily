@@ -39,32 +39,30 @@ public class PushNotificationController {
         });
     }
 
+    public void askForLocationFromChild(String childEmail){
+        mMobileServicesClient.getLocation(childEmail, new TableJsonOperationCallback() {
+            @Override
+            public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
+                if (exception == null){
+                    Toast.makeText(mContext, "pushnotifikationcontroller send location", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.e(TAG, "There was an exception requesting location from child: " + exception.getMessage());
+                }
+            }
+        });
+    }
+
     //Skal hente lokation på barnets telefon
     public void sendLocationFromChild(String parentEmail, String location){
         mMobileServicesClient.sendLocation(parentEmail, location, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
                 if (exception == null){
-
+                    Toast.makeText(mContext, "Lokation Sendt!", Toast.LENGTH_LONG).show();
                 }
                 else {
                     Log.e(TAG, "There was an exception sending location from Child: " + exception.getMessage());
-                }
-            }
-        });
-        Toast.makeText(mContext, "Location sendt", Toast.LENGTH_LONG).show();
-    }
-
-
-    public void askForLocationFromChild(String childEmail){
-        mMobileServicesClient.getLocation(childEmail, new TableJsonOperationCallback() {
-            @Override
-            public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
-                if (exception == null){
-
-                }
-                else {
-                    Log.e(TAG, "There was an exception requesting location from child: " + exception.getMessage());
                 }
             }
         });

@@ -42,8 +42,7 @@
             android:hint="Navn på Begivenhed"
             android:textColorHint="#bbbbbb"
             android:singleLine="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="30dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -69,8 +68,7 @@
             android:hint="Lokalitet"
             android:textColorHint="#bbbbbb"
             android:singleLine="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="10dp"/>
         </LinearLayout>
 
         <Button
@@ -109,8 +107,7 @@
             android:clickable="true"
             android:editable="false"
             android:textColorHint="#bbbbbb"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="30dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -137,8 +134,7 @@
             android:focusableInTouchMode="false"
             android:editable="false"
             android:textColorHint="#bbbbbb"
-            android:layout_marginLeft="-4dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="-4dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -166,8 +162,7 @@
             android:focusableInTouchMode="false"
             android:editable="false"
             android:textColorHint="#bbbbbb"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="6dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -195,8 +190,7 @@
             android:focusableInTouchMode="false"
             android:editable="false"
             android:textColorHint="#bbbbbb"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="2dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -224,8 +218,7 @@
             android:focusableInTouchMode="false"
             android:editable="false"
             android:textColorHint="#bbbbbb"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="12dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -252,8 +245,7 @@
             android:clickable="true"
             android:editable="false"
             android:textColorHint="#bbbbbb"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginLeft="15dp"/>
         </LinearLayout>
 
     </RelativeLayout>

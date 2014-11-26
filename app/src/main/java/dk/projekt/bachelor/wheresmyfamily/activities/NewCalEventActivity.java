@@ -64,7 +64,7 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEndDate = (EditText) findViewById(R.id.txtEndDate);
         txtEndTime = (EditText) findViewById(R.id.txtEndTime);
         txtEvent = (EditText) findViewById(R.id.txtEvent);
-        btnNewLocation= (Button) findViewById(R.id.btnaddplace);
+        btnNewLocation= (Button) findViewById(R.id.btnnewlocation);
 
         txtStartDate.setOnClickListener(this);
         txtStartTime.setOnClickListener(this);
