@@ -128,5 +128,11 @@
     <string name="overview_address_hint_text">Skriv adresse</string>
     <string name="overview_save_place_button">Tilføj til mine steder</string>
     <string name="title_activity_new_location">NewLocation</string>
+    <string name="overview_name_textview">Navn</string>
+    <string name="overview_phone_textview">Mobilnummer</string>
+    <string name="overview_position_textview">Position</string>
+    <string name="overview_future_events_textview">Kommende begivenheder</string>
+    <string name="overview_take_pic_textview">Tag billede</string>
+    <string name="overview_btn_take_pic_text">Bepp</string>
 
 </resources>

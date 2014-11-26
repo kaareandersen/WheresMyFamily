@@ -4,12 +4,10 @@ package dk.projekt.bachelor.wheresmyfamily;
  * Created by Tommy on 25-11-2014.
  */
 
-import com.google.android.gms.location.Geofence;
-
 /**
- * A single Geofence object, defined by its center and radius.
+ * A single WmfGeofence object, defined by its center and radius.
  */
-public class SimpleGeofence
+public class WmfGeofence
 {
     // Instance variables
     private final String mId;
@@ -20,15 +18,15 @@ public class SimpleGeofence
     private int mTransitionType;
 
     /**
-     * @param geofenceId The Geofence's request ID
-     * @param latitude Latitude of the Geofence's center.
-     * @param longitude Longitude of the Geofence's center.
+     * @param geofenceId The WmfGeofence's request ID
+     * @param latitude Latitude of the WmfGeofence's center.
+     * @param longitude Longitude of the WmfGeofence's center.
      * @param radius Radius of the geofence circle.
-     * @param expiration Geofence expiration duration
-     * @param transition Type of Geofence transition.
+     * @param expiration WmfGeofence expiration duration
+     * @param transition Type of WmfGeofence transition.
      */
-    public SimpleGeofence(String geofenceId, double latitude, double longitude, float radius,
-                          long expiration, int transition)
+    public WmfGeofence(String geofenceId, double latitude, double longitude, float radius,
+                       long expiration, int transition)
     {
         // Set the instance fields from the constructor
         this.mId = geofenceId;
@@ -61,15 +59,15 @@ public class SimpleGeofence
     }
     //endregion
     /**
-     * Creates a Location Services Geofence object from a
-     * SimpleGeofence.
+     * Creates a Location Services WmfGeofence object from a
+     * WmfGeofence.
      *
-     * @return A Geofence object
+     * @return A WmfGeofence object
      */
-    public Geofence toGeofence()
+    public com.google.android.gms.location.Geofence toGeofence()
     {
-        // Build a new Geofence object
-        return new Geofence.Builder().setRequestId(getId()).setTransitionTypes(mTransitionType)
+        // Build a new WmfGeofence object
+        return new com.google.android.gms.location.Geofence.Builder().setRequestId(getId()).setTransitionTypes(mTransitionType)
                 .setCircularRegion(getLatitude(), getLongitude(), getRadius())
                 .setExpirationDuration(mExpirationDuration).build();
     }

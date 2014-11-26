@@ -50,10 +50,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.DataModel.Position"
-            android:label="@string/title_activity_position" >
-        </activity>
-        <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.CreateUserScreen"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_sign_up_screen"

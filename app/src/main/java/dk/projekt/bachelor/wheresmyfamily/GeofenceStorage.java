@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 /**
  * Storage for geofence values, implemented in SharedPreferences.
  */
-public class SimpleGeofenceStore
+public class GeofenceStorage
 {
     //region Fields
     // Keys for flattened geofences stored in SharedPreferences
@@ -35,7 +35,7 @@ public class SimpleGeofenceStore
     //endregion
 
     // Create the SharedPreferences storage with private access only
-    public SimpleGeofenceStore(Context context)
+    public GeofenceStorage(Context context)
     {
         mPrefs = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
     }
@@ -46,7 +46,7 @@ public class SimpleGeofenceStore
      * @param id The ID of a stored geofence
      * @return A geofence defined by its center and radius. See
      */
-    public SimpleGeofence getGeofence(String id)
+    public WmfGeofence getGeofence(String id)
     {
             /*
             * Get the latitude for the geofence identified by id, or
@@ -77,26 +77,26 @@ public class SimpleGeofenceStore
                 INVALID_INT_VALUE);
         // If none of the values is incorrect, return the object
         if (
-                lat != SimpleGeofenceStore.INVALID_FLOAT_VALUE &&
-                        lng != SimpleGeofenceStore.INVALID_FLOAT_VALUE &&
-                        radius != SimpleGeofenceStore.INVALID_FLOAT_VALUE &&
-                        expirationDuration != SimpleGeofenceStore.INVALID_LONG_VALUE &&
-                        transitionType != SimpleGeofenceStore.INVALID_INT_VALUE
+                lat != GeofenceStorage.INVALID_FLOAT_VALUE &&
+                        lng != GeofenceStorage.INVALID_FLOAT_VALUE &&
+                        radius != GeofenceStorage.INVALID_FLOAT_VALUE &&
+                        expirationDuration != GeofenceStorage.INVALID_LONG_VALUE &&
+                        transitionType != GeofenceStorage.INVALID_INT_VALUE
                 )
         {
-            // Return a true Geofence object
-            return new SimpleGeofence(id, lat, lng, radius, expirationDuration, transitionType);
+            // Return a true WmfGeofence object
+            return new WmfGeofence(id, lat, lng, radius, expirationDuration, transitionType);
             // Otherwise, return null.
         }
         else
             return null;
     }
     /**
-     * Save a geofence.
-     * @param geofence The SimpleGeofence containing the
+     * Save a wmfGeofence.
+     * @param wmfGeofence The WmfGeofence containing the
      * values you want to save in SharedPreferences
      */
-    public void setGeofence(String id, SimpleGeofence geofence)
+    public void setGeofence(String id, WmfGeofence wmfGeofence)
     {
             /*
              * Get a SharedPreferences editor instance. Among other
@@ -104,13 +104,13 @@ public class SimpleGeofenceStore
              * and non-concurrent
              */
         SharedPreferences.Editor editor = mPrefs.edit();
-        // Write the Geofence values to SharedPreferences
-        editor.putFloat(getGeofenceFieldKey(id, KEY_LATITUDE), (float) geofence.getLatitude());
-        editor.putFloat(getGeofenceFieldKey(id, KEY_LONGITUDE), (float) geofence.getLongitude());
-        editor.putFloat(getGeofenceFieldKey(id, KEY_RADIUS), geofence.getRadius());
+        // Write the WmfGeofence values to SharedPreferences
+        editor.putFloat(getGeofenceFieldKey(id, KEY_LATITUDE), (float) wmfGeofence.getLatitude());
+        editor.putFloat(getGeofenceFieldKey(id, KEY_LONGITUDE), (float) wmfGeofence.getLongitude());
+        editor.putFloat(getGeofenceFieldKey(id, KEY_RADIUS), wmfGeofence.getRadius());
         editor.putLong(getGeofenceFieldKey(id, KEY_EXPIRATION_DURATION),
-                geofence.getExpirationDuration());
-        editor.putInt(getGeofenceFieldKey(id, KEY_TRANSITION_TYPE), geofence.getTransitionType());
+                wmfGeofence.getExpirationDuration());
+        editor.putInt(getGeofenceFieldKey(id, KEY_TRANSITION_TYPE), wmfGeofence.getTransitionType());
         // Commit the changes
         editor.commit();
     }
@@ -129,11 +129,11 @@ public class SimpleGeofenceStore
         editor.commit();
     }
     /**
-     * Given a Geofence object's ID and the name of a field
+     * Given a WmfGeofence object's ID and the name of a field
      * (for example, KEY_LATITUDE), return the key name of the
      * object's values in SharedPreferences.
      *
-     * @param id The ID of a Geofence object
+     * @param id The ID of a WmfGeofence object
      * @param fieldName The field represented by the key
      * @return The full key name of a value in SharedPreferences
      */

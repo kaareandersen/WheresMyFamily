@@ -27,7 +27,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.HistoryApi;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.location.ActivityRecognitionClient;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -42,14 +41,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.SimpleGeofence;
-import dk.projekt.bachelor.wheresmyfamily.SimpleGeofenceStore;
+import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 
 public class LocationActivity extends FragmentActivity implements
@@ -57,9 +57,7 @@ public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener,
         LocationListener {
 
-    ActionBar actionBar;
 
-    protected PushNotificationController pushNotificationController;
 
     //region Fields
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -125,14 +123,14 @@ public class LocationActivity extends FragmentActivity implements
     /*
      * Internal geofence objects for geofence 1 and 2
      */
-    private SimpleGeofence mUIGeofence1;
-    private SimpleGeofence mUIGeofence2;
+    private WmfGeofence mUIGeofence1;
+    private WmfGeofence mUIGeofence2;
     // List of currentGeofences
-    ArrayList<Geofence> mCurrentGeofences;
-    // Internal List of Geofence objects
-    List<Geofence> mGeofenceList;
+    ArrayList<com.google.android.gms.location.Geofence> mCurrentGeofences;
+    // Internal List of WmfGeofence objects
+    List<com.google.android.gms.location.Geofence> mGeofenceList;
     // Persistent storage for geofences
-    private SimpleGeofenceStore mGeofenceStorage;
+    private GeofenceStorage mGeofenceStorage;
 
     // Hardcoded location for testing
     private static final LatLng GOLDEN_GATE_BRIDGE = new LatLng(37.828891,-122.485884);
@@ -157,6 +155,9 @@ public class LocationActivity extends FragmentActivity implements
     Child myChild;
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
     UserInfoStorage storage = new UserInfoStorage();
+
+    ActionBar actionBar;
+    protected PushNotificationController pushNotificationController;
     //endregion
 
     //region Lifecycle events
@@ -200,10 +201,10 @@ public class LocationActivity extends FragmentActivity implements
         mInProgress = false;
 
         // Instantiate a new geofence storage area
-        mGeofenceStorage = new SimpleGeofenceStore(this);
+        mGeofenceStorage = new GeofenceStorage(this);
 
         // Instantiate the current List of geofences
-        mCurrentGeofences = new ArrayList<Geofence>();
+        mCurrentGeofences = new ArrayList<com.google.android.gms.location.Geofence>();
 
 
 
@@ -281,6 +282,26 @@ public class LocationActivity extends FragmentActivity implements
                         .target(mCurrentLocation).zoom(17).bearing(90).tilt(30).build();
                 map.animateCamera(
                         CameraUpdateFactory.newCameraPosition(myPosition));
+                break;
+            case R.id.menu_test_item:
+                Child current = new Child();
+                Address address1 = new Address(Locale.getDefault());
+
+
+                for(int i = 0; i < m_My_children.size(); i++)
+                {
+                    if(m_My_children.get(i).getIsCurrent())
+                        current = m_My_children.get(i);
+                }
+
+                address1.setAddressLine(0, "TestAddress");
+                /*Bundle bundle = address1.getExtras();
+                bundle.toString();*/
+
+                map.addMarker(new MarkerOptions().position(mCurrentLocation)
+                .title(current.getName()).draggable(true).snippet(address1.getAddressLine(0)).
+                    snippet("Latitude: " + new Float(mCurrentLocation.latitude).toString() + "\n" +
+                    "Longitude: " + new Float(mCurrentLocation.longitude).toString()));
                 break;
             case R.id.action_overview:
                 Intent overview = new Intent(this, OverviewActivity.class);
@@ -370,7 +391,7 @@ public class LocationActivity extends FragmentActivity implements
                 case STOP :
                     mActivityRecognitionClient.removeActivityUpdates(mActivityRecognitionPendingIntent);
                     break;
-                /*
+                    /*
                      * An enum was added to the definition of REQUEST_TYPE,
                      * but it doesn't match a known case. Throw an exception.
                      */
@@ -389,7 +410,7 @@ public class LocationActivity extends FragmentActivity implements
          * detection interval and PendingIntent. This call is
          * synchronous.
          */
-       /* mActivityRecognitionClient.requestActivityUpdates(
+        /*mActivityRecognitionClient.requestActivityUpdates(
                 DETECTION_INTERVAL_MILLISECONDS,
                 mActivityRecognitionPendingIntent);*/
         /*
@@ -488,10 +509,6 @@ public class LocationActivity extends FragmentActivity implements
          */
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
-
-
-
-
 
     @Override
     public void onAddGeofencesResult(int statusCode, String[] geofenceRequestIds)
@@ -610,7 +627,6 @@ public class LocationActivity extends FragmentActivity implements
         }
     }
 
-
     /**
      * Get the geofence parameters for each geofence from the UI
      * and add them to a List.
@@ -622,7 +638,7 @@ public class LocationActivity extends FragmentActivity implements
          * ID to "1". This is a "flattened" object that contains
          * a set of strings
          */
-        mUIGeofence1 = new SimpleGeofence
+        mUIGeofence1 = new WmfGeofence
             (
             "1",
             Double.valueOf(mLatitude1.getText().toString()),
@@ -630,20 +646,20 @@ public class LocationActivity extends FragmentActivity implements
             Float.valueOf(mRadius1.getText().toString()),
             GEOFENCE_EXPIRATION_TIME,
             // This geofence records only entry transitions
-            Geofence.GEOFENCE_TRANSITION_ENTER
+            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
             );
         // Store this flat version
         mGeofenceStorage.setGeofence("1", mUIGeofence1);
         // Create another internal object. Set its ID to "2"
-        mUIGeofence2 = new SimpleGeofence(
+        mUIGeofence2 = new WmfGeofence(
                 "2",
                 Double.valueOf(mLatitude2.getText().toString()),
                 Double.valueOf(mLongitude2.getText().toString()),
                 Float.valueOf(mRadius2.getText().toString()),
-                Geofence.NEVER_EXPIRE,
+                com.google.android.gms.location.Geofence.NEVER_EXPIRE,
                 // This geofence records both entry and exit transitions
-                Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT);
+                com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
         // Store this flat version
         mGeofenceStorage.setGeofence("2", mUIGeofence2);
         mGeofenceList.add(mUIGeofence1.toGeofence());

@@ -26,26 +26,31 @@ public class User implements Serializable {
     public String getName() {
         return userName;
     }
-    public void setName(String userName) {
+    public User setName(String userName) {
         this.userName = userName;
+
+        return this;
     }
     public String getPhone() {
         return userPhone;
     }
-    public void setPhone(String userPhone) {
+    public User setPhone(String userPhone) {
         this.userPhone = userPhone;
+        return this;
     }
     public String getEmail() {
         return userEmail;
     }
-    public void setEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public User setEmail(String eMail) {
+        this.userEmail = eMail;
+        return this;
     }
     public Boolean getIsCurrent() {
         return isCurrent;
     }
-    public void setIsCurrent(Boolean isCurrent) {
+    public User setIsCurrent(Boolean isCurrent) {
         this.isCurrent = isCurrent;
+        return this;
     }
     //endregion
 }
