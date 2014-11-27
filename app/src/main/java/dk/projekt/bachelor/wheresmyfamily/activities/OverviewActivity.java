@@ -59,6 +59,8 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 
             @Override
             public void onClick(View arg0) {
+                Child temp = new Child();
+                child = temp.getCurrentChild(myChildren);
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + child.getPhone()));
@@ -125,7 +127,6 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
             // start camera activity
             startActivityForResult(intent, TAKE_PICTURE);
         }
-
     }
 
 
