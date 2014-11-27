@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -39,25 +40,24 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener,
         LocationListener {
-
-
 
     //region Fields
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -146,7 +146,6 @@ public class LocationActivity extends FragmentActivity implements
 
     String provider;
     LocationManager locationManager;
-
     DataReadRequest dataReadRequest;
 
     public static final String myPrefs = "PrefsFile";
@@ -158,6 +157,8 @@ public class LocationActivity extends FragmentActivity implements
 
     ActionBar actionBar;
     protected PushNotificationController pushNotificationController;
+
+    LatLng currentPosition;
     //endregion
 
     //region Lifecycle events
@@ -206,8 +207,6 @@ public class LocationActivity extends FragmentActivity implements
         // Instantiate the current List of geofences
         mCurrentGeofences = new ArrayList<com.google.android.gms.location.Geofence>();
 
-
-
         /*
          * Instantiate a new activity recognition client. Since the
          * parent Activity implements the connection listener and
@@ -240,9 +239,6 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId())
         {
             case R.id.menu_set_hybrid:
@@ -270,7 +266,7 @@ public class LocationActivity extends FragmentActivity implements
                         cameraPosition));
                 map.addMarker(new MarkerOptions()
                         .position(mCurrentLocation)
-                        .title("Home").snippet("Population 3")
+                        .title("Home").snippet("\nPopulation 3")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 break;
             case R.id.menu_showcurrentlocation:
@@ -279,14 +275,17 @@ public class LocationActivity extends FragmentActivity implements
 
                 // Set the camera position to zoom in on the current location
                 CameraPosition myPosition = new CameraPosition.Builder()
-                        .target(mCurrentLocation).zoom(17).bearing(90).tilt(30).build();
+                        .target(mCurrentLocation).zoom(20).bearing(180).tilt(0).build();
                 map.animateCamera(
                         CameraUpdateFactory.newCameraPosition(myPosition));
                 break;
             case R.id.menu_test_item:
                 Child current = new Child();
-                Address address1 = new Address(Locale.getDefault());
-
+                List<Address> addresses;
+                String language = "da";
+                String country = "DK";
+                Locale local = new Locale(language, country);
+                StringBuffer markerInfo = new StringBuffer();
 
                 for(int i = 0; i < m_My_children.size(); i++)
                 {
@@ -294,14 +293,41 @@ public class LocationActivity extends FragmentActivity implements
                         current = m_My_children.get(i);
                 }
 
-                address1.setAddressLine(0, "TestAddress");
-                /*Bundle bundle = address1.getExtras();
-                bundle.toString();*/
+                /*WmfGeofence wmfGeofence =
+                    new WmfGeofence("Hjemme hos Kåre", currentPosition.latitude, currentPosition.longitude,
+                            20, GEOFENCE_EXPIRATION_TIME, com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
+                            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
 
-                map.addMarker(new MarkerOptions().position(mCurrentLocation)
-                .title(current.getName()).draggable(true).snippet(address1.getAddressLine(0)).
-                    snippet("Latitude: " + new Float(mCurrentLocation.latitude).toString() + "\n" +
-                    "Longitude: " + new Float(mCurrentLocation.longitude).toString()));
+                wmfGeofence.toGeofence();*/
+
+                Geocoder geocoder = new Geocoder(this, local);
+                try {
+                     addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                    if(addresses.size() > 0)
+                    {
+                        // double latitude = addresses.get(0).getLatitude();
+                        // double longitude = addresses.get(0).getLongitude();
+
+                        for(int bip = 0; bip < addresses.size(); bip++)
+                        {
+                            markerInfo.append(addresses.get(bip).toString());
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // Set the maptype
+                map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                // Add a marker with the selected Child's name and current location
+                map.addMarker(new MarkerOptions().position(currentPosition)
+                        .title(current.getName()).snippet(markerInfo.toString()));
+
+                // Set the camera position to zoom in on the current location
+                CameraPosition currentChildPosition = new CameraPosition.Builder()
+                        .target(currentPosition).zoom(22).bearing(90).tilt(0).build();
+                map.animateCamera(
+                        CameraUpdateFactory.newCameraPosition(currentChildPosition));
                 break;
             case R.id.action_overview:
                 Intent overview = new Intent(this, OverviewActivity.class);
@@ -638,7 +664,7 @@ public class LocationActivity extends FragmentActivity implements
          * ID to "1". This is a "flattened" object that contains
          * a set of strings
          */
-        mUIGeofence1 = new WmfGeofence
+        /*mUIGeofence1 = new WmfGeofence
             (
             "1",
             Double.valueOf(mLatitude1.getText().toString()),
@@ -649,7 +675,7 @@ public class LocationActivity extends FragmentActivity implements
             com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
             );
         // Store this flat version
-        mGeofenceStorage.setGeofence("1", mUIGeofence1);
+        mGeofenceStorage.setGeofence("1", mUIGeofence1);*/
         // Create another internal object. Set its ID to "2"
         mUIGeofence2 = new WmfGeofence(
                 "2",
@@ -931,7 +957,155 @@ public class LocationActivity extends FragmentActivity implements
     public void receiveLocation(String location){
         //TODO
         //DO something
-        Toast.makeText(getApplicationContext(), "Location modtaget" + location, Toast.LENGTH_LONG).show();
+        // String to convert = Location[gps 56,172339,10,191438 acc=2 et=+5d4h30m56s48ms alt=82.02612592977187
+        // vel=0.1622365 bear=280.9743 {Bundle[mParcelledData.dataSize=44]}]
+        // TextUtils.SimpleStringSplitter stringSplitter = new TextUtils.SimpleStringSplitter(" ");
+
+        StringBuilder stringBuilder = new StringBuilder(location);
+        String latitudeString = stringBuilder.substring(12, 22);
+        String longitudeString = stringBuilder.substring(23, 32);
+        String lat = latitudeString.replace(latitudeString, stringBuilder.substring(13, 15) + "." + stringBuilder.substring(16, 22));
+        String lng = longitudeString.replace(longitudeString, stringBuilder.substring(23, 25) + "." + stringBuilder.substring(26, 32));
+
+        double latitude = 0;
+        double longitude = 0;
+
+        try
+        {
+            latitude = Double.valueOf(lat);
+            longitude = Double.valueOf(lng);
+        }
+        catch(NumberFormatException e)
+        {
+            Toast.makeText(this, "Kan ikke modtage position, prøv venligst igen", Toast.LENGTH_SHORT).show();
+        }
+
+        currentPosition = new LatLng(latitude, longitude);
+
+        Toast.makeText(this, currentPosition.toString(), Toast.LENGTH_LONG).show();
+
+        /*List<Address> adress = new List<Address>() {
+            @Override
+            public void add(int i, Address address) {
+
+            }
+
+            @Override
+            public boolean add(Address address) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(int i, Collection<? extends Address> addresses) {
+                return false;
+            }
+
+            @Override
+            public boolean addAll(Collection<? extends Address> addresses) {
+                return false;
+            }
+
+            @Override
+            public void clear() {
+
+            }
+
+            @Override
+            public boolean contains(Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean containsAll(Collection<?> objects) {
+                return false;
+            }
+
+            @Override
+            public Address get(int i) {
+                return null;
+            }
+
+            @Override
+            public int indexOf(Object o) {
+                return 0;
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return false;
+            }
+
+            @NonNull
+            @Override
+            public Iterator<Address> iterator() {
+                return null;
+            }
+
+            @Override
+            public int lastIndexOf(Object o) {
+                return 0;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<Address> listIterator() {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public ListIterator<Address> listIterator(int i) {
+                return null;
+            }
+
+            @Override
+            public Address remove(int i) {
+                return null;
+            }
+
+            @Override
+            public boolean remove(Object o) {
+                return false;
+            }
+
+            @Override
+            public boolean removeAll(Collection<?> objects) {
+                return false;
+            }
+
+            @Override
+            public boolean retainAll(Collection<?> objects) {
+                return false;
+            }
+
+            @Override
+            public Address set(int i, Address address) {
+                return null;
+            }
+
+            @Override
+            public int size() {
+                return 0;
+            }
+
+            @NonNull
+            @Override
+            public List<Address> subList(int i, int i2) {
+                return null;
+            }
+
+            @NonNull
+            @Override
+            public Object[] toArray() {
+                return new Object[0];
+            }
+
+            @NonNull
+            @Override
+            public <T> T[] toArray(T[] ts) {
+                return null;
+            }
+        };*/
     }
     //endregion
 }
