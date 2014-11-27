@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,18 +28,24 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class NewCalEventActivity extends BaseActivity implements
         View.OnClickListener, OnItemSelectedListener {
     private final String TAG = "NewCalEventActivity";
+    UserInfoStorage storage = new UserInfoStorage();
+    private ArrayList<Child> m_My_children = new ArrayList<Child>();
+
     private Activity mActivity;
     // Widget GUI
-    private EditText txtStartDate, txtStartTime, txtEndDate, txtEndTime, txtEvent;
+    private EditText txtStartDate, txtStartTime, txtEndDate, txtEndTime, txtEvent, txtChild;
     private Spinner spinnerLocation, spinnerRepeat;
     private Button btnNewLocation;
 
@@ -64,6 +71,7 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEndDate = (EditText) findViewById(R.id.txtEndDate);
         txtEndTime = (EditText) findViewById(R.id.txtEndTime);
         txtEvent = (EditText) findViewById(R.id.txtEvent);
+        txtChild=(EditText) findViewById(R.id.txtChild);
         btnNewLocation= (Button) findViewById(R.id.btnnewlocation);
 
         txtStartDate.setOnClickListener(this);
@@ -71,6 +79,8 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEndDate.setOnClickListener(this);
         txtEndTime.setOnClickListener(this);
         btnNewLocation.setOnClickListener(this);
+
+        txtChild.setText(selectedChild);
 
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
@@ -110,11 +120,15 @@ public class NewCalEventActivity extends BaseActivity implements
                 }
             }
         });
+    }
 
-        //TODO
-        //Sættes til de rigtige barne værdier
-        cEmail = "q@q.dk";
-        selectedChild = "Lucas";
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        m_My_children = storage.loadChildren(this);
+
+        getChildInfo();
     }
 
 
@@ -288,4 +302,15 @@ public class NewCalEventActivity extends BaseActivity implements
                     });
             }
         }
+
+    private void getChildInfo(){
+
+
+        for(int i = 0; i < m_My_children.size(); i++)
+        {
+            if(m_My_children.get(i).getIsCurrent())
+                cEmail = m_My_children.get(i).getEmail();
+                selectedChild = m_My_children.get(i).getName();
+        }
+    }
 }

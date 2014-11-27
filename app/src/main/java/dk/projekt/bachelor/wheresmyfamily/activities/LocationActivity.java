@@ -915,7 +915,6 @@ public class LocationActivity extends FragmentActivity implements
     }
 
     public void askForLocation(){
-        //TODO
         String childEmail = "";
 
         for(int i = 0; i < m_My_children.size(); i++)
