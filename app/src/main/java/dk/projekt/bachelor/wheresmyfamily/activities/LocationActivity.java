@@ -305,12 +305,9 @@ public class LocationActivity extends FragmentActivity implements
                      addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
                     if(addresses.size() > 0)
                     {
-                        // double latitude = addresses.get(0).getLatitude();
-                        // double longitude = addresses.get(0).getLongitude();
-
-                        for(int bip = 0; bip < addresses.size(); bip++)
+                        for(int j = 0; j < addresses.size(); j++)
                         {
-                            markerInfo.append(addresses.get(bip).toString());
+                            markerInfo.append(addresses.get(j).toString());
                         }
                     }
                 } catch (IOException e) {
@@ -339,6 +336,10 @@ public class LocationActivity extends FragmentActivity implements
                 break;
             case R.id.action_map:
                 break;
+            case R.id.menu_add_new_place:
+                Intent location = new Intent(this, AddNewLocation.class);
+                startActivity(location);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -363,14 +364,11 @@ public class LocationActivity extends FragmentActivity implements
 
     @Override
     protected void onStop() {
+
         // If the client is connected
         if (mLocationClient.isConnected())
         {
-            /*
-             * Remove location updates for a listener.
-             * The current Activity is the listener, so
-             * the argument is "this".
-             */
+            /* Remove location updates for a listener.*/
             mLocationClient.removeLocationUpdates(this);
         }
 

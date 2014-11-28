@@ -23,8 +23,8 @@ public class LocationService extends IntentService implements
     private boolean currentlyProcessingLocation = false;
     private LocationRequest locationRequest;
     private LocationClient locationClient;
-    private int locationRequestInterval = 1000000;
-    private int fastestLocationRequestInterval = 1000000;
+    private int locationRequestInterval = 60000;
+    private int fastestLocationRequestInterval = 60000;
     private int mStartId;
 
     public LocationService() {
