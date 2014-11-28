@@ -122,10 +122,10 @@
 
     <!-- Overview -->
     <string name="overview_title_edit_text">Tilføj et nyt sted</string>
-    <string name="overview_place_text_view">Sted</string>
-    <string name="overview_place_hint_text">Navn på sted, f.eks hjem, skole etc.</string>
+    <string name="overview_place_text_view">Stednavn</string>
+    <string name="overview_place_hint_text">Navn på sted, f.eks "Hjem", "Skole" etc.</string>
     <string name="overview_address_text_view">Adresse</string>
-    <string name="overview_address_hint_text">Skriv adresse</string>
+    <string name="overview_address_hint_text">Søg på adresse</string>
     <string name="overview_save_place_button">Tilføj til mine steder</string>
     <string name="title_activity_new_location">NewLocation</string>
     <string name="overview_name_textview">Navn</string>
@@ -134,5 +134,8 @@
     <string name="overview_future_events_textview">Kommende begivenheder</string>
     <string name="overview_take_pic_textview">Tag billede</string>
     <string name="overview_btn_take_pic_text">Bepp</string>
+
+    <!--AddNewLocation-->
+    <string name="add_new_location_headline">Tilføj steder til favoritter</string>
 
 </resources>

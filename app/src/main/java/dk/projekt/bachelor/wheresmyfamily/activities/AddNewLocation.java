@@ -44,7 +44,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
     EditText placeField;
     AutoCompleteTextView autoCompView;
 
-
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
@@ -159,20 +158,12 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
         List<Address> addresses;
+
+        // Set the Locale too "Danish spoken in Denmark" to get the most
+        // relevant search results for Denmark
         String language = "da";
         String country = "DK";
-        // String variant = "_";
         Locale local = new Locale(language, country);
-
-        /*Locale[] locale = Locale.getAvailableLocales();
-
-        for (int i = 0; i < locale.length; i++)
-        {
-            String temp = locale[i].toString();
-            String vari = locale[i].getVariant();
-            // Log.e("Locale", temp);
-            Log.e("Variant", vari);
-        }*/
 
         Geocoder geocoder = new Geocoder(this, local);
 
