@@ -80,8 +80,8 @@ public class MyHandler extends NotificationsHandler {
                         .setContentTitle("Wheres My Family")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
-                        .setContentText(msg)
-                        .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                        .setContentText(msg);
+                        //.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         int duration = Toast.LENGTH_SHORT;
