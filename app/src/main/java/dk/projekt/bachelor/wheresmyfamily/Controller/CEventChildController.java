@@ -22,7 +22,7 @@ public class CEventChildController {
         mContext = context;
     }
 
-    private void startEvent(int year, int month, int date, int hour, int minute) {
+    public void startEvent(int year, int month, int date, int hour, int minute) {
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(mContext.ALARM_SERVICE);
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(year, month, date, hour, minute);
