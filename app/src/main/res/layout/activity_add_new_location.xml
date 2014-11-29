@@ -77,9 +77,28 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/radius_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/overview_address_layout"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_radius_text_view"
+            />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/overview_radius_edit_text"
+            android:inputType="number"/>
+        </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/overview_address_layout"
+        android:layout_below="@+id/radius_layout"
         android:layout_margin="@dimen/activity_vertical_margin"
         android:gravity="right"
         android:orientation="vertical">
@@ -90,6 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/overview_address_layout"
             android:background="@drawable/add_new_place_icon"
+            android:clickable="true"
             />
     </LinearLayout>
 
