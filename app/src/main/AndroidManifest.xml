@@ -185,12 +185,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <service
-            android:name="dk.projekt.bachelor.wheresmyfamily.Services.LocationService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
-
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity"
             android:label="@string/title_activity_location"

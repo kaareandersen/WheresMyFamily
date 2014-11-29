@@ -43,6 +43,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
     Button btnAddPlace;
     EditText placeField;
     AutoCompleteTextView autoCompView;
+    List<Address> addresses;
 
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
@@ -62,7 +63,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         autoCompView.setOnItemClickListener(this);
 
         btnAddPlace = (Button) findViewById(R.id.btnaddplace);
-
     }
 
 
@@ -144,7 +144,9 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
     public void onClick(View view) {
         if(view == btnAddPlace) {
             Intent intent = new Intent(this, LocationActivity.class);
-            intent.putExtra("Place", placeField.getText());
+            intent.putExtra("Name", addresses.get(0).getAddressLine(0));
+            intent.putExtra("Address", addresses.get(0).getAddressLine(1));
+            intent.putExtra("PostalCodeCity", addresses.get(0).getAddressLine(2));
 
             LocationActivity locationActivity = new LocationActivity();
             PendingIntent pendingIntent = PendingIntent.getActivity(this, ConnectionResult.SUCCESS,
@@ -156,8 +158,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-        List<Address> addresses;
 
         // Set the Locale too "Danish spoken in Denmark" to get the most
         // relevant search results for Denmark
@@ -172,11 +172,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
         try
         {
-            /*double lowerLeftLatitude = 0;
-            double lowerLeftLongitude = 0;
-            double upperRightLatitude= 0;
-            double upperRightLongitude= 0;*/
-            // Geocoding = get GPS coordinates from address
             addresses = geocoder.getFromLocationName(str, 1);
             if(addresses.size() > 0)
             {

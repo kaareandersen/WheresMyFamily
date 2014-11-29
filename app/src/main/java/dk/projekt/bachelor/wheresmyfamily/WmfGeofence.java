@@ -5,70 +5,76 @@ package dk.projekt.bachelor.wheresmyfamily;
  */
 
 /**
- * A single WmfGeofence object, defined by its center and radius.
+ * A WmfGeofence object, defined by its center and radius.
+ * It also holds a name, an expiration duration
+ * and which transition types to monitor
  */
 public class WmfGeofence
 {
     // Instance variables
-    private final String mId;
-    private final double mLatitude;
-    private final double mLongitude;
-    private final float mRadius;
-    private long mExpirationDuration;
-    private int mTransitionType;
+    private String geofenceId;
+    private double latitude;
+    private double longitude;
+    private float radius;
+    private long expirationDuration;
+    private int transitionType;
 
-    /**
-     * @param geofenceId The WmfGeofence's request ID
-     * @param latitude Latitude of the WmfGeofence's center.
-     * @param longitude Longitude of the WmfGeofence's center.
-     * @param radius Radius of the geofence circle.
-     * @param expiration WmfGeofence expiration duration
-     * @param transition Type of WmfGeofence transition.
-     */
-    public WmfGeofence(String geofenceId, double latitude, double longitude, float radius,
-                       long expiration, int transition)
+    public WmfGeofence(String _geofenceId, double _latitude, double _longitude, float _radius,
+                       long _expirationDuration, int _transitionType)
     {
-        // Set the instance fields from the constructor
-        this.mId = geofenceId;
-        this.mLatitude = latitude;
-        this.mLongitude = longitude;
-        this.mRadius = radius;
-        this.mExpirationDuration = expiration;
-        this.mTransitionType = transition;
+        setGeofenceId(_geofenceId);
+        setLatitude(_latitude);
+        setLongitude(_longitude);
+        setRadius(_radius);
+        setExpirationDuration(_expirationDuration);
+        setTransitionType(_transitionType);
     }
 
-    // region Instance field getters
-    public String getId(){
-        return mId;
+    // region Get and set
+    public int getTransitionType() {
+        return transitionType;
     }
-    public double getLatitude()
-    {
-        return mLatitude;
-    }
-    public double getLongitude() {
-        return mLongitude;
-    }
-    public float getRadius() {
-        return mRadius;
+    public void setTransitionType(int transitionType) {
+        this.transitionType = transitionType;
     }
     public long getExpirationDuration() {
-        return mExpirationDuration;
+        return expirationDuration;
     }
-    public int getTransitionType() {
-        return mTransitionType;
+    public void setExpirationDuration(long expirationDuration) {
+        this.expirationDuration = expirationDuration;
+    }
+    public float getRadius() {
+        return radius;
+    }
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+    public double getLongitude() {
+        return longitude;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+    public double getLatitude() {
+        return latitude;
+    }
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+    public String getGeofenceId() {
+        return geofenceId;
+    }
+    public void setGeofenceId(String geofenceId) {
+        this.geofenceId = geofenceId;
     }
     //endregion
-    /**
-     * Creates a Location Services WmfGeofence object from a
-     * WmfGeofence.
-     *
-     * @return A WmfGeofence object
-     */
+
+
     public com.google.android.gms.location.Geofence toGeofence()
     {
-        // Build a new WmfGeofence object
-        return new com.google.android.gms.location.Geofence.Builder().setRequestId(getId()).setTransitionTypes(mTransitionType)
+        // Create a new google Location geofence
+        return new com.google.android.gms.location.Geofence.Builder().setRequestId(getGeofenceId()).setTransitionTypes(transitionType)
                 .setCircularRegion(getLatitude(), getLongitude(), getRadius())
-                .setExpirationDuration(mExpirationDuration).build();
+                .setExpirationDuration(expirationDuration).build();
     }
 }

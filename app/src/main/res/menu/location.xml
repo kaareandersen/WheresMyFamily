@@ -35,21 +35,12 @@
         </menu>
     </item>
 
-    <!--<item
-        android:id="@+id/menu_showtraffic"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_show_traffic_title"/>
     <item
-        android:id="@+id/menu_zoomin"
+        android:id="@+id/menu_add_new_place"
         android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_zoom_in_title"/>
-    <item
-        android:id="@+id/menu_zoomout"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/menu_zoom_out_title"/>-->
+        android:showAsAction="always"
+        android:title="@string/menu_add_new_place"/>
+
     <item
         android:id="@+id/menu_gotolocation"
         android:orderInCategory="100"
@@ -68,12 +59,8 @@
     <item android:id="@+id/menu_test_item"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="Test"/>
-    <item
-        android:id="@+id/menu_add_new_place"
-        android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="Line connecting 2 points"/>
+        android:title="@string/menu_show_child_position"/>
+
 </menu>
     </item>
 

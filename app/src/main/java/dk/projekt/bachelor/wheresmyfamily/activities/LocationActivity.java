@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,7 +17,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -62,7 +63,7 @@ public class LocationActivity extends FragmentActivity implements
     //region Fields
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private LocationClient mLocationClient;
+    private LocationClient locationClient;
     private LocationListener locationListener;
     private LatLng mCurrentLocation;
     private HistoryApi historyApi;
@@ -144,8 +145,6 @@ public class LocationActivity extends FragmentActivity implements
 
     Address address;
 
-    String provider;
-    LocationManager locationManager;
     DataReadRequest dataReadRequest;
 
     public static final String myPrefs = "PrefsFile";
@@ -159,8 +158,10 @@ public class LocationActivity extends FragmentActivity implements
     protected PushNotificationController pushNotificationController;
 
     LatLng currentPosition;
+    ImageButton addgeofenceButton;
     //endregion
 
+    public LocationActivity(){}
     //region Lifecycle events
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,11 +173,22 @@ public class LocationActivity extends FragmentActivity implements
         pushNotificationController = new PushNotificationController(this);
 
         ActionBar actionBar = getActionBar();
+        actionBar.setCustomView(R.layout.actionbar_top_new_geofence); //load your layout
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME|ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_TITLE); //show it
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        addgeofenceButton = (ImageButton) findViewById(R.id.action_new_geofence);
+        addgeofenceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), AddNewLocation.class);
+                startActivity(intent);
+            }
+        });
+
         // Initialize the location
-        if (mLocationClient == null)
-            mLocationClient = new LocationClient(this, this, this);
+        if (locationClient == null)
+            locationClient = new LocationClient(this, this, this);
 
         map = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
@@ -196,7 +208,7 @@ public class LocationActivity extends FragmentActivity implements
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        // mLocationClient.requestLocationUpdates(mLocationRequest, this);
+
 
         // Start with the request flag set to false
         mInProgress = false;
@@ -305,19 +317,33 @@ public class LocationActivity extends FragmentActivity implements
                      addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
                     if(addresses.size() > 0)
                     {
-                        for(int j = 0; j < addresses.size(); j++)
+                        for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
                         {
-                            markerInfo.append(addresses.get(j).toString());
+                            markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                            markerInfo.append("\n");
                         }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+                Log.e("MarkerInfo", markerInfo.toString());
+
+                // Sort information from the string with address info
+//                Address[addressLines=[0:"IT-byen Katrinebjerg",
+//                  1:"Finlandsgade 24A",2:"8200 Aarhus N",3:"Danmark"],feature=24A,
+//                  admin=null,sub-admin=null,locality=null,thoroughfare=Finlandsgade,
+//                  postalCode=8200,countryCode=DK,countryName=Danmark,hasLatitude=true,
+//                  latitude=56.172171,hasLongitude=true,longitude=10.191838,phone=null,
+//                  url=null,extras=null]
+
+
+
+
                 // Set the maptype
                 map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 // Add a marker with the selected Child's name and current location
-                map.addMarker(new MarkerOptions().position(currentPosition)
+                map.addMarker(new MarkerOptions().position(currentPosition).snippet(markerInfo.toString())
                         .title(current.getName()).snippet(markerInfo.toString()));
 
                 // Set the camera position to zoom in on the current location
@@ -336,10 +362,6 @@ public class LocationActivity extends FragmentActivity implements
                 break;
             case R.id.action_map:
                 break;
-            case R.id.menu_add_new_place:
-                Intent location = new Intent(this, AddNewLocation.class);
-                startActivity(location);
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -348,11 +370,11 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        mLocationClient.connect();
-
-        provider = LocationManager.GPS_PROVIDER;
+        locationClient.connect();
 
         m_My_children = storage.loadChildren(this);
+
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         askForLocation();
     }
@@ -360,19 +382,21 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        locationClient.connect();
+
     }
 
     @Override
     protected void onStop() {
 
         // If the client is connected
-        if (mLocationClient.isConnected())
+        if (locationClient.isConnected())
         {
             /* Remove location updates for a listener.*/
-            mLocationClient.removeLocationUpdates(this);
+            locationClient.removeLocationUpdates(this);
         }
 
-        mLocationClient.disconnect();
+        locationClient.disconnect();
 
         super.onStop();
     }
@@ -384,7 +408,7 @@ public class LocationActivity extends FragmentActivity implements
     {
         Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
-        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+        locationClient.requestLocationUpdates(mLocationRequest, this);
 
         if (mRequestType != null)
         {
@@ -393,14 +417,14 @@ public class LocationActivity extends FragmentActivity implements
                 case ADD:
                     mGeofenceRequestIntent = getTransitionPendingIntent();
                     // Send a request to add the current geofences
-                    mLocationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
+                    locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
                 case REMOVE_INTENT:
                     mGeofenceRequestIntent = getTransitionPendingIntent();
-                    mLocationClient.removeGeofences(mGeofenceRequestIntent,
+                    locationClient.removeGeofences(mGeofenceRequestIntent,
                             (LocationClient.OnRemoveGeofencesResultListener) this);
                     break;
                 case REMOVE_LIST:
-                    mLocationClient.removeGeofences(mGeofencesToRemove,
+                    locationClient.removeGeofences(mGeofencesToRemove,
                             (LocationClient.OnRemoveGeofencesResultListener) this);
                     break;
                 case START :
@@ -453,7 +477,7 @@ public class LocationActivity extends FragmentActivity implements
         // Turn off the request flag
         mInProgress = false;
         // Destroy the current location client
-        mLocationClient = null;
+        locationClient = null;
         // Delete the client
         mActivityRecognitionClient = null;
     }
@@ -559,7 +583,7 @@ public class LocationActivity extends FragmentActivity implements
 
         // Turn off the in progress flag and disconnect the client
         mInProgress = false;
-        mLocationClient.disconnect();
+        locationClient.disconnect();
     }
 
     /**
@@ -580,30 +604,31 @@ public class LocationActivity extends FragmentActivity implements
 
         // Store the PendingIntent
         mGeofenceRequestIntent = requestIntent;
+        mGeofenceRequestIntent.getCreatorPackage();
         /*
          * Create a new location client object. Since the current
          * activity class implements ConnectionCallbacks and
          * OnConnectionFailedListener, pass the current activity object
          * as the listener for both parameters
          */
-        mLocationClient = new LocationClient(this, this, this);
+        locationClient = new LocationClient(this, this, this);
         // If a request is not already underway
         if (!mInProgress)
         {
             // Indicate that a request is underway
             mInProgress = true;
             // Request a connection from the client to Location Services
-            mLocationClient.connect();
+            locationClient.connect();
         }
         else
         {
             // A request is already underway. To handle this situation:
             // Disconnect the client
-            mLocationClient.disconnect();
+            locationClient.disconnect();
             // Reset the flag
             mInProgress = false;
             // Retry the request.
-            addGeofences(requestIntent); // mRequestType = REQUEST_TYPE.ADD; ?? FIXME
+            addGeofences(requestIntent);
         }
     }
     /**
@@ -630,20 +655,20 @@ public class LocationActivity extends FragmentActivity implements
          * OnConnectionFailedListener, pass the current activity object
          * as the listener for both parameters
          */
-        mLocationClient = new LocationClient(this, this, this);
+        locationClient = new LocationClient(this, this, this);
         // If a request is not already underway
         if (!mInProgress)
         {
             // Indicate that a request is underway
             mInProgress = true;
             // Request a connection from the client to Location Services
-            mLocationClient.connect();
+            locationClient.connect();
         }
         else
         {
             // A request is already underway. To handle this situation:
             // Disconnect the client
-            mLocationClient.disconnect();
+            locationClient.disconnect();
             // Reset the flag
             mInProgress = false;
             // Retry the request.
@@ -716,39 +741,25 @@ public class LocationActivity extends FragmentActivity implements
          * OnConnectionFailedListener, pass the current activity object
          * as the listener for both parameters
          */
-        mLocationClient = new LocationClient(this, this, this);
+        locationClient = new LocationClient(this, this, this);
         // If a request is not already underway
         if (!mInProgress)
         {
             // Indicate that a request is underway
             mInProgress = true;
             // Request a connection from the client to Location Services
-            mLocationClient.connect();
+            locationClient.connect();
         }
         else
         {
             // A request is already underway. To handle this situation:
             // Disconnect the client
-            mLocationClient.disconnect();
+            locationClient.disconnect();
             // Reset the flag
             mInProgress = false;
             // Retry the request.
             removeGeofences(geofenceIds); // mRequestType = REQUEST_TYPE.REMOVE_LIST; ?? FIXME
         }
-    }
-
-    /*
-     * From input arguments, create a single Location with provider set to
-     * "flp"
-     */
-    public Location createLocation(double lat, double lng, float accuracy)
-    {
-        // Create a new Location
-        Location newLocation = new Location(provider);
-        newLocation.setLatitude(lat);
-        newLocation.setLongitude(lng);
-        newLocation.setAccuracy(accuracy);
-        return newLocation;
     }
     //endregion
 
@@ -835,7 +846,7 @@ public class LocationActivity extends FragmentActivity implements
         {
             // A request is already underway. To handle this situation:
             // Disconnect the client
-            mLocationClient.disconnect();
+            locationClient.disconnect();
             // Reset the flag
             mInProgress = false;
             // Retry the request.
@@ -872,7 +883,7 @@ public class LocationActivity extends FragmentActivity implements
         {
             // A request is already underway. To handle this situation:
             // Disconnect the client
-            mLocationClient.disconnect();
+            locationClient.disconnect();
             // Reset the flag
             mInProgress = false;
             // Retry the request.

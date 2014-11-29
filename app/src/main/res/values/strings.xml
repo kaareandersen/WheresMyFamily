@@ -119,6 +119,8 @@
     <string name="menu_show_traffic_title">Show traffic</string>
     <string name="menu_zoom_in_title">Zoom in</string>
     <string name="menu_zoom_out_title">Zoom out</string>
+    <string name="menu_add_new_place">Nyt sted</string>
+    <string name="menu_show_child_position">Barnets position</string>
 
     <!-- Overview -->
     <string name="overview_title_edit_text">Tilføj et nyt sted</string>
@@ -134,6 +136,8 @@
     <string name="overview_future_events_textview">Kommende begivenheder</string>
     <string name="overview_take_pic_textview">Tag billede</string>
     <string name="overview_btn_take_pic_text">Bepp</string>
+    <string name="overview_radius_text_view">Sæt radius</string>
+    <string name="overview_radius_edit_text">Vælg størrelse på område</string>
 
     <!--AddNewLocation-->
     <string name="add_new_location_headline">Tilføj steder til favoritter</string>
