@@ -157,7 +157,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-        locationClient.requestLocationUpdates(mLocationRequest, this);
+
 
         ImageButton button = (ImageButton) findViewById(R.id.callchild);
         button.setOnClickListener(new View.OnClickListener() {
