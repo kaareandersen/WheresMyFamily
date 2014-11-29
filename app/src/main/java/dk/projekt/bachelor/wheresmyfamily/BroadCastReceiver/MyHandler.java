@@ -23,10 +23,11 @@ import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInParent;
  */
 public class MyHandler extends NotificationsHandler {
     private final String TAG = "MyHandler";
-    public static final int NOTIFICATION_ID = 1;
+    public static int NOTIFICATION_ID = 0;
     private NotificationManager mNotificationManager;
     Context ctx;
     private MyHandler mHandler;
+    int id = 0;
 
     @Override
     public void onReceive(Context context, Bundle bundle) {
@@ -40,6 +41,7 @@ public class MyHandler extends NotificationsHandler {
         if(sepMessage[0].equals("NewEvent")){
             newMessage = "Du har modtaget en ny kalender begivenhed";
             String eventID = sepMessage[1];
+            NOTIFICATION_ID = 1;
 
             //LoggedInChild loggedinchild = LoggedInChild.instance;
             //loggedinchild.getEventId(eventID);
@@ -49,6 +51,7 @@ public class MyHandler extends NotificationsHandler {
         }
         if(sepMessage[0].equals("GetLocation")){
             newMessage = "Lokations anmodning modtaget";
+            NOTIFICATION_ID = 2;
 
             LoggedInChild loggedinchild = LoggedInChild.instance;
             loggedinchild.getAndPushLocation();
@@ -56,6 +59,7 @@ public class MyHandler extends NotificationsHandler {
         if (sepMessage[0].equals("ReceiveLocation")){
             String location = sepMessage[1];
             newMessage = "Lokation modtaget";
+            NOTIFICATION_ID= 3;
 
             LocationActivity locationactivity = LocationActivity.instance;
             locationactivity.receiveLocation(location);
@@ -71,12 +75,12 @@ public class MyHandler extends NotificationsHandler {
         mNotificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0,
+        PendingIntent contentIntent = PendingIntent.getActivity(ctx, id,
                 new Intent(ctx, LoggedInParent.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.family_white)
                         .setContentTitle("Wheres My Family")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))

@@ -236,6 +236,9 @@
             android:name=".activities.AddNewLocation"
             android:label="@string/title_activity_new_location" >
         </activity>
+
+        <receiver android:name=".BroadCastReceiver.AlarmReceiver">
+        </receiver>
     </application>
 
 </manifest>
