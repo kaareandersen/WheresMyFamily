@@ -6,7 +6,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.RegisterParent">
+    tools:context="dk.projekt.bachelor.wheresmyfamily.activities.RegisterParent"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/childNameLayout"
@@ -18,7 +19,9 @@
             android:id="@+id/childNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/child_name_textView_title"/>
+            android:text="@string/child_name_textView_title"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/childNameInfo"
@@ -26,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_name_hint"
-            android:inputType="text" />
+            android:inputType="text"
+            android:textSize="18dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -39,7 +43,9 @@
             android:id="@+id/childPhoneTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/child_phone_textView_title"/>
+            android:text="@string/child_phone_textView_title"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/childPhoneInfo"
@@ -47,7 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_phone_hint"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:textSize="18dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -60,14 +67,17 @@
             android:id="@+id/childEmailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/child_email_textView_title"/>
+            android:text="@string/child_email_textView_title"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/childEmailInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textSize="18dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -75,14 +85,15 @@
         android:layout_height="fill_parent"
         android:layout_below="@+id/childPhoneLayout"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_child_headline"
             android:layout_marginBottom="5dp"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="match_parent"

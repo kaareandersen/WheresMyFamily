@@ -8,12 +8,10 @@
     <string name="register_barn_title">Registrér Barn</string>
     <string name="action_settings">Settings</string>
     <string name="register_child_headline">Registréringsvejledning</string>
-    <string name="register_child_description">1. Åbn WhereIsMyFamily på begge telefoner,
-        og placér begge enheders bagside mod hinanden \n
+    <string name="register_child_description"> 1. Placér begge enheders bagside mod hinanden \n
         2. Vent på en lyd, der bekræfter, at begge enheder har fundet hinanden. \n
-        3. Rør ved afsenderens skærm for at starte dataoverførslen. Der vil være en lyd,
-        der fortæller, når dataoverførslen starter. \n
-        4. Når dataoverførslen er færdig, vil der afspilles endnu en lyd.</string>
+        3. Rør ved afsenderens skærm for at starte dataoverførslen. \n
+        4. Dataoverførslen bekræftes ved afspilning af en lyd.</string>
     <string name="turn_on_nfc_headline">Aktivér NFC:</string>
     <string name="turn_on_nfc">http://www.androidauthority.com/how-to-use-nfc-android-2-164644/</string>
     <string name="registrer_barn_knap">Registrér barn</string>
@@ -80,7 +78,7 @@
     <string name="title_activity_sign_in_screen">Log Ind</string>
 
     <!-- logged_in -->
-    <string name="title_activity_logged_in">Oversigt</string>
+    <string name="title_activity_logged_in"></string>
     <string name="main_no_items">Der er ikke gemt nogen børn</string>
 
     <!-- logged_in_child -->
@@ -130,9 +128,9 @@
     <string name="overview_address_hint_text">Søg på adresse</string>
     <string name="overview_save_place_button">Tilføj til mine steder</string>
     <string name="title_activity_new_location">NewLocation</string>
-    <string name="overview_name_textview">Navn</string>
-    <string name="overview_phone_textview">Mobilnummer</string>
-    <string name="overview_position_textview">Position</string>
+    <string name="overview_name_textview">Navn:</string>
+    <string name="overview_phone_textview">Mobilnummer:</string>
+    <string name="overview_position_textview">Position:</string>
     <string name="overview_future_events_textview">Kommende begivenheder</string>
     <string name="overview_take_pic_textview">Tag billede</string>
     <string name="overview_btn_take_pic_text">Bepp</string>
@@ -146,5 +144,6 @@
     <!--FavoritePlaces-->
     <string name="favorite_places_headline">Favoritliste</string>
     <string name="action_add_new_place"></string>
+    <string name="showpositionoverview">Gå til</string>
 
 </resources>
