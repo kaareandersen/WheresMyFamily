@@ -35,10 +35,10 @@ import java.util.TimeZone;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
@@ -90,8 +90,8 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEndDate = (EditText) findViewById(R.id.txtEndDate);
         txtEndTime = (EditText) findViewById(R.id.txtEndTime);
         txtEvent = (EditText) findViewById(R.id.txtEvent);
-        txtChild=(EditText) findViewById(R.id.txtChild);
-        btnNewLocation= (Button) findViewById(R.id.btnnewlocation);
+        txtChild = (EditText) findViewById(R.id.txtChild);
+        btnNewLocation = (Button) findViewById(R.id.btnnewlocation);
         spinner = (Spinner) findViewById(R.id.spinnerRepeat);
 
         txtStartDate.setOnClickListener(this);
@@ -182,7 +182,7 @@ public class NewCalEventActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
 
-        m_My_children = storage.loadChildren(this);
+        // m_My_children = storage.loadChildren(this);
         getCurrentChild();
         txtChild.setText(currentChild.getName());
 
@@ -234,7 +234,6 @@ public class NewCalEventActivity extends BaseActivity implements
             int minute = Integer.parseInt(sepTime[1]);
             // int seconds = Integer.parseInt(sepDate[2]);
 
-
             // calendar.set(Calendar.AM_PM, Calendar.AM);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
@@ -256,7 +255,6 @@ public class NewCalEventActivity extends BaseActivity implements
             AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             // Don't do anything here as this will fire the alarm instantly
-
 
             return true;
         }

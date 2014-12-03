@@ -11,10 +11,14 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInParent;
 
 public class AlarmService extends Service {
@@ -35,9 +39,51 @@ public class AlarmService extends Service {
         Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(500);
 
-        //Toast.makeText(this, "Your time is up, bitch", Toast.LENGTH_SHORT).show();
+        askForLocation();
 
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void askForLocation(){
+
+        ChildModelController childModelController = new ChildModelController(this);
+
+        PushNotificationController pushNotificationController = new PushNotificationController(this);
+        pushNotificationController.askForLocationFromChild(childModelController.getCurrentChild().getEmail());
+    }
+
+    public void receiveLocation(String location){
+        //TODO
+        //DO something
+        // String to convert = Location[gps 56,172339,10,191438 acc=2 et=+5d4h30m56s48ms alt=82.02612592977187
+        // vel=0.1622365 bear=280.9743 {Bundle[mParcelledData.dataSize=44]}]
+        // TextUtils.SimpleStringSplitter stringSplitter = new TextUtils.SimpleStringSplitter(" ");
+
+
+        StringBuilder stringBuilder = new StringBuilder(location);
+        String latitudeString = stringBuilder.substring(15, 24);
+        String longitudeString = stringBuilder.substring(25, 35);
+        String lat = latitudeString.replace(latitudeString, stringBuilder.substring(15, 17) + "." + stringBuilder.substring(18, 24));
+        String lng = longitudeString.replace(longitudeString, stringBuilder.substring(25, 27) + "." + stringBuilder.substring(28, 34));
+
+        double latitude = 0;
+        double longitude = 0;
+
+        try
+        {
+            latitude = Double.valueOf(lat);
+            longitude = Double.valueOf(lng);
+        }
+        catch(NumberFormatException e)
+        {
+            Toast.makeText(this, "Kan ikke modtage position, prøv venligst igen", Toast.LENGTH_SHORT).show();
+        }
+
+        LatLng currentPosition = new LatLng(latitude, longitude);
+
+        Toast.makeText(this, currentPosition.toString(), Toast.LENGTH_LONG).show();
+
+
     }
 
     /*public void startRepeatingTimer()

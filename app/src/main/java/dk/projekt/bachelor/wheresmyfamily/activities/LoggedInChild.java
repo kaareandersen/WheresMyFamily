@@ -38,7 +38,7 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -89,12 +89,11 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     JSONArray mChildren = new JSONArray();
     ArrayList<Parent> mParents = new ArrayList<Parent>();
-    String childrenPrefName = "myChildren";
+    /*String childrenPrefName = "myChildren";
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
-    String parentsKey = "parentsInfo";
+    String parentsKey = "parentsInfo";*/
     UserInfoStorage storage = new UserInfoStorage();
-    LocationActivity locationActivity;
     //endregion
 
     @Override
@@ -157,8 +156,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-
-
         ImageButton button = (ImageButton) findViewById(R.id.callchild);
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -177,9 +174,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     protected void onResume() {
         super.onResume();
 
-        // Toast.makeText(this, "LoggedInChild OnResume", Toast.LENGTH_SHORT).show();
-
-        // Get and show parent info
         mParents = storage.loadParents(this);
 
         if(mParents.size() > 0)
@@ -222,8 +216,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
     public void deleteDialogBox(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -321,12 +313,11 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
             // Get the error dialog from Google Play services
             Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, this,
                     CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-
         }
-
     }
 
+
+    // Internal storga section from early in the project
     /*public void saveParent(Parent parent)
     {
         try

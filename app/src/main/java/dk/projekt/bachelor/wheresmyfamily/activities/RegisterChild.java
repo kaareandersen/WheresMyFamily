@@ -24,10 +24,11 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
@@ -58,6 +59,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
     UserInfoStorage storage = new UserInfoStorage();
+    ChildModelController childModelController;
     //endregion
 
     @Override
@@ -69,7 +71,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
         setContentView(R.layout.activity_register_child2);
 
-        // Toast.makeText(this, "RegisterChild onCreate", Toast.LENGTH_SHORT).show();
+        childModelController = new ChildModelController(this);
 
         parentNameTextView = (TextView)findViewById(R.id.parentNameTextView);
         parentNameEditText = (TextView)findViewById(R.id.parentNameInfo);

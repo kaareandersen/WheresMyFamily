@@ -32,9 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 
 public class AddNewLocation extends Activity  implements View.OnClickListener, AdapterView.OnItemClickListener {
 

@@ -45,13 +45,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
@@ -268,34 +269,30 @@ public class LocationActivity extends FragmentActivity implements
                         CameraUpdateFactory.newCameraPosition(myPosition));
                 break;
             case R.id.menu_test_item:
-                Child current = new Child();
+                Child current;
                 List<Address> addresses;
                 String language = "da";
                 String country = "DK";
                 Locale local = new Locale(language, country);
                 StringBuffer markerInfo = new StringBuffer();
 
-                for(int i = 0; i < m_My_children.size(); i++)
-                {
-                    if(m_My_children.get(i).getIsCurrent())
-                        current = m_My_children.get(i);
-                }
+                ChildModelController childModelController = new ChildModelController(this);
+                current = childModelController.getCurrentChild();
 
-
-                    Geocoder geocoder = new Geocoder(this, local);
-                    try {
-                        addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
-                        if(addresses.size() > 0)
+                Geocoder geocoder = new Geocoder(this, local);
+                try {
+                    addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                    if(addresses.size() > 0)
+                    {
+                        for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
                         {
-                            for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
-                            {
-                                markerInfo.append(addresses.get(0).getAddressLine(j).toString());
-                                markerInfo.append("\n");
-                            }
+                            markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                            markerInfo.append("\n");
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                     // Sort information from the string with address info
 //                Address[addressLines=[0:"IT-byen Katrinebjerg",
@@ -315,9 +312,6 @@ public class LocationActivity extends FragmentActivity implements
                             .target(currentPosition).zoom(17).bearing(90).tilt(0).build();
                     map.animateCamera(
                             CameraUpdateFactory.newCameraPosition(currentChildPosition));
-
-
-
                 break;
             case R.id.action_overview:
                 Intent overview = new Intent(this, OverviewActivity.class);
@@ -923,128 +917,7 @@ public class LocationActivity extends FragmentActivity implements
 
         Toast.makeText(this, currentPosition.toString(), Toast.LENGTH_LONG).show();
 
-        /*List<Address> adress = new List<Address>() {
-            @Override
-            public void add(int i, Address address) {
 
-            }
-
-            @Override
-            public boolean add(Address address) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int i, Collection<? extends Address> addresses) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends Address> addresses) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> objects) {
-                return false;
-            }
-
-            @Override
-            public Address get(int i) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @NonNull
-            @Override
-            public Iterator<Address> iterator() {
-                return null;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @NonNull
-            @Override
-            public ListIterator<Address> listIterator() {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public ListIterator<Address> listIterator(int i) {
-                return null;
-            }
-
-            @Override
-            public Address remove(int i) {
-                return null;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> objects) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> objects) {
-                return false;
-            }
-
-            @Override
-            public Address set(int i, Address address) {
-                return null;
-            }
-
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @NonNull
-            @Override
-            public List<Address> subList(int i, int i2) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @NonNull
-            @Override
-            public <T> T[] toArray(T[] ts) {
-                return null;
-            }
-        };*/
     }
     //endregion
 }

@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.DataModel;
 
 /**
  * Created by Tommy on 25-11-2014.

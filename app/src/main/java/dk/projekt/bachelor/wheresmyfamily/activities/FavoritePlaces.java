@@ -22,9 +22,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 
 public class FavoritePlaces extends ListActivity {
 

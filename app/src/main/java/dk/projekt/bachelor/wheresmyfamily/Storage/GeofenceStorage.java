@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Storage;
 
 /**
  * Created by Tommy on 25-11-2014.
@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 
 /**
  * Storage for geofence values, implemented in SharedPreferences.

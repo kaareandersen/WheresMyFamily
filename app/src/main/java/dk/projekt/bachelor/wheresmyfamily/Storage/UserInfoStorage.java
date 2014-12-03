@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;

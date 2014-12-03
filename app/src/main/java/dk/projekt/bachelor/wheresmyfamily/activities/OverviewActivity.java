@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PictUtil;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 
 
 public class OverviewActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener

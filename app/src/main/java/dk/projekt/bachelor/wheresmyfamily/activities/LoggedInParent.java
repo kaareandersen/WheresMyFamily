@@ -35,7 +35,6 @@ import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
-import com.microsoft.windowsazure.notifications.NotificationsManager;
 
 import org.json.JSONArray;
 
@@ -44,13 +43,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -88,6 +87,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
     UserInfoStorage storage = new UserInfoStorage();
+    ChildModelController childModelController;
+    Child currentChild = new Child();
     // Define an object that holds accuracy and frequency parameters
     private LocationRequest mLocationRequest;
 
@@ -148,7 +149,9 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         myApp.setCurrentActivity(this);
         mMobileServicesClient = myApp.getAuthService();
 
-        m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
+        childModelController = new ChildModelController(this);
+
+        m_adapter = new ChildAdapter(this, R.layout.row, childModelController.getMyChildren());
         myList = (ListView)findViewById(android.R.id.list);
         myList.setAdapter(m_adapter);
 
@@ -211,19 +214,17 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     protected void onResume() {
         super.onResume();
 
-        m_My_children = storage.loadChildren(this);
+        // m_My_children = storage.loadChildren(this);
+        // childModelController.getMyChildren();
 
         // If any children are registered
-        if(m_My_children.size() > 0)
+        if(childModelController.getChildListCount() >= 0)
         {
             // Since we are on the home page, set current child to none
-            for(int i = 0; i < m_My_children.size(); i++)
-            {
-                m_My_children.get(i).setIsCurrent(false);
-            }
+            childModelController.setCurrentUserToNone();
         }
         // Refresh the list of children
-        myList.setAdapter(new ChildAdapter(this, R.layout.row, m_My_children));
+        myList.setAdapter(new ChildAdapter(this, R.layout.row, childModelController.getMyChildren()));
     }
 
     @Override
@@ -241,10 +242,10 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private Runnable returnRes = new Runnable() {
         @Override
         public void run() {
-            if (m_My_children != null && m_My_children.size() > 0){
+            if (childModelController.getMyChildren() != null && childModelController.getChildListCount() > 0){
                 m_adapter.notifyDataSetChanged();
-                for (int i=0;i< m_My_children.size();i++)
-                    m_adapter.add(m_My_children.get(i));
+                for (int i = 0; i < childModelController.getChildListCount(); i++)
+                    m_adapter.add(childModelController.getMyChildren().get(i));
             }
             m_ProgressDialog.dismiss();
             m_adapter.notifyDataSetChanged();
@@ -254,10 +255,10 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private void getChild() throws FileNotFoundException, IOException {
         try
         {
-            m_My_children = storage.loadChildren(this);
+            ArrayList<Child> tempList = childModelController.getMyChildren();
 
             Thread.sleep(1000);
-            Log.i("ARRAY", "" + m_My_children.size());
+            Log.i("ARRAY", "" + tempList.size());
         } catch (Exception e){
             Log.e("BACKGROUND_PROC", e.getMessage());
         }
@@ -424,7 +425,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
             }
 
             Child c = null;
-            c = m_My_children.get(position);
+            c = childModelController.getMyChildren().get(position);
 
             if (c != null)
             {
@@ -452,7 +453,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
             startActivity(childClick);
 
             // Set selected user to current user
-            m_My_children.get(position).setIsCurrent(true);
+            childModelController.getMyChildren().get(position).setIsCurrent(true);
         }
     };
     //endregion
@@ -493,7 +494,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     protected void onPause() {
         super.onPause();
 
-        storage.saveChildren(this, m_My_children);
+        storage.saveChildren(this, childModelController.getMyChildren());
     }
 
     public void callApi(View view) {
@@ -557,7 +558,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    /* public void saveChildren(ArrayList<Child> myChildren)
+    //region Internal storage from early in the project
+/* public void saveChildren(ArrayList<Child> myChildren)
     {
         try
         {
@@ -582,4 +584,5 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
 
         return retVal == null ? new ArrayList<Child>() : retVal;
     }*/
+    //endregion
 }
