@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -63,20 +65,20 @@ public class PushNotificationController {
                     int hour = Integer.parseInt(sepTime[0]);
                     int minute = Integer.parseInt(sepTime[1]);
 
-                    //Id number of chosen event
-                    //int id = Integer.parseInt(eventid);
-
-                    //Convert starttime to milliseconds NOT IN USE
-                    long min = Integer.parseInt(startTime.substring(0, 2));
-                    long sec = Integer.parseInt(startTime.substring(3));
-                    long t = (min * 60L) + sec;
-                    long result = TimeUnit.SECONDS.toMillis(t);
+                    Calendar c = Calendar.getInstance();
+                    int currentyear = c.get(Calendar.YEAR);
+                    int currentmonth = c.get(Calendar.MONTH);
+                    int currentday = c.get(Calendar.DATE);
+                    int currenthour = c.get(Calendar.HOUR_OF_DAY);
+                    int currentminute = c.get(Calendar.MINUTE);
+                    int currentseconds = c.get(Calendar.SECOND);
 
                     //Convert timedifference setdate - currentdate to milliseconds
-                    GregorianCalendar currentDay=new  GregorianCalendar (Locale.GERMANY);
+                    GregorianCalendar currentDay=new  GregorianCalendar (currentyear, currentmonth, currentday, currenthour, currentminute, 0);
                     GregorianCalendar nextDay=new  GregorianCalendar (year,month,date,hour,minute,0);
 
                     long diff_in_ms=nextDay. getTimeInMillis()-currentDay. getTimeInMillis();
+                    long timemilli = nextDay.  getTimeInMillis();
 
                     Intent intent = new Intent(mContext,
                             AlarmReceiver.class);
@@ -86,16 +88,13 @@ public class PushNotificationController {
                     intent.putExtra("end_date", endDate);
                     intent.putExtra("end_time", endTime);
 
-                    PendingIntent mAlarmSender;
-
-                    mAlarmSender = PendingIntent.getBroadcast(
-                           mContext, 0, intent, 0);
-
-                    AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-                    am.set(AlarmManager.RTC_WAKEUP, diff_in_ms,
-                            mAlarmSender);
-
-                    //cEventChildController.startEvent(year,month,date,hour,minute);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.MONTH, month);
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.DAY_OF_MONTH, date);
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                    calendar.set(Calendar.MINUTE, minute);
+                    calendar.set(Calendar.SECOND, 0);
 
                     Toast.makeText(mContext, "Kalender hentet", Toast.LENGTH_LONG).show();
 

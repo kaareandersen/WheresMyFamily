@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="dk.projekt.bachelor.wheresmyfamily.activities.CreateUserScreen"
 
-    android:background="#ffffff">
+    android:background="@color/themecolor">
 
     <LinearLayout
         android:orientation="vertical"
@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:padding="10dp"
+        android:background="@drawable/linearlayout_bg"
         >
 
         <EditText
@@ -34,7 +35,7 @@
             android:id="@+id/txtRegisterUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_default_bg"
+            android:background="@drawable/eddittext_default_middle"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
             android:hint="Bruger Navn"
@@ -47,7 +48,7 @@
             android:id="@+id/txtRegisterPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_default_bg"
+            android:background="@drawable/eddittext_default_middle"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
             android:hint="Password"
@@ -60,7 +61,7 @@
             android:id="@+id/txtRegisterConfirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_default_bg"
+            android:background="@drawable/eddittext_default_middle"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
             android:hint="Bekræft Password"

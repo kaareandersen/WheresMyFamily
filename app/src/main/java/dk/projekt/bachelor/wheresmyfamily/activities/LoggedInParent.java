@@ -163,14 +163,14 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         };
         Thread thread = new Thread(null, viewChild, "MagenToBackground");
         thread.start();
-        m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Please wait...", "Retrieving data ...", true);
-
+        m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Vent venligt...", "Henter data ...", true);
+/*
         mGcm = GoogleCloudMessaging.getInstance(this);
 
         String connectionString =
                 "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
         mHub = new NotificationHub("WheresMyFamiluMSHub", connectionString, this);
-        NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);
+        NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);*/
 
         //get UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
@@ -250,7 +250,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         {
             m_My_children = storage.loadChildren(this);
 
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             Log.i("ARRAY", "" + m_My_children.size());
         } catch (Exception e){
             Log.e("BACKGROUND_PROC", e.getMessage());

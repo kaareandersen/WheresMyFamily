@@ -36,6 +36,8 @@ public class AlarmReceiver extends BroadcastReceiver{
                     context.getSystemService(Context.NOTIFICATION_SERVICE);
             CharSequence text = eventName + " "+ newEventName;
 
+            Toast.makeText(context, "BOOOOOOOOOM fra RECEIVER", Toast.LENGTH_LONG).show();
+
             Intent newIntent = new Intent(context,
                     CEventChildController.class);
             //newIntent.putExtra("event_id", eventId);
