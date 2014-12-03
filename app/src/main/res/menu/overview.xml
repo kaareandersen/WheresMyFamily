@@ -18,5 +18,5 @@
         android:title="Map"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_map"/>
+        android:icon="@drawable/ic_action_map_light"/>
 </menu>

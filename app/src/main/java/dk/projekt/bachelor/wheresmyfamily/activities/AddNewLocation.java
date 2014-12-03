@@ -1,9 +1,7 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -20,8 +18,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,14 +32,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
 
 public class AddNewLocation extends Activity  implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     Button btnAddPlace;
     EditText placeField;
+    EditText radiusField;
     AutoCompleteTextView autoCompView;
     List<Address> addresses;
+    /*
+     * Internal geofence objects for geofence 1 and 2
+     */
+    private WmfGeofence wmfGeofence;
+    private GeofenceStorage geofenceStorage;
+    // Internal List of WmfGeofence objects
+    ArrayList<WmfGeofence> geofenceList;
 
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
@@ -57,7 +63,10 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_location);
 
+        geofenceStorage = new GeofenceStorage(this);
+
         placeField = (EditText) findViewById(R.id.place_edit_text);
+        radiusField = (EditText) findViewById(R.id.radius_edit_text);
         autoCompView = (AutoCompleteTextView) findViewById(R.id.address_autocomplete_edit_text);
         autoCompView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
         autoCompView.setOnItemClickListener(this);
@@ -65,6 +74,19 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         btnAddPlace = (Button) findViewById(R.id.btnaddplace);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        geofenceList = geofenceStorage.getGeofences(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        geofenceStorage.setGeofences(this, geofenceList);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,27 +161,28 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         return resultList;
     }
 
-
     @Override
     public void onClick(View view) {
         if(view == btnAddPlace) {
-            Intent intent = new Intent(this, LocationActivity.class);
+            /*Intent intent = new Intent(this, LocationActivity.class);
             intent.putExtra("Name", addresses.get(0).getAddressLine(0));
             intent.putExtra("Address", addresses.get(0).getAddressLine(1));
             intent.putExtra("PostalCodeCity", addresses.get(0).getAddressLine(2));
 
-            LocationActivity locationActivity = new LocationActivity();
             PendingIntent pendingIntent = PendingIntent.getActivity(this, ConnectionResult.SUCCESS,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
 
-            locationActivity.createGeofences(pendingIntent);
+            createGeofences();
+            geofenceStorage.setGeofences(this, geofenceList);
+
+            Toast.makeText(this, placeField.getText().toString() + " er føjet til favoritter", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-        // Set the Locale too "Danish spoken in Denmark" to get the most
+        //*/ Set the Locale too "Danish spoken in Denmark" to get the most
         // relevant search results for Denmark
         String language = "da";
         String country = "DK";
@@ -174,27 +197,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         {
             addresses = geocoder.getFromLocationName(str, 1);
             if(addresses.size() > 0)
-            {
-                double latitude = addresses.get(0).getLatitude();
-                double longitude = addresses.get(0).getLongitude();
-                String postalCode = addresses.get(0).getPostalCode();
-                String a = addresses.get(0).getAddressLine(0);
-                String b = addresses.get(0).getAdminArea();
-                String c = addresses.get(0).getCountryCode();
-                String d = addresses.get(0).getCountryName();
-                String e = addresses.get(0).getFeatureName();
-                String f = addresses.get(0).getLocality();
-                String g = addresses.get(0).getPhone();
-                String h = addresses.get(0).getPostalCode();
-                String i = addresses.get(0).getPremises();
-                String j = addresses.get(0).getSubAdminArea();
-                String k = addresses.get(0).getSubLocality();
-                String l = addresses.get(0).getSubThoroughfare();
-                String m = addresses.get(0).getThoroughfare();
-                String n = addresses.get(0).getUrl();
-                String o = addresses.get(0).getLocale().toString();
                 Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-            }
         }
         catch (IOException e)
         {
@@ -249,5 +252,28 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
             return filter;
         }
+    }
+
+    /**
+     * Get the geofence parameters for each geofence from the UI
+     * and add them to a List.
+     */
+    public void createGeofences() // PendingIntent pendingIntent?? FIXME
+    {
+        wmfGeofence = new WmfGeofence(
+                placeField.getText().toString(),
+                addresses.get(0).getLatitude(),
+                addresses.get(0).getLongitude(),
+                Float.valueOf(radiusField.getText().toString()),
+                com.google.android.gms.location.Geofence.NEVER_EXPIRE,
+                // This geofence records both entry and exit transitions
+                com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
+        // Store this geofence
+        geofenceStorage = new GeofenceStorage(this);
+        // geofenceList = new ArrayList<WmfGeofence>();
+
+        geofenceList.add(geofenceList.size(), wmfGeofence);
+        geofenceStorage.setGeofences(this, geofenceList);
     }
 }

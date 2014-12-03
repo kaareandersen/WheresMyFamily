@@ -7,15 +7,12 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 
@@ -66,11 +63,11 @@ public class PushNotificationController {
                     //Id number of chosen event
                     //int id = Integer.parseInt(eventid);
 
-                    //Convert starttime to milliseconds NOT IN USE
+                    /*//Convert starttime to milliseconds NOT IN USE
                     long min = Integer.parseInt(startTime.substring(0, 2));
                     long sec = Integer.parseInt(startTime.substring(3));
                     long t = (min * 60L) + sec;
-                    long result = TimeUnit.SECONDS.toMillis(t);
+                    long result = TimeUnit.SECONDS.toMillis(t);*/
 
                     //Convert timedifference setdate - currentdate to milliseconds
                     GregorianCalendar currentDay=new  GregorianCalendar (Locale.GERMANY);

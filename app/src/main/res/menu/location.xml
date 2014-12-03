@@ -36,12 +36,6 @@
     </item>
 
     <item
-        android:id="@+id/menu_add_new_place"
-        android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="@string/menu_add_new_place"/>
-
-    <item
         android:id="@+id/menu_gotolocation"
         android:orderInCategory="100"
         android:showAsAction="never"
@@ -80,6 +74,6 @@
         android:title="Map"
         android:orderInCategory="3"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_map"/>
+        android:icon="@drawable/ic_action_map_light"/>
 
 </menu>

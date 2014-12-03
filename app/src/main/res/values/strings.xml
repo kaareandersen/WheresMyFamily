@@ -139,7 +139,12 @@
     <string name="overview_radius_text_view">Sæt radius</string>
     <string name="overview_radius_edit_text">Vælg størrelse på område</string>
 
-    <!--AddNewLocation-->
+    <!-- AddNewLocation -->
     <string name="add_new_location_headline">Tilføj steder til favoritter</string>
+    <string name="title_activity_favorite_places">FavoritePlaces</string>
+
+    <!--FavoritePlaces-->
+    <string name="favorite_places_headline">Favoritliste</string>
+    <string name="action_add_new_place"></string>
 
 </resources>

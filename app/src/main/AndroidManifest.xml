@@ -25,6 +25,7 @@
     <uses-permission android:name="dk.projekt.bachelor.wheresmyfamily.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature android:name="android.hardware.nfc" />
     <uses-feature android:name="android.hardware.camera" />
@@ -197,6 +198,9 @@
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity"
             android:label="@string/title_activity_new_cal_event" >
+            <intent-filter>
+                <action android:name="new.calendar.event" />
+            </intent-filter>
         </activity>
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.OverviewActivity"
@@ -227,12 +231,29 @@
         </service>
 
         <activity
-            android:name=".activities.AddNewLocation"
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.AddNewLocation"
             android:label="@string/title_activity_new_location" >
         </activity>
 
-        <receiver android:name=".BroadCastReceiver.AlarmReceiver">
+        <receiver android:name="dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver" >
+            <!--<intent-filter>
+                <action android:name="new.calendar.event" />
+            </intent-filter>-->
         </receiver>
+
+        <activity
+            android:name="dk.projekt.bachelor.wheresmyfamily.activities.FavoritePlaces"
+            android:label="@string/title_activity_favorite_places" >
+        </activity>
+
+        <service
+            android:name="dk.projekt.bachelor.wheresmyfamily.Services.AlarmService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="new.calendar.event" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -128,14 +128,15 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     // Store the current activity recognition client
     private ActivityRecognitionClient mActivityRecognitionClient;
 
+    ListView myList;
+
     //endregion
 
+    //region Lifecycle events
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in_parent);
-
-        // Toast.makeText(this, "LoggedInParent OnCreate", Toast.LENGTH_SHORT).show();
 
         getListView().setOnItemClickListener(listlistener);
 
@@ -147,8 +148,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         myApp.setCurrentActivity(this);
         mMobileServicesClient = myApp.getAuthService();
 
-        this.m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
-        ListView myList = (ListView)findViewById(android.R.id.list);
+        m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
+        myList = (ListView)findViewById(android.R.id.list);
         myList.setAdapter(m_adapter);
 
         viewChild = new Runnable() {
@@ -204,11 +205,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-
-
-        /*Intent intent = new Intent(this, LocationService.class);
-        startService(intent);*/
     }
 
     @Override
@@ -226,11 +222,21 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
                 m_My_children.get(i).setIsCurrent(false);
             }
         }
-
-        locationClient.connect();
-
-
+        // Refresh the list of children
+        myList.setAdapter(new ChildAdapter(this, R.layout.row, m_My_children));
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    //endregion
 
     private Runnable returnRes = new Runnable() {
         @Override
@@ -255,9 +261,11 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         } catch (Exception e){
             Log.e("BACKGROUND_PROC", e.getMessage());
         }
+
         runOnUiThread(returnRes);
     }
 
+    //region Location callback methods
     @Override
     public void onConnected(Bundle bundle) {
         Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
@@ -331,7 +339,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         locationClient = null;
         // Delete the client
         mActivityRecognitionClient = null;
-
     }
 
     @Override
@@ -394,9 +401,12 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
                 errorFragment.setDialog(errorDialog);
                 // Show the error dialog in the DialogFragment
                 errorFragment.show(getSupportFragmentManager(), "Error Detection in" + getCallingActivity());*/
-            }
         }
+    }
+    //endregion
 
+
+    //region Child listadapter
     private class ChildAdapter extends ArrayAdapter<Child>
     {
         public ChildAdapter(Context context, int textViewResourceId, ArrayList<Child> items)
@@ -445,6 +455,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
             m_My_children.get(position).setIsCurrent(true);
         }
     };
+    //endregion
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
