@@ -1,5 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
@@ -18,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -40,7 +40,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,6 @@ import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
@@ -68,6 +66,7 @@ public class LocationActivity extends FragmentActivity implements
     private LatLng mCurrentLocation;
     private HistoryApi historyApi;
     private GoogleApiClient googleApiClient;
+
 
     // Define an object that holds accuracy and frequency parameters
     private LocationRequest mLocationRequest;
@@ -106,35 +105,10 @@ public class LocationActivity extends FragmentActivity implements
     // Store the list of geofence Ids to remove
     List<String> mGeofencesToRemove;
 
-    /*
-     * Handles to UI views containing geofence data
-     */
-    // Handle to geofence 1 latitude in the UI
-    private EditText mLatitude1;
-    // Handle to geofence 1 longitude in the UI
-    private EditText mLongitude1;
-    // Handle to geofence 1 radius in the UI
-    private EditText mRadius1;
-    // Handle to geofence 2 latitude in the UI
-    private EditText mLatitude2;
-    // Handle to geofence 2 longitude in the UI
-    private EditText mLongitude2;
-    // Handle to geofence 2 radius in the UI
-    private EditText mRadius2;
-    /*
-     * Internal geofence objects for geofence 1 and 2
-     */
-    private WmfGeofence mUIGeofence1;
-    private WmfGeofence mUIGeofence2;
-    // List of currentGeofences
     ArrayList<com.google.android.gms.location.Geofence> mCurrentGeofences;
     // Internal List of WmfGeofence objects
     List<com.google.android.gms.location.Geofence> mGeofenceList;
-    // Persistent storage for geofences
-    private GeofenceStorage mGeofenceStorage;
-
-    // Hardcoded location for testing
-    private static final LatLng GOLDEN_GATE_BRIDGE = new LatLng(37.828891,-122.485884);
+    private GeofenceStorage geofenceStorage;
 
     // Store the PendingIntent used to send activity recognition events back to the app
     private PendingIntent mActivityRecognitionPendingIntent;
@@ -162,6 +136,7 @@ public class LocationActivity extends FragmentActivity implements
     //endregion
 
     public LocationActivity(){}
+
     //region Lifecycle events
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +156,7 @@ public class LocationActivity extends FragmentActivity implements
         addgeofenceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AddNewLocation.class);
+                Intent intent = new Intent(getApplicationContext(), FavoritePlaces.class);
                 startActivity(intent);
             }
         });
@@ -190,6 +165,7 @@ public class LocationActivity extends FragmentActivity implements
         if (locationClient == null)
             locationClient = new LocationClient(this, this, this);
 
+        // Initialize the map
         map = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
 
@@ -214,7 +190,7 @@ public class LocationActivity extends FragmentActivity implements
         mInProgress = false;
 
         // Instantiate a new geofence storage area
-        mGeofenceStorage = new GeofenceStorage(this);
+        geofenceStorage = new GeofenceStorage(this);
 
         // Instantiate the current List of geofences
         mCurrentGeofences = new ArrayList<com.google.android.gms.location.Geofence>();
@@ -287,7 +263,7 @@ public class LocationActivity extends FragmentActivity implements
 
                 // Set the camera position to zoom in on the current location
                 CameraPosition myPosition = new CameraPosition.Builder()
-                        .target(mCurrentLocation).zoom(20).bearing(180).tilt(0).build();
+                        .target(mCurrentLocation).zoom(17).bearing(90).tilt(0).build();
                 map.animateCamera(
                         CameraUpdateFactory.newCameraPosition(myPosition));
                 break;
@@ -305,52 +281,43 @@ public class LocationActivity extends FragmentActivity implements
                         current = m_My_children.get(i);
                 }
 
-                /*WmfGeofence wmfGeofence =
-                    new WmfGeofence("Hjemme hos Kåre", currentPosition.latitude, currentPosition.longitude,
-                            20, GEOFENCE_EXPIRATION_TIME, com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
-                            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
 
-                wmfGeofence.toGeofence();*/
-
-                Geocoder geocoder = new Geocoder(this, local);
-                try {
-                     addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
-                    if(addresses.size() > 0)
-                    {
-                        for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
+                    Geocoder geocoder = new Geocoder(this, local);
+                    try {
+                        addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                        if(addresses.size() > 0)
                         {
-                            markerInfo.append(addresses.get(0).getAddressLine(j).toString());
-                            markerInfo.append("\n");
+                            for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
+                            {
+                                markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                                markerInfo.append("\n");
+                            }
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                Log.e("MarkerInfo", markerInfo.toString());
-
-                // Sort information from the string with address info
+                    // Sort information from the string with address info
 //                Address[addressLines=[0:"IT-byen Katrinebjerg",
 //                  1:"Finlandsgade 24A",2:"8200 Aarhus N",3:"Danmark"],feature=24A,
 //                  admin=null,sub-admin=null,locality=null,thoroughfare=Finlandsgade,
 //                  postalCode=8200,countryCode=DK,countryName=Danmark,hasLatitude=true,
 //                  latitude=56.172171,hasLongitude=true,longitude=10.191838,phone=null,
 //                  url=null,extras=null]
+                    // Set the maptype
+                    map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    // Add a marker with the selected Child's name and current location
+                    map.addMarker(new MarkerOptions().position(currentPosition)
+                            .title(current.getName()).snippet(markerInfo.toString()));
+
+                    // Set the camera position to zoom in on the current location
+                    CameraPosition currentChildPosition = new CameraPosition.Builder()
+                            .target(currentPosition).zoom(17).bearing(90).tilt(0).build();
+                    map.animateCamera(
+                            CameraUpdateFactory.newCameraPosition(currentChildPosition));
 
 
 
-
-                // Set the maptype
-                map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                // Add a marker with the selected Child's name and current location
-                map.addMarker(new MarkerOptions().position(currentPosition).snippet(markerInfo.toString())
-                        .title(current.getName()).snippet(markerInfo.toString()));
-
-                // Set the camera position to zoom in on the current location
-                CameraPosition currentChildPosition = new CameraPosition.Builder()
-                        .target(currentPosition).zoom(22).bearing(90).tilt(0).build();
-                map.animateCamera(
-                        CameraUpdateFactory.newCameraPosition(currentChildPosition));
                 break;
             case R.id.action_overview:
                 Intent overview = new Intent(this, OverviewActivity.class);
@@ -383,7 +350,6 @@ public class LocationActivity extends FragmentActivity implements
     protected void onStart() {
         super.onStart();
         locationClient.connect();
-
     }
 
     @Override
@@ -590,6 +556,7 @@ public class LocationActivity extends FragmentActivity implements
      * Start a request for geofence monitoring by calling
      * LocationClient.connect().
      */
+    @TargetApi(17)
     public void addGeofences(PendingIntent requestIntent)
     {
         // Start a request to add geofences
@@ -604,7 +571,7 @@ public class LocationActivity extends FragmentActivity implements
 
         // Store the PendingIntent
         mGeofenceRequestIntent = requestIntent;
-        mGeofenceRequestIntent.getCreatorPackage();
+        mGeofenceRequestIntent.getCreatorPackage(); // FIXME
         /*
          * Create a new location client object. Since the current
          * activity class implements ConnectionCallbacks and
@@ -676,44 +643,7 @@ public class LocationActivity extends FragmentActivity implements
         }
     }
 
-    /**
-     * Get the geofence parameters for each geofence from the UI
-     * and add them to a List.
-     */
-    public void createGeofences(PendingIntent pendingIntent)
-    {
-        /*
-         * Create an internal object to store the data. Set its
-         * ID to "1". This is a "flattened" object that contains
-         * a set of strings
-         */
-        /*mUIGeofence1 = new WmfGeofence
-            (
-            "1",
-            Double.valueOf(mLatitude1.getText().toString()),
-            Double.valueOf(mLongitude1.getText().toString()),
-            Float.valueOf(mRadius1.getText().toString()),
-            GEOFENCE_EXPIRATION_TIME,
-            // This geofence records only entry transitions
-            com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER
-            );
-        // Store this flat version
-        mGeofenceStorage.setGeofence("1", mUIGeofence1);*/
-        // Create another internal object. Set its ID to "2"
-        mUIGeofence2 = new WmfGeofence(
-                "2",
-                Double.valueOf(mLatitude2.getText().toString()),
-                Double.valueOf(mLongitude2.getText().toString()),
-                Float.valueOf(mRadius2.getText().toString()),
-                com.google.android.gms.location.Geofence.NEVER_EXPIRE,
-                // This geofence records both entry and exit transitions
-                com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
-                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
-        // Store this flat version
-        mGeofenceStorage.setGeofence("2", mUIGeofence2);
-        mGeofenceList.add(mUIGeofence1.toGeofence());
-        mGeofenceList.add(mUIGeofence2.toGeofence());
-    }
+
 
     /**
      * Start a request to remove monitoring by
@@ -758,7 +688,7 @@ public class LocationActivity extends FragmentActivity implements
             // Reset the flag
             mInProgress = false;
             // Retry the request.
-            removeGeofences(geofenceIds); // mRequestType = REQUEST_TYPE.REMOVE_LIST; ?? FIXME
+            removeGeofences(geofenceIds);
         }
     }
     //endregion
@@ -971,10 +901,10 @@ public class LocationActivity extends FragmentActivity implements
         // TextUtils.SimpleStringSplitter stringSplitter = new TextUtils.SimpleStringSplitter(" ");
 
         StringBuilder stringBuilder = new StringBuilder(location);
-        String latitudeString = stringBuilder.substring(12, 22);
-        String longitudeString = stringBuilder.substring(23, 32);
-        String lat = latitudeString.replace(latitudeString, stringBuilder.substring(13, 15) + "." + stringBuilder.substring(16, 22));
-        String lng = longitudeString.replace(longitudeString, stringBuilder.substring(23, 25) + "." + stringBuilder.substring(26, 32));
+        String latitudeString = stringBuilder.substring(15, 24);
+        String longitudeString = stringBuilder.substring(25, 35);
+        String lat = latitudeString.replace(latitudeString, stringBuilder.substring(15, 17) + "." + stringBuilder.substring(18, 24));
+        String lng = longitudeString.replace(longitudeString, stringBuilder.substring(25, 27) + "." + stringBuilder.substring(28, 34));
 
         double latitude = 0;
         double longitude = 0;

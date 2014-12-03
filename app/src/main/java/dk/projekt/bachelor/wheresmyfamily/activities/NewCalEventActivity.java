@@ -2,23 +2,24 @@ package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -30,10 +31,14 @@ import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
+import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
@@ -42,6 +47,8 @@ public class NewCalEventActivity extends BaseActivity implements
     private final String TAG = "NewCalEventActivity";
     UserInfoStorage storage = new UserInfoStorage();
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
+    private ArrayList<WmfGeofence> geofences;
+    GeofenceStorage geofenceStorage;
 
     private Activity mActivity;
     // Widget GUI
@@ -52,9 +59,17 @@ public class NewCalEventActivity extends BaseActivity implements
     // Variable for storing current date and time
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String spinnerLoc, spinnerRep, pEmail, cEmail, selectedChild, eventID;
+    Spinner spinner;
+    AlarmReceiver alarmReceiver;
+    TimePickerDialog tpd;
 
-    private String[] location = { "Lokation", "Skole", "Hjem", "Grim Ven", "Saltmine" };
+    private String[] location;
     private String[] repeat = {"", "Ja" , "Nej"};
+    private PendingIntent pendingIntent;
+    Child currentChild;
+    public static final String NEW_CALENDAR_EVENT_ACTION = "new.calendar.event";
+    // AlarmService alarmService;
+    Bundle bundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +78,10 @@ public class NewCalEventActivity extends BaseActivity implements
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        geofenceStorage = new GeofenceStorage(this);
+        geofences = geofenceStorage.getGeofences(this);
+        location = new String[geofences.size()];
 
         mActivity = this;
 
@@ -73,6 +92,7 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEvent = (EditText) findViewById(R.id.txtEvent);
         txtChild=(EditText) findViewById(R.id.txtChild);
         btnNewLocation= (Button) findViewById(R.id.btnnewlocation);
+        spinner = (Spinner) findViewById(R.id.spinnerRepeat);
 
         txtStartDate.setOnClickListener(this);
         txtStartTime.setOnClickListener(this);
@@ -80,7 +100,12 @@ public class NewCalEventActivity extends BaseActivity implements
         txtEndTime.setOnClickListener(this);
         btnNewLocation.setOnClickListener(this);
 
-        txtChild.setText(selectedChild);
+        geofences = geofenceStorage.getGeofences(this);
+
+        for (int i = 0; i < geofences.size(); i++)
+        {
+            location[i] = geofences.get(i).getGeofenceId();
+        }
 
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
@@ -91,6 +116,7 @@ public class NewCalEventActivity extends BaseActivity implements
         spinnerLocation.setOnItemSelectedListener(this);
 
         spinnerRepeat = (Spinner) findViewById(R.id.spinnerRepeat);
+
         ArrayAdapter<String> adapter_repeat = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, repeat);
         adapter_state
@@ -120,6 +146,36 @@ public class NewCalEventActivity extends BaseActivity implements
                 }
             }
         });
+
+        alarmReceiver = new AlarmReceiver();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        bundle.putString("event_name", txtEvent.getText().toString());
+        bundle.putString("spinner_location", spinnerLoc);
+        bundle.putString("child_name", txtChild.getText().toString());
+        bundle.putString("start_date", txtStartDate.getText().toString());
+        bundle.putString("start_time", txtStartTime.getText().toString());
+        bundle.putString("end_date", txtEndDate.getText().toString());
+        bundle.putString("end_time", txtEndTime.getText().toString());
+        bundle.putString("spinner_repeat", spinnerRep);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        txtEndDate.setText(savedInstanceState.getString("event_name"));
+        txtEndDate.setText(savedInstanceState.getString("spinner_location"));
+        txtEndDate.setText(savedInstanceState.getString("child_name"));
+        txtEndDate.setText(savedInstanceState.getString("start_date"));
+        txtEndDate.setText(savedInstanceState.getString("start_time"));
+        txtEndDate.setText(savedInstanceState.getString("end_date"));
+        txtEndDate.setText(savedInstanceState.getString("end_time"));
+        txtEndDate.setText(savedInstanceState.getString("spinner_repeat"));
     }
 
     @Override
@@ -127,10 +183,15 @@ public class NewCalEventActivity extends BaseActivity implements
         super.onResume();
 
         m_My_children = storage.loadChildren(this);
+        getCurrentChild();
+        txtChild.setText(currentChild.getName());
 
-        getChildInfo();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -148,7 +209,55 @@ public class NewCalEventActivity extends BaseActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            saveEvent();
+            Intent intent = new Intent(this, AlarmReceiver.class);
+
+            int date;
+            int month;
+            int year;
+
+            String startDate = txtStartDate.getText().toString();
+            String startTime = txtStartTime.getText().toString();
+            String endDate = txtEndDate.getText().toString();
+            String endTime = txtEndTime.getText().toString();
+            //int eventId = Integer.parseInt(bundle.getString("event_id"));
+
+            //Convert date/month/year to int
+            String[] sepDate = startDate.split("-");
+            date = Integer.parseInt(sepDate[0]);
+            month = Integer.parseInt(sepDate[1]);
+            year = Integer.parseInt(sepDate[2]);
+
+            //Convert minute/hour to int
+            String[] sepTime = startTime.split(":");
+
+            int hour = Integer.parseInt(sepTime[0]);
+            int minute = Integer.parseInt(sepTime[1]);
+            // int seconds = Integer.parseInt(sepDate[2]);
+
+
+            // calendar.set(Calendar.AM_PM, Calendar.AM);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+
+            // January is month 0!!!!
+            // Very important to remember to roll back the time one month!!!!
+            --month;
+
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.DAY_OF_MONTH, date);
+
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
+            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            // Don't do anything here as this will fire the alarm instantly
+
+
             return true;
         }
 
@@ -190,16 +299,17 @@ public class NewCalEventActivity extends BaseActivity implements
             mMinute = c.get(Calendar.MINUTE);
 
             // Launch Time Picker Dialog
-            TimePickerDialog tpd = new TimePickerDialog(this,
-                    new TimePickerDialog.OnTimeSetListener() {
+            tpd = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
 
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay,
-                                              int minute) {
-                            // Display Selected time in textbox
-                            txtStartTime.setText(hourOfDay + ":" + minute);
-                        }
-                    }, mHour, mMinute, true);
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                          int minute) {
+                        // Display Selected time in textbox
+                        txtStartTime.setText(hourOfDay + ":" + minute);
+                    }
+                }, mHour, mMinute, true);
+
             tpd.show();
         }
 
@@ -254,11 +364,12 @@ public class NewCalEventActivity extends BaseActivity implements
 
     public void onItemSelected(AdapterView<?> parent, View view, int position,
                                long id) {
-        spinnerLocation.setSelection(position);
+
+        /*spinnerLocation.setSelection(position);
         spinnerLoc = (String) spinnerLocation.getSelectedItem();
 
         spinnerRepeat.setSelection(position);
-        spinnerRep = (String) spinnerRepeat.getSelectedItem();
+        spinnerRep = (String) spinnerRepeat.getSelectedItem();*/
     }
 
     @Override
@@ -303,14 +414,87 @@ public class NewCalEventActivity extends BaseActivity implements
             }
         }
 
-    private void getChildInfo(){
+    private Child getCurrentChild()
+    {
+        Child temp = new Child();
+        currentChild = temp.getCurrentChild(m_My_children);
 
+        return currentChild;
+    }
 
-        for(int i = 0; i < m_My_children.size(); i++)
-        {
-            if(m_My_children.get(i).getIsCurrent())
-                cEmail = m_My_children.get(i).getEmail();
-                selectedChild = m_My_children.get(i).getName();
+    /*public void startRepeatingTimer() {
+        Context context = this.getApplicationContext();
+        if(alarmReceiver != null){
+            alarmReceiver.SetAlarm(context);
+        }else{
+            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void cancelRepeatingTimer(){
+        Context context = this.getApplicationContext();
+        if(alarmReceiver != null){
+            alarmReceiver.CancelAlarm(context);
+        }else{
+            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onetimeTimer(){
+        Context context = this.getApplicationContext();
+        if(alarmReceiver != null){
+            alarmReceiver.setOnetimeAlarm(context);
+        }else{
+            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+        }
+    }*/
+
+    public Calendar getAlarmTime(Intent intent)
+    {
+        Calendar calendar = Calendar.getInstance();
+        TimeZone timeZone = TimeZone.getDefault();
+        calendar.setTimeZone(timeZone);
+
+        int date;
+        int month;
+        int year;
+
+        /*Intent intent = new Intent(this, AlarmService.class);
+        intent.putExtras(bundle);*/
+        // Bundle bundle = intent.getExtras();
+        //String eventName = bundle.getString("event_name");
+        // String newEventName = bundle.getString("message");
+        String startDate = intent.getStringExtra("start_date");
+        String startTime = intent.getStringExtra("start_time");
+        String endDate = intent.getStringExtra("end_date");
+        String endTime = intent.getStringExtra("end_time");
+        //int eventId = Integer.parseInt(bundle.getString("event_id"));
+
+        //Convert date/month/year to int
+        String[] sepDate = startDate.split("-");
+        date = Integer.parseInt(sepDate[0]);
+        month = Integer.parseInt(sepDate[1]);
+        year = Integer.parseInt(sepDate[2]);
+
+        //Convert minute/hour to int
+        String[] sepTime = startTime.split(":");
+
+        int hour = Integer.parseInt(sepTime[0]);
+        int minute = Integer.parseInt(sepTime[1]);
+        // int seconds = Integer.parseInt(sepDate[2]);
+
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.AM_PM,Calendar.PM);
+
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, date);
+        // January is month 0!!!!
+        // Very important to remember to roll back the time one month!!!!
+        // calendar.roll(Calendar.MONTH, false);
+
+        return calendar;
     }
 }

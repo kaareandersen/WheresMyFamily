@@ -80,14 +80,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/overview_address_layout"
-        android:orientation="horizontal">
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:orientation="vertical">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/activity_vertical_margin"
             android:text="@string/overview_radius_text_view"
             />
 
         <EditText
+            android:id="@+id/radius_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/overview_radius_edit_text"
@@ -109,6 +113,7 @@
             android:layout_below="@+id/overview_address_layout"
             android:background="@drawable/add_new_place_icon"
             android:clickable="true"
+            android:onClick="onClick"
             />
     </LinearLayout>
 
