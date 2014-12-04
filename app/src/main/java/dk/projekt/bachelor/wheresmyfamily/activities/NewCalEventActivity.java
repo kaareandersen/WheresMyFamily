@@ -34,11 +34,13 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
-import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
@@ -63,13 +65,14 @@ public class NewCalEventActivity extends BaseActivity implements
     AlarmReceiver alarmReceiver;
     TimePickerDialog tpd;
 
-    private String[] location;
+    private String[] locationList;
     private String[] repeat = {"", "Ja" , "Nej"};
     private PendingIntent pendingIntent;
     Child currentChild;
     public static final String NEW_CALENDAR_EVENT_ACTION = "new.calendar.event";
     // AlarmService alarmService;
     Bundle bundle = new Bundle();
+    ChildModelController childModelController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +84,9 @@ public class NewCalEventActivity extends BaseActivity implements
 
         geofenceStorage = new GeofenceStorage(this);
         geofences = geofenceStorage.getGeofences(this);
-        location = new String[geofences.size()];
+        locationList = new String[geofences.size()];
+
+        childModelController = new ChildModelController(this);
 
         mActivity = this;
 
@@ -104,12 +109,12 @@ public class NewCalEventActivity extends BaseActivity implements
 
         for (int i = 0; i < geofences.size(); i++)
         {
-            location[i] = geofences.get(i).getGeofenceId();
+            locationList[i] = geofences.get(i).getGeofenceId();
         }
 
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, location);
+                android.R.layout.simple_spinner_item, locationList);
         adapter_state
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLocation.setAdapter(adapter_state);
@@ -182,10 +187,7 @@ public class NewCalEventActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
 
-        // m_My_children = storage.loadChildren(this);
-        getCurrentChild();
-        txtChild.setText(currentChild.getName());
-
+        txtChild.setText(childModelController.getCurrentChild().getName());
     }
 
     @Override
@@ -250,6 +252,11 @@ public class NewCalEventActivity extends BaseActivity implements
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.DAY_OF_MONTH, date);
 
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Geofences", geofences);
+
+            Intent geofenceWatch = new Intent(this, ReceiveTransitionsIntentService.class);
+            startService(geofenceWatch);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
             AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);

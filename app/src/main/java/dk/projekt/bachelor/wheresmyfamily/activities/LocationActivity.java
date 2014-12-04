@@ -65,6 +65,7 @@ public class LocationActivity extends FragmentActivity implements
     private LocationClient locationClient;
     private LocationListener locationListener;
     private LatLng mCurrentLocation;
+    LatLng currentPosition;
     private HistoryApi historyApi;
     private GoogleApiClient googleApiClient;
 
@@ -129,10 +130,10 @@ public class LocationActivity extends FragmentActivity implements
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
     UserInfoStorage storage = new UserInfoStorage();
 
-    ActionBar actionBar;
+    // ActionBar actionBar;
     protected PushNotificationController pushNotificationController;
 
-    LatLng currentPosition;
+
     ImageButton addgeofenceButton;
     //endregion
 
@@ -184,8 +185,6 @@ public class LocationActivity extends FragmentActivity implements
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-
-
 
         // Start with the request flag set to false
         mInProgress = false;
@@ -244,8 +243,7 @@ public class LocationActivity extends FragmentActivity implements
                 break;
             case R.id.menu_gotolocation:
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(mCurrentLocation) // Sets the center of the map to
-                                // Golden Gate Bridge
+                        .target(mCurrentLocation) // Sets the center of the map to current location
                         .zoom(17)    // Sets the zoom
                         .bearing(90) // Sets the orientation of the camera to east
                         .tilt(30)    // Sets the tilt of the camera to 30 degrees
@@ -263,12 +261,11 @@ public class LocationActivity extends FragmentActivity implements
                 map.setMyLocationEnabled(true);
 
                 // Set the camera position to zoom in on the current location
-                CameraPosition myPosition = new CameraPosition.Builder()
+                CameraPosition cameraPosition1 = new CameraPosition.Builder()
                         .target(mCurrentLocation).zoom(17).bearing(90).tilt(0).build();
-                map.animateCamera(
-                        CameraUpdateFactory.newCameraPosition(myPosition));
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition1));
                 break;
-            case R.id.menu_test_item:
+            case R.id.current_child_position:
                 Child current;
                 List<Address> addresses;
                 String language = "da";
@@ -915,9 +912,7 @@ public class LocationActivity extends FragmentActivity implements
 
         currentPosition = new LatLng(latitude, longitude);
 
-        Toast.makeText(this, currentPosition.toString(), Toast.LENGTH_LONG).show();
-
-
+        // Toast.makeText(this, currentPosition.toString(), Toast.LENGTH_LONG).show();
     }
     //endregion
 }

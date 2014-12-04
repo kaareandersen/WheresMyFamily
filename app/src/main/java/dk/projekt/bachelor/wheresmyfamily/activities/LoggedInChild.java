@@ -35,6 +35,7 @@ import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.ParentModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
@@ -94,8 +95,10 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";*/
     UserInfoStorage storage = new UserInfoStorage();
+    ParentModelController parentModelController;
     //endregion
 
+    //region Lifecycle events
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +109,8 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         //Notifacation hub Azure
         mNotificationHubController = new NotificationHubController(this);
         pushNotificationController = new PushNotificationController(this);
+
+        parentModelController = new ParentModelController(this);
 
         // Reference UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
@@ -174,9 +179,9 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     protected void onResume() {
         super.onResume();
 
-        mParents = storage.loadParents(this);
+        // mParents = storage.loadParents(this);
 
-        if(mParents.size() > 0)
+        if(parentModelController.getMyParents().size() > 0)
         {
             parentInfoName.setText(mParents.get(0).getName());
             parentInfoPhone.setText(mParents.get(0).getPhone());
@@ -184,6 +189,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         locationClient.connect();
     }
+    //endregion
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -249,12 +255,13 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     public void getAndPushLocation(){
         //TODO
-        String parentEmail = mParents.get(0).getEmail();
+        String parentEmail = parentModelController.getMyParents().get(0).getEmail();
         String location = currentLocation.toString();
 
         pushNotificationController.sendLocationFromChild(parentEmail, location);
     }
 
+    //region Location callback methods
     @Override
     public void onLocationChanged(Location location) {
 
@@ -315,8 +322,9 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
                     CONNECTION_FAILURE_RESOLUTION_REQUEST);
         }
     }
+    //endregion
 
-
+    //region Internal storage
     // Internal storga section from early in the project
     /*public void saveParent(Parent parent)
     {
@@ -353,4 +361,5 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         return retVal == null ? new Parent() : retVal;
     }*/
+    //endregion
 }

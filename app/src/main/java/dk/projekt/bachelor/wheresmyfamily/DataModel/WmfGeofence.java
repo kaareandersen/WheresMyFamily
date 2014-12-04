@@ -4,12 +4,14 @@ package dk.projekt.bachelor.wheresmyfamily.DataModel;
  * Created by Tommy on 25-11-2014.
  */
 
+import java.io.Serializable;
+
 /**
  * A WmfGeofence object, defined by its center and radius.
  * It also holds a name, an expiration duration
  * and which transition types to monitor
  */
-public class WmfGeofence
+public class WmfGeofence implements Serializable
 {
     // Instance variables
     private String geofenceId;

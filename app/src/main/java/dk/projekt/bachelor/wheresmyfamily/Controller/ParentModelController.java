@@ -14,6 +14,7 @@ public class ParentModelController {
 
     ArrayList<Parent> myParents = new ArrayList<Parent>();
     UserInfoStorage userInfoStorage = new UserInfoStorage();
+    int parentListCount;
 
     public ParentModelController(Context context)
     {
@@ -39,6 +40,24 @@ public class ParentModelController {
         {
             temp.setName("Unknown");
             return temp;
+        }
+    }
+
+    public int getParentListCount() {
+
+        parentListCount = myParents.size();
+        return parentListCount;
+    }
+
+    public ArrayList<Parent> getMyParents() {
+        return myParents;
+    }
+
+    public void setCurrentUserToNone()
+    {
+        for(int i = 0; i < myParents.size(); i++)
+        {
+            myParents.get(i).setIsCurrent(false);
         }
     }
 }
