@@ -49,7 +49,6 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -86,8 +85,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
-    UserInfoStorage storage = new UserInfoStorage();
-    ChildModelController childModelController;
+    // UserInfoStorage storage = new UserInfoStorage();
+    ChildModelController childModelController = new ChildModelController();
     Child currentChild = new Child();
     // Define an object that holds accuracy and frequency parameters
     private LocationRequest mLocationRequest;
@@ -149,9 +148,9 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         myApp.setCurrentActivity(this);
         mMobileServicesClient = myApp.getAuthService();
 
-        childModelController = new ChildModelController(this);
+        // childModelController = new ChildModelController();
 
-        m_adapter = new ChildAdapter(this, R.layout.row, childModelController.getMyChildren());
+        m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
         myList = (ListView)findViewById(android.R.id.list);
         myList.setAdapter(m_adapter);
 
@@ -214,18 +213,25 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     protected void onResume() {
         super.onResume();
 
-        // m_My_children = storage.loadChildren(this);
-        // childModelController.getMyChildren();
+        m_My_children = childModelController.getMyChildren(this);
 
         // If any children are registered
-        if(childModelController.getChildListCount() >= 0)
+        if(m_My_children.size() >= 0)
         {
             // Since we are on the home page, set current child to none
-            childModelController.setCurrentUserToNone();
+            childModelController.noCurrentChild(m_My_children);
         }
         // Refresh the list of children
-        myList.setAdapter(new ChildAdapter(this, R.layout.row, childModelController.getMyChildren()));
+        myList.setAdapter(new ChildAdapter(this, R.layout.row, m_My_children));
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        childModelController.setMyChildren(this, m_My_children);
+    }
+
 
     @Override
     protected void onStart() {
@@ -237,15 +243,47 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         super.onStop();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.logged_in, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.action_logout:
+                mMobileServicesClient.logout(true);
+                mNotificationHubController.unRegisterNH();
+                return true;
+            case R.id.action_deleteusr:
+                deleteDialogBox();
+                return true;
+            case R.id.action_addChild:
+                Intent register = new Intent(this, RegisterChild.class);
+                startActivity(register);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     //endregion
 
     private Runnable returnRes = new Runnable() {
         @Override
         public void run() {
-            if (childModelController.getMyChildren() != null && childModelController.getChildListCount() > 0){
+            if (m_My_children != null && m_My_children.size() > 0){
                 m_adapter.notifyDataSetChanged();
-                for (int i = 0; i < childModelController.getChildListCount(); i++)
-                    m_adapter.add(childModelController.getMyChildren().get(i));
+                for (int i = 0; i < m_My_children.size(); i++)
+                    m_adapter.add(m_My_children.get(i));
             }
             m_ProgressDialog.dismiss();
             m_adapter.notifyDataSetChanged();
@@ -255,10 +293,10 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private void getChild() throws FileNotFoundException, IOException {
         try
         {
-            ArrayList<Child> tempList = childModelController.getMyChildren();
+            m_My_children = childModelController.getMyChildren(this);
 
             Thread.sleep(1000);
-            Log.i("ARRAY", "" + tempList.size());
+            Log.i("ARRAY", "" + m_My_children.size());
         } catch (Exception e){
             Log.e("BACKGROUND_PROC", e.getMessage());
         }
@@ -425,7 +463,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
             }
 
             Child c = null;
-            c = childModelController.getMyChildren().get(position);
+            c = m_My_children.get(position);
 
             if (c != null)
             {
@@ -453,49 +491,10 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
             startActivity(childClick);
 
             // Set selected user to current user
-            childModelController.getMyChildren().get(position).setIsCurrent(true);
+            m_My_children.get(position).setIsCurrent(true);
         }
     };
     //endregion
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.logged_in, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch (id) {
-            case R.id.action_logout:
-                mMobileServicesClient.logout(true);
-                mNotificationHubController.unRegisterNH();
-                return true;
-            case R.id.action_deleteusr:
-                deleteDialogBox();
-                return true;
-            case R.id.action_addChild:
-                Intent register = new Intent(this, RegisterChild.class);
-                startActivity(register);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        storage.saveChildren(this, childModelController.getMyChildren());
-    }
 
     public void callApi(View view) {
 

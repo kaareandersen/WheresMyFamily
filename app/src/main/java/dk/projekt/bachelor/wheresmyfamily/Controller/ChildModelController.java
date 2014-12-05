@@ -15,18 +15,23 @@ public class ChildModelController {
     ArrayList<Child> myChildren = new ArrayList<Child>();
     UserInfoStorage userInfoStorage = new UserInfoStorage();
 
-    private int childListCount;
+    public ChildModelController() {}
 
-    public ChildModelController(Context context)
+    public ArrayList<Child> getMyChildren(Context context)
     {
         myChildren = userInfoStorage.loadChildren(context);
+
+        return myChildren;
+    }
+
+    public void setMyChildren(Context context, ArrayList<Child> _myChildren)
+    {
+        userInfoStorage.saveChildren(context, _myChildren);
     }
 
     public Child getCurrentChild()
     {
         Child temp = new Child();
-        // ArrayList<Child> tempList;
-        // tempList = myChildren;
 
         if(myChildren.size() > 0)
         {
@@ -46,21 +51,11 @@ public class ChildModelController {
         }
     }
 
-    public int getChildListCount() {
-
-        childListCount = myChildren.size();
-        return childListCount;
-    }
-
-    public ArrayList<Child> getMyChildren() {
-        return myChildren;
-    }
-
-    public void setCurrentUserToNone()
+    public void noCurrentChild(ArrayList<Child> _myChildren)
     {
-        for(int i = 0; i < myChildren.size(); i++)
+        for(int i = 0; i < _myChildren.size(); i++)
         {
-            myChildren.get(i).setIsCurrent(false);
+            _myChildren.get(i).setIsCurrent(false);
         }
     }
 }

@@ -40,14 +40,13 @@ import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class NewCalEventActivity extends BaseActivity implements
         View.OnClickListener, OnItemSelectedListener {
     private final String TAG = "NewCalEventActivity";
-    UserInfoStorage storage = new UserInfoStorage();
+    // UserInfoStorage storage = new UserInfoStorage();
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
     private ArrayList<WmfGeofence> geofences;
     GeofenceStorage geofenceStorage;
@@ -72,7 +71,7 @@ public class NewCalEventActivity extends BaseActivity implements
     public static final String NEW_CALENDAR_EVENT_ACTION = "new.calendar.event";
     // AlarmService alarmService;
     Bundle bundle = new Bundle();
-    ChildModelController childModelController;
+    ChildModelController childModelController = new ChildModelController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +85,7 @@ public class NewCalEventActivity extends BaseActivity implements
         geofences = geofenceStorage.getGeofences(this);
         locationList = new String[geofences.size()];
 
-        childModelController = new ChildModelController(this);
+        m_My_children = childModelController.getMyChildren(this);
 
         mActivity = this;
 
@@ -186,6 +185,8 @@ public class NewCalEventActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        m_My_children = childModelController.getMyChildren(this);
 
         txtChild.setText(childModelController.getCurrentChild().getName());
     }
@@ -418,14 +419,6 @@ public class NewCalEventActivity extends BaseActivity implements
                     });
             }
         }
-
-    private Child getCurrentChild()
-    {
-        Child temp = new Child();
-        currentChild = temp.getCurrentChild(m_My_children);
-
-        return currentChild;
-    }
 
     /*public void startRepeatingTimer() {
         Context context = this.getApplicationContext();

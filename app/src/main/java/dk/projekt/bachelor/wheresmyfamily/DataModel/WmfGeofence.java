@@ -13,13 +13,16 @@ import java.io.Serializable;
  */
 public class WmfGeofence implements Serializable
 {
-    // Instance variables
+
     private String geofenceId;
     private double latitude;
     private double longitude;
     private float radius;
     private long expirationDuration;
     private int transitionType;
+    private Boolean isActive;
+
+    public WmfGeofence() {}
 
     public WmfGeofence(String _geofenceId, double _latitude, double _longitude, float _radius,
                        long _expirationDuration, int _transitionType)
@@ -68,6 +71,12 @@ public class WmfGeofence implements Serializable
     }
     public void setGeofenceId(String geofenceId) {
         this.geofenceId = geofenceId;
+    }
+    public Boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
     //endregion
 

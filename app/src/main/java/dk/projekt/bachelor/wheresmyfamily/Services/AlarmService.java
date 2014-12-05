@@ -46,7 +46,7 @@ public class AlarmService extends Service {
 
     public void askForLocation(){
 
-        ChildModelController childModelController = new ChildModelController(this);
+        ChildModelController childModelController = new ChildModelController();
 
         PushNotificationController pushNotificationController = new PushNotificationController(this);
         pushNotificationController.askForLocationFromChild(childModelController.getCurrentChild().getEmail());

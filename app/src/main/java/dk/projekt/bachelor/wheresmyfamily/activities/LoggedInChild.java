@@ -39,7 +39,6 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.ParentModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -94,7 +93,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";*/
-    UserInfoStorage storage = new UserInfoStorage();
+    // UserInfoStorage storage = new UserInfoStorage();
     ParentModelController parentModelController;
     //endregion
 
@@ -110,7 +109,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         mNotificationHubController = new NotificationHubController(this);
         pushNotificationController = new PushNotificationController(this);
 
-        parentModelController = new ParentModelController(this);
+        parentModelController = new ParentModelController();
 
         // Reference UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
@@ -118,7 +117,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         parentInfoPhone = (TextView) findViewById(R.id.phoneinput);
 
         // Get parent info
-        mParents = storage.loadParents(this);
+        mParents = parentModelController.getMyParents(this);
 
         if(mParents.size() > 0)
         {
@@ -179,9 +178,9 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     protected void onResume() {
         super.onResume();
 
-        // mParents = storage.loadParents(this);
+        mParents = parentModelController.getMyParents(this);
 
-        if(parentModelController.getMyParents().size() > 0)
+        if(mParents.size() > 0)
         {
             parentInfoName.setText(mParents.get(0).getName());
             parentInfoPhone.setText(mParents.get(0).getPhone());
@@ -255,7 +254,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     public void getAndPushLocation(){
         //TODO
-        String parentEmail = parentModelController.getMyParents().get(0).getEmail();
+        String parentEmail = mParents.get(0).getEmail();
         String location = currentLocation.toString();
 
         pushNotificationController.sendLocationFromChild(parentEmail, location);

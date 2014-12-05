@@ -32,9 +32,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
-import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 public class AddNewLocation extends Activity  implements View.OnClickListener, AdapterView.OnItemClickListener {
 
@@ -102,7 +102,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        ////noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -172,10 +172,17 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
             PendingIntent pendingIntent = PendingIntent.getActivity(this, ConnectionResult.SUCCESS,
                     intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
 
-            createGeofences();
-            geofenceStorage.setGeofences(this, geofenceList);
+            if(autoCompView != null)
+            {
+                createGeofence();
 
-            Toast.makeText(this, placeField.getText().toString() + " er føjet til favoritter", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, placeField.getText().toString() + " er føjet til favoritter", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(this, "Kan ikke finde adressen pga. manglende oplysinger, prøv venligst igen", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -258,7 +265,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
      * Get the geofence parameters for each geofence from the UI
      * and add them to a List.
      */
-    public void createGeofences() // PendingIntent pendingIntent?? FIXME
+    public void createGeofence() // PendingIntent pendingIntent?? FIXME
     {
         wmfGeofence = new WmfGeofence(
                 placeField.getText().toString(),
@@ -271,7 +278,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
                         com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
         // Store this geofence
         geofenceStorage = new GeofenceStorage(this);
-        // geofenceList = new ArrayList<WmfGeofence>();
 
         geofenceList.add(geofenceList.size(), wmfGeofence);
         geofenceStorage.setGeofences(this, geofenceList);

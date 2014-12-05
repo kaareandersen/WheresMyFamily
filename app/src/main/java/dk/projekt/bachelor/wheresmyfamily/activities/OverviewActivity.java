@@ -19,10 +19,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PictUtil;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 
 
 public class OverviewActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener
@@ -35,7 +35,8 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
     ListView listView ;
 
     ArrayList<Child> myChildren = new ArrayList<Child>();
-    UserInfoStorage storage = new UserInfoStorage();
+    ChildModelController childModelController = new ChildModelController();
+
     Child currentChild = new Child();
 
     TextView childNameTextView;
@@ -49,7 +50,7 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
-        myChildren = storage.loadChildren(this);
+        myChildren = childModelController.getMyChildren(this);
 
         btnTackPic = (ImageButton) findViewById(R.id.btnTakePic);
 
@@ -67,8 +68,8 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 
             @Override
             public void onClick(View arg0) {
-                Child temp = new Child();
-                child = temp.getCurrentChild(myChildren);
+                // Child temp = new Child();
+                child = childModelController.getCurrentChild();
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + child.getPhone()));
@@ -82,10 +83,9 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
 
-        myChildren = storage.loadChildren(this);
+        myChildren = childModelController.getMyChildren(this);
 
-        Child temp = new Child();
-        currentChild = temp.getCurrentChild(myChildren);
+        currentChild = childModelController.getCurrentChild();
 
         childNameTextView.setText(currentChild.getName());
         childPhoneTextView.setText(currentChild.getPhone());

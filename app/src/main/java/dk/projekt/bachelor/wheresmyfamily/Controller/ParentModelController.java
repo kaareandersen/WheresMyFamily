@@ -16,14 +16,12 @@ public class ParentModelController {
     UserInfoStorage userInfoStorage = new UserInfoStorage();
     int parentListCount;
 
-    public ParentModelController(Context context)
-    {
-        myParents = userInfoStorage.loadParents(context);
-    }
+    public ParentModelController() {}
 
     public Parent getCurrentParent()
     {
         Parent temp = new Parent();
+
 
         if(myParents.size() > 0)
         {
@@ -43,17 +41,19 @@ public class ParentModelController {
         }
     }
 
-    public int getParentListCount() {
+    public ArrayList<Parent> getMyParents(Context context)
+    {
+        myParents = userInfoStorage.loadParents(context);
 
-        parentListCount = myParents.size();
-        return parentListCount;
-    }
-
-    public ArrayList<Parent> getMyParents() {
         return myParents;
     }
 
-    public void setCurrentUserToNone()
+    public void setMyParents(Context context, ArrayList<Parent> _myParents)
+    {
+        userInfoStorage.saveParents(context, _myParents);
+    }
+
+    public void noCurrentParent()
     {
         for(int i = 0; i < myParents.size(); i++)
         {

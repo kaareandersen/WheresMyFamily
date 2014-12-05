@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +49,10 @@ import java.util.Locale;
 import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
-import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
@@ -128,7 +128,7 @@ public class LocationActivity extends FragmentActivity implements
     SharedPreferences prefs;
     Child myChild;
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
-    UserInfoStorage storage = new UserInfoStorage();
+    ChildModelController childModelController = new ChildModelController();
 
     // ActionBar actionBar;
     protected PushNotificationController pushNotificationController;
@@ -218,6 +218,41 @@ public class LocationActivity extends FragmentActivity implements
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        locationClient.connect();
+
+        m_My_children = childModelController.getMyChildren(this);
+
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        askForLocation();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        locationClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+
+        // If the client is connected
+        if (locationClient.isConnected())
+        {
+            /* Remove location updates for a listener.*/
+            locationClient.removeLocationUpdates(this);
+        }
+
+        locationClient.disconnect();
+
+        super.onStop();
+    }
+
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.location, menu);
@@ -273,7 +308,6 @@ public class LocationActivity extends FragmentActivity implements
                 Locale local = new Locale(language, country);
                 StringBuffer markerInfo = new StringBuffer();
 
-                ChildModelController childModelController = new ChildModelController(this);
                 current = childModelController.getCurrentChild();
 
                 Geocoder geocoder = new Geocoder(this, local);
@@ -325,38 +359,7 @@ public class LocationActivity extends FragmentActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        locationClient.connect();
 
-        m_My_children = storage.loadChildren(this);
-
-        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-
-        askForLocation();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        locationClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-
-        // If the client is connected
-        if (locationClient.isConnected())
-        {
-            /* Remove location updates for a listener.*/
-            locationClient.removeLocationUpdates(this);
-        }
-
-        locationClient.disconnect();
-
-        super.onStop();
-    }
     //endregion
 
     //region Location callback methods

@@ -28,6 +28,7 @@ import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 
 public class FavoritePlaces extends ListActivity {
 
+    //region Fields
     private ListView m_list;
     GeofenceStorage geofenceStorage;
     WmfGeofence wmfGeofence;
@@ -35,12 +36,11 @@ public class FavoritePlaces extends ListActivity {
     private ArrayList<WmfGeofence> myGeofences;
     private Runnable viewChild;
     ListView myList;
-
-    //region Fields
     private final String TAG = "Mine steder";
     private TextView geoFencename;
     private EditText parentName;
     private ProgressDialog progressDialog = null;
+    //endregion
 
 
 
@@ -91,7 +91,6 @@ public class FavoritePlaces extends ListActivity {
         super.onPause();
 
         geofenceStorage.setGeofences(this, myGeofences);
-
     }
 
     @Override
