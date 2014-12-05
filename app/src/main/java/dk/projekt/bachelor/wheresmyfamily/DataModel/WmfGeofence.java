@@ -25,7 +25,7 @@ public class WmfGeofence implements Serializable
     public WmfGeofence() {}
 
     public WmfGeofence(String _geofenceId, double _latitude, double _longitude, float _radius,
-                       long _expirationDuration, int _transitionType)
+                       long _expirationDuration, int _transitionType, Boolean _isActive)
     {
         setGeofenceId(_geofenceId);
         setLatitude(_latitude);
@@ -33,6 +33,7 @@ public class WmfGeofence implements Serializable
         setRadius(_radius);
         setExpirationDuration(_expirationDuration);
         setTransitionType(_transitionType);
+        setIsActive(false);
     }
 
     // region Get and set

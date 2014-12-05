@@ -275,7 +275,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
                 com.google.android.gms.location.Geofence.NEVER_EXPIRE,
                 // This geofence records both entry and exit transitions
                 com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
-                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT);
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT, false);
         // Store this geofence
         geofenceStorage = new GeofenceStorage(this);
 

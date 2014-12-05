@@ -132,7 +132,7 @@ public class GeofenceStorage
                 )
         {
             // Return a true WmfGeofence object
-            return new WmfGeofence(id, lat, lng, radius, expirationDuration, transitionType);
+            return new WmfGeofence(id, lat, lng, radius, expirationDuration, transitionType, false);
             // Otherwise, return null.
         }
         else

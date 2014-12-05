@@ -48,7 +48,6 @@ public class ReceiveTransitionsIntentService extends IntentService
              * You can also send the error code to an Activity or
              * Fragment with a broadcast Intent
              */
-
         }
         else
         {
@@ -81,8 +80,6 @@ public class ReceiveTransitionsIntentService extends IntentService
                 * display them, or display the details associated with
                 * them. FIXME
                 */
-
-
             }
              else
             {
