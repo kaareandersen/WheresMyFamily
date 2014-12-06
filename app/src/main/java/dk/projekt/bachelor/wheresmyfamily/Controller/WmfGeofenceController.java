@@ -1,6 +1,8 @@
 package dk.projekt.bachelor.wheresmyfamily.Controller;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
@@ -8,6 +10,7 @@ import com.google.android.gms.location.Geofence;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 /**
@@ -23,7 +26,7 @@ public class WmfGeofenceController {
 
     public WmfGeofenceController() {}
 
-    public ArrayList<Geofence> getMyGeofences(Context context)
+    public ArrayList<Geofence> getAllGeofences(Context context)
     {
         wmfGeofences = geofenceStorage.getGeofences(context);
 
@@ -36,7 +39,7 @@ public class WmfGeofenceController {
         return myGeofences;
     }
 
-    public void setMyGeofences(Context context, ArrayList<Geofence> _myGeofences)
+    public void setActiveGeofences(Context context, ArrayList<Geofence> _myGeofences)
     {
         wmfGeofences = geofenceStorage.getGeofences(context);
 
@@ -70,11 +73,17 @@ public class WmfGeofenceController {
         return null;
     }
 
-    public void noActiveGeofences(ArrayList<Geofence> _myGeofences)
+    /*
+     * Create a PendingIntent that triggers an IntentService in your
+     * app when a geofence transition occurs.
+     */
+    public PendingIntent getTransitionPendingIntent(Context context)
     {
-        for(int i = 0; i < _myGeofences.size(); i++)
-        {
-            // _myGeofences.get(i).getRequestId(). // FIXME
-        }
+        // Create an explicit Intent
+        Intent intent = new Intent(context, ReceiveTransitionsIntentService.class);
+        /*
+         * Return the PendingIntent
+         */
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

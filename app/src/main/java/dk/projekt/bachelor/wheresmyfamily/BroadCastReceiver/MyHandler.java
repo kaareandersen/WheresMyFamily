@@ -85,12 +85,9 @@ public class MyHandler extends NotificationsHandler {
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg);
-                        //.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(ctx, msg, duration);
-        toast.show();
+        Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
     }
-
 }

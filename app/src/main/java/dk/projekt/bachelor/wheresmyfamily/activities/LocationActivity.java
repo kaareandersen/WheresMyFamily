@@ -75,10 +75,11 @@ public class LocationActivity extends FragmentActivity implements
 
     // Setup Location update interval
     private static final int MILLISECONDS_PER_SECOND = 1000;
-    private static final int UPDATE_INTERVAL_IN_SECONDS = 10;
+    private static final int UPDATE_INTERVAL_IN_SECONDS = 30;
     private static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
-    private static final int FASTEST_INTERVAL_IN_SECONDS = 10;
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 30;
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+    private static final float SMALLEST_DISPLACEMENT_IN_METERS = 20;
 
     /*
      * Use to set an expiration time for a geofence. After this amount
@@ -176,15 +177,13 @@ public class LocationActivity extends FragmentActivity implements
                     Toast.LENGTH_LONG).show();
         }
 
-        // Create the LocationRequest object
+        // Since the user is at the map request a new LocationClient
+        // with faster location updates
         mLocationRequest = LocationRequest.create();
-        // Use high accuracy
-        mLocationRequest.setPriority(
-                LocationRequest.PRIORITY_HIGH_ACCURACY);
-        // Set the update interval to 10 seconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
-        // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT_IN_METERS);
 
         // Start with the request flag set to false
         mInProgress = false;
@@ -250,8 +249,6 @@ public class LocationActivity extends FragmentActivity implements
         super.onStop();
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -277,72 +274,95 @@ public class LocationActivity extends FragmentActivity implements
                 map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 break;
             case R.id.menu_gotolocation:
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(mCurrentLocation) // Sets the center of the map to current location
-                        .zoom(17)    // Sets the zoom
-                        .bearing(90) // Sets the orientation of the camera to east
-                        .tilt(30)    // Sets the tilt of the camera to 30 degrees
-                        .build();    // Creates a CameraPosition from the builder
+                List<Address> _addresses;
+                String _language = "da";
+                String _country = "DK";
+                Locale _local = new Locale(_language, _country);
+                Geocoder _geocoder = new Geocoder(this, _local);
+                StringBuffer _markerInfo = new StringBuffer();
 
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(
-                        cameraPosition));
-                map.addMarker(new MarkerOptions()
-                        .position(mCurrentLocation)
-                        .title("Home").snippet("\nPopulation 3")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                break;
-            case R.id.menu_showcurrentlocation:
-                // Get the current location and mark it on the map
-                map.setMyLocationEnabled(true);
+                if(mCurrentLocation != null)
+                {
+                    try
+                    {
+                        _addresses = _geocoder.getFromLocation(mCurrentLocation.latitude, mCurrentLocation.longitude, 1);
+                        if(_addresses.size() > 0)
+                        {
+                            for(int j = 0; j < _addresses.get(0).getMaxAddressLineIndex(); j++)
+                            {
+                                _markerInfo.append(_addresses.get(0).getAddressLine(j).toString());
+                                _markerInfo.append("\n");
+                            }
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
 
-                // Set the camera position to zoom in on the current location
-                CameraPosition cameraPosition1 = new CameraPosition.Builder()
-                        .target(mCurrentLocation).zoom(17).bearing(90).tilt(0).build();
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition1));
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(mCurrentLocation) // Sets the center of the map to current location
+                            .zoom(17)    // Sets the zoom
+                            .bearing(90) // Sets the orientation of the camera to east
+                            .tilt(30)    // Sets the tilt of the camera to 30 degrees
+                            .build();    // Creates a CameraPosition from the builder
+
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            cameraPosition));
+                    map.addMarker(new MarkerOptions()
+                            .position(mCurrentLocation)
+                            .title("Mig\n").snippet(_markerInfo.toString())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
+                else
+                {
+                    Toast.makeText(this, "Lokation endnu ikke modtaget, vent venligst", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.current_child_position:
-                Child current;
                 List<Address> addresses;
                 String language = "da";
                 String country = "DK";
                 Locale local = new Locale(language, country);
-                StringBuffer markerInfo = new StringBuffer();
-
-                current = childModelController.getCurrentChild();
-
                 Geocoder geocoder = new Geocoder(this, local);
-                try {
-                    addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
-                    if(addresses.size() > 0)
+                StringBuffer markerInfo = new StringBuffer();
+                Child current = childModelController.getCurrentChild();
+
+                if (currentPosition != null)
+                {
+                    try
                     {
-                        for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
+                        addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                        if(addresses.size() > 0)
                         {
-                            markerInfo.append(addresses.get(0).getAddressLine(j).toString());
-                            markerInfo.append("\n");
+                            for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
+                            {
+                                markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                                markerInfo.append("\n");
+                            }
                         }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
 
-                    // Sort information from the string with address info
-//                Address[addressLines=[0:"IT-byen Katrinebjerg",
-//                  1:"Finlandsgade 24A",2:"8200 Aarhus N",3:"Danmark"],feature=24A,
-//                  admin=null,sub-admin=null,locality=null,thoroughfare=Finlandsgade,
-//                  postalCode=8200,countryCode=DK,countryName=Danmark,hasLatitude=true,
-//                  latitude=56.172171,hasLongitude=true,longitude=10.191838,phone=null,
-//                  url=null,extras=null]
                     // Set the maptype
                     map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                     // Add a marker with the selected Child's name and current location
                     map.addMarker(new MarkerOptions().position(currentPosition)
-                            .title(current.getName()).snippet(markerInfo.toString()));
+                            .title(current.getName() + "\n").snippet(markerInfo.toString()));
 
                     // Set the camera position to zoom in on the current location
                     CameraPosition currentChildPosition = new CameraPosition.Builder()
                             .target(currentPosition).zoom(17).bearing(90).tilt(0).build();
                     map.animateCamera(
                             CameraUpdateFactory.newCameraPosition(currentChildPosition));
+                }
+                else
+                {
+                    Toast.makeText(this, "Barnets lokation endnu ikke modtaget, vent venligst", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.action_overview:
                 Intent overview = new Intent(this, OverviewActivity.class);

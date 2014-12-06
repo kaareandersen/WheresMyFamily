@@ -35,10 +35,10 @@ import java.util.TimeZone;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.WmfGeofenceController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -256,8 +256,8 @@ public class NewCalEventActivity extends BaseActivity implements
             Bundle bundle = new Bundle();
             bundle.putSerializable("Geofences", geofences);
 
-            Intent geofenceWatch = new Intent(this, ReceiveTransitionsIntentService.class);
-            startService(geofenceWatch);
+            WmfGeofenceController wmfGeofenceController = new WmfGeofenceController();
+            PendingIntent pendingIntent1 = wmfGeofenceController.getTransitionPendingIntent(this);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
             AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);

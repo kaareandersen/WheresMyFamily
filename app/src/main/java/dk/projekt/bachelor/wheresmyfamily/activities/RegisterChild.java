@@ -162,6 +162,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         }
         catch (Exception e1)
         {
+            // Toast.makeText(this, "Der skete en fejl i registréringen, prøv venligt igen", Toast.LENGTH_SHORT).show();
             e1.printStackTrace();
         }
     }

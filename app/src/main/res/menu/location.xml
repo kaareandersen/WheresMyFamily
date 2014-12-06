@@ -45,11 +45,6 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="Add a marker"/>-->
-    <item
-        android:id="@+id/menu_showcurrentlocation"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Vis nuværende position"/>
     <item android:id="@+id/current_child_position"
         android:orderInCategory="100"
         android:showAsAction="never"

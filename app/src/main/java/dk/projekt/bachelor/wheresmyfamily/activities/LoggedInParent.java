@@ -21,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -78,6 +77,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private NotificationHub mHub;
     private String mRegistrationId;
     LocationClient locationClient;
+    Location currentLocation;
 
     ArrayList<Child> mChildren = new ArrayList<Child>();
     JSONArray mParents = new JSONArray();
@@ -98,6 +98,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
     private static final int FASTEST_INTERVAL_IN_SECONDS = 10;
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+    private static final float SMALLEST_DISPLACEMENT_IN_METERS = 50;
 
     /*
      * Use to set an expiration time for a geofence. After this amount
@@ -207,6 +208,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT_IN_METERS);
     }
 
     @Override
@@ -230,17 +232,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         super.onPause();
 
         childModelController.setMyChildren(this, m_My_children);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     @Override
@@ -293,7 +284,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private void getChild() throws FileNotFoundException, IOException {
         try
         {
-            m_My_children = childModelController.getMyChildren(this);
+            // m_My_children = childModelController.getMyChildren(this);
 
             Thread.sleep(1000);
             Log.i("ARRAY", "" + m_My_children.size());
@@ -307,7 +298,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     //region Location callback methods
     @Override
     public void onConnected(Bundle bundle) {
-        Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
 
@@ -382,7 +372,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
 
     @Override
     public void onLocationChanged(Location location) {
-
+        currentLocation = location;
     }
 
     @Override

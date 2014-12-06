@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.messaging.NotificationHub;
@@ -39,6 +41,7 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.ParentModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -53,7 +56,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     private TextView mLblUsernameValue,parentInfoName, parentInfoPhone;
     Parent parent = new Parent();
     private String cEmail;
-    Location currentLocation;
+    LatLng currentLocation;
     LocationClient locationClient;
     // Define an object that holds accuracy and frequency parameters
     private LocationRequest mLocationRequest;
@@ -62,10 +65,11 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     // Setup Location update interval
     private static final int MILLISECONDS_PER_SECOND = 1000;
-    private static final int UPDATE_INTERVAL_IN_SECONDS = 10;
+    private static final int UPDATE_INTERVAL_IN_SECONDS = 100;
     private static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
-    private static final int FASTEST_INTERVAL_IN_SECONDS = 10;
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 100;
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+    private static final float SMALLEST_DISPLACEMENT_IN_METERS = 25;
 
     /*
      * Use to set an expiration time for a geofence. After this amount
@@ -95,6 +99,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     String parentsKey = "parentsInfo";*/
     // UserInfoStorage storage = new UserInfoStorage();
     ParentModelController parentModelController;
+    ActivityRecognitionIntentService activityRecognitionIntentService = new ActivityRecognitionIntentService();
     //endregion
 
     //region Lifecycle events
@@ -152,13 +157,10 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         // Create the LocationRequest object
         mLocationRequest = LocationRequest.create();
-        // Use high accuracy
-        mLocationRequest.setPriority(
-                LocationRequest.PRIORITY_HIGH_ACCURACY);
-        // Set the update interval to 10 seconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(UPDATE_INTERVAL);
-        // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT_IN_METERS);
 
         ImageButton button = (ImageButton) findViewById(R.id.callchild);
         button.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +180,10 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     protected void onResume() {
         super.onResume();
 
+        locationClient.connect();
+        Intent intent = new Intent(this, ActivityRecognitionIntentService.class);
+        startService(intent);
+
         mParents = parentModelController.getMyParents(this);
 
         if(mParents.size() > 0)
@@ -185,8 +191,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
             parentInfoName.setText(mParents.get(0).getName());
             parentInfoPhone.setText(mParents.get(0).getPhone());
         }
-
-        locationClient.connect();
     }
     //endregion
 
@@ -263,8 +267,8 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     //region Location callback methods
     @Override
     public void onLocationChanged(Location location) {
-
-        currentLocation = location;
+        // Send the location change to the server FIXME
+        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
     @Override
@@ -273,7 +277,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
-
     }
 
     @Override
@@ -322,6 +325,31 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         }
     }
     //endregion
+
+    @SuppressWarnings("unchecked")
+    public void sendLocationUpdates()
+    {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object... params)
+            {
+                try
+                {
+                    if (mLocationRequest.getSmallestDisplacement() > SMALLEST_DISPLACEMENT_IN_METERS)
+                    {
+                        // Send the updated location to the server
+                        // Set the update interval according to the broadcast
+                        // from ActivityRecognitionIntentService
+
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Problem med at kontakte serveren: " + e.getMessage());
+                    return e;
+                }
+                return null;
+            }
+        }.execute(null, null, null);
+    }
 
     //region Internal storage
     // Internal storga section from early in the project
