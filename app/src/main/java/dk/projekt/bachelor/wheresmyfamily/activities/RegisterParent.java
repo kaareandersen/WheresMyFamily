@@ -28,6 +28,7 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.ParentModelController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -57,6 +58,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     String parentsKey = "parentsInfo";
     ChildModelController childModelController = new ChildModelController();
     ParentModelController parentModelController = new ParentModelController();
+    UserInfoStorage storage = new UserInfoStorage();
     //endregion
 
     public RegisterParent(){}
@@ -98,7 +100,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         super.onResume();
 
         mChildren = childModelController.getMyChildren(this);
-        mParents = parentModelController.getMyParents(this);
+        storage.loadParents(this);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         MobileServicesClient mobileServicesClient = myApp.getAuthService();
@@ -126,7 +128,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
                     {
                         mChildren.add(new Child(userName, userPhone, userMail, null));
 
-                        childModelController.setMyChildren(getApplicationContext(), mChildren);
+                        storage.saveChildren(getApplicationContext(), mChildren);
 
                         childNameInfoText.setText(userName);
                         childPhoneInfoText.setText(userPhone);
@@ -163,15 +165,16 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         // Toast.makeText(this, "RegisterParent OnPause", Toast.LENGTH_SHORT).show();
 
-        childModelController.setMyChildren(this, mChildren);
-        parentModelController.setMyParents(this, mParents);
+        storage.saveChildren(this, mChildren);
+
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
 
-        mChildren = childModelController.getMyChildren(this);
+        mChildren = storage.loadChildren(this);
+
     }
 
     @Override
@@ -243,7 +246,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         Toast.makeText(this, "Processing intent", Toast.LENGTH_SHORT).show();
 
         mParents.add(new Parent(userName, userPhone, userMail, null));
-        parentModelController.setMyParents(this, mParents);
+        storage.saveParents(this, mParents);
 
         isNFCMessageNew = false;
     }

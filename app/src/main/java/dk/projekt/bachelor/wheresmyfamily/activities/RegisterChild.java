@@ -68,7 +68,8 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         super.onCreate(savedInstanceState);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_register_child2);
 
@@ -252,7 +253,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     @Override
     public void onNdefPushComplete(NfcEvent nfcEvent) {
 
-        Toast.makeText(this, "Dit barn " + child.getName() + " Tlf. " + child.getPhone() + " er nu registréret",
-                Toast.LENGTH_SHORT).show();
+        /*Toast.makeText(this, "Dit barn " + child.getName() + " Tlf. " + child.getPhone() + " er nu registréret",
+                Toast.LENGTH_SHORT).show();*/
     }
 }

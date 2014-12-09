@@ -43,9 +43,6 @@ public class MyHandler extends NotificationsHandler {
             String eventID = sepMessage[1];
             NOTIFICATION_ID = 1;
 
-            //LoggedInChild loggedinchild = LoggedInChild.instance;
-            //loggedinchild.getEventId(eventID);
-
             pushNotificationController.getEventId(eventID);
 
         }
@@ -59,12 +56,11 @@ public class MyHandler extends NotificationsHandler {
         if (sepMessage[0].equals("ReceiveLocation")){
             String location = sepMessage[1];
             newMessage = "Lokation modtaget";
-            NOTIFICATION_ID= 3;
+            NOTIFICATION_ID = 3;
 
             LocationActivity locationactivity = LocationActivity.instance;
             locationactivity.receiveLocation(location);
         }
-
 
         Log.d(TAG, "onReceive");
         sendNotification(newMessage);

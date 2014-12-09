@@ -114,8 +114,8 @@ public class NewCalEventActivity extends BaseActivity implements
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, locationList);
-        adapter_state
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // View position = adapter_state.getDropDownView(getIntent().getIntExtra("Position", 0), spinnerLocation, FavoritePlaces.PlaceAdapter.);
         spinnerLocation.setAdapter(adapter_state);
         spinnerLocation.setOnItemSelectedListener(this);
 
@@ -123,8 +123,7 @@ public class NewCalEventActivity extends BaseActivity implements
 
         ArrayAdapter<String> adapter_repeat = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, repeat);
-        adapter_state
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRepeat.setAdapter(adapter_repeat);
         spinnerRepeat.setOnItemSelectedListener(this);
 
@@ -258,11 +257,18 @@ public class NewCalEventActivity extends BaseActivity implements
 
             WmfGeofenceController wmfGeofenceController = new WmfGeofenceController();
             PendingIntent pendingIntent1 = wmfGeofenceController.getTransitionPendingIntent(this);
+            try {
+                pendingIntent1.send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
+
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
             AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             // Don't do anything here as this will fire the alarm instantly
+            saveEvent();
 
             return true;
         }

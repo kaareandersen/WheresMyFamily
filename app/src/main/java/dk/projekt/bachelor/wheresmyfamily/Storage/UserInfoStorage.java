@@ -27,7 +27,7 @@ public final class UserInfoStorage
     public UserInfoStorage()
     {
         super();
-    }
+    };
 
     // These eight methods are used for maintaining favorites.
     public void saveChildren(Context context, List<Child> children) {
@@ -90,8 +90,7 @@ public final class UserInfoStorage
         settings = context.getSharedPreferences(PARENT_PREFS_NAME,
                 Context.MODE_PRIVATE);
 
-        if (settings.contains(PARENT_FAVORITES))
-        {
+        if (settings.contains(PARENT_FAVORITES)) {
             String jsonFavorites = settings.getString(PARENT_FAVORITES, null);
             Gson gson = new Gson();
             Parent[] favoriteItems = gson.fromJson(jsonFavorites,
@@ -101,9 +100,9 @@ public final class UserInfoStorage
             parents = new ArrayList<Parent>(parents);
 
             return (ArrayList<Parent>) parents;
-        }
-        else
+        } else {
             return new ArrayList<Parent>();
+        }
     }
 
     public void addParent(Context context, Parent parent) {

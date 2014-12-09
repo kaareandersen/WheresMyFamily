@@ -121,12 +121,13 @@ public class FavoritePlaces extends ListActivity {
     private AdapterView.OnItemClickListener listlistener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
-            Intent childClick = new Intent(FavoritePlaces.this, OverviewActivity.class);
+            Intent childClick = new Intent(FavoritePlaces.this, NewCalEventActivity.class);
+            childClick.putExtra("Position", position);
             startActivity(childClick);
         }
     };
 
-    private class PlaceAdapter extends ArrayAdapter<WmfGeofence>
+    public  class PlaceAdapter extends ArrayAdapter<WmfGeofence>
     {
         public PlaceAdapter(Context context, int textViewResourceId, ArrayList<WmfGeofence> items)
         {
@@ -152,7 +153,7 @@ public class FavoritePlaces extends ListActivity {
                 TextView tt = (TextView) v.findViewById(R.id.geofence_name_text_view);
 
                 if (tt != null)
-                    tt.setText("Name: " + wmfGeofence.getGeofenceId());
+                    tt.setText(wmfGeofence.getGeofenceId());
             }
 
             return v;

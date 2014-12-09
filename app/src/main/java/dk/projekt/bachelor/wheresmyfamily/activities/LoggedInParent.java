@@ -376,10 +376,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     }
 
     @Override
-    public void onAddGeofencesResult(int i, String[] strings) {
-
-
-    }
+    public void onAddGeofencesResult(int i, String[] strings) {}
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult)

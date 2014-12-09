@@ -2,8 +2,6 @@ package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -12,7 +10,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,7 +25,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.HistoryApi;
 import com.google.android.gms.fitness.request.DataReadRequest;
-import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -50,14 +46,14 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 public class LocationActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener,
-        LocationListener {
+        LocationListener
+{
 
     //region Fields
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -100,11 +96,7 @@ public class LocationActivity extends FragmentActivity implements
 
     // Stores the PendingIntent used to request geofence monitoring
     private PendingIntent mGeofenceRequestIntent;
-    // Defines the allowable request types.
-    public enum REQUEST_TYPE {ADD, REMOVE_INTENT, REMOVE_LIST, START, STOP }
-    private REQUEST_TYPE mRequestType;
-    // Flag that indicates if a request is underway.
-    private boolean mInProgress;
+
     // Store the list of geofence Ids to remove
     List<String> mGeofencesToRemove;
 
@@ -112,11 +104,6 @@ public class LocationActivity extends FragmentActivity implements
     // Internal List of WmfGeofence objects
     List<com.google.android.gms.location.Geofence> mGeofenceList;
     private GeofenceStorage geofenceStorage;
-
-    // Store the PendingIntent used to send activity recognition events back to the app
-    private PendingIntent mActivityRecognitionPendingIntent;
-    // Store the current activity recognition client
-    private ActivityRecognitionClient mActivityRecognitionClient;
 
     public static LocationActivity instance = null;
 
@@ -134,7 +121,11 @@ public class LocationActivity extends FragmentActivity implements
     // ActionBar actionBar;
     protected PushNotificationController pushNotificationController;
 
-
+    // Defines the allowable request types.
+    public enum REQUEST_TYPE {ADD, REMOVE_INTENT, REMOVE_LIST }
+    private REQUEST_TYPE mRequestType;
+    // Flag that indicates if a request is underway.
+    private boolean mInProgress;
     ImageButton addgeofenceButton;
     //endregion
 
@@ -142,7 +133,8 @@ public class LocationActivity extends FragmentActivity implements
 
     //region Lifecycle events
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
@@ -156,7 +148,8 @@ public class LocationActivity extends FragmentActivity implements
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         addgeofenceButton = (ImageButton) findViewById(R.id.action_new_geofence);
-        addgeofenceButton.setOnClickListener(new View.OnClickListener() {
+        addgeofenceButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), FavoritePlaces.class);
@@ -168,13 +161,15 @@ public class LocationActivity extends FragmentActivity implements
         if (locationClient == null)
             locationClient = new LocationClient(this, this, this);
 
+        locationClient.connect();
+
         // Initialize the map
         map = ((SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
 
-        if (map == null) {
-            Toast.makeText(this, "Google Maps not available",
-                    Toast.LENGTH_LONG).show();
+        if (map == null)
+        {
+            Toast.makeText(this, "Google Maps not available", Toast.LENGTH_LONG).show();
         }
 
         // Since the user is at the map request a new LocationClient
@@ -193,31 +188,11 @@ public class LocationActivity extends FragmentActivity implements
 
         // Instantiate the current List of geofences
         mCurrentGeofences = new ArrayList<com.google.android.gms.location.Geofence>();
-
-        /*
-         * Instantiate a new activity recognition client. Since the
-         * parent Activity implements the connection listener and
-         * connection failure listener, the constructor uses "this"
-         * to specify the values of those parameters.
-         */
-        mActivityRecognitionClient =
-                new ActivityRecognitionClient(this, this, this);
-        /*
-         * Create the PendingIntent that Location Services uses
-         * to send activity recognition updates back to this app.
-         */
-        Intent intent = new Intent(
-                this, ActivityRecognitionIntentService.class);
-        /*
-         * Return a PendingIntent that starts the IntentService.
-         */
-        mActivityRecognitionPendingIntent =
-                PendingIntent.getService(this, 0, intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume()
+    {
         super.onResume();
         locationClient.connect();
 
@@ -225,17 +200,22 @@ public class LocationActivity extends FragmentActivity implements
 
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        //new AskForLocation().execute(null, null, null);
         askForLocation();
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart()
+    {
         super.onStart();
         locationClient.connect();
+
+        // new AskForLocation().execute(null, null, null);
     }
 
     @Override
-    protected void onStop() {
+    protected void onStop()
+    {
 
         // If the client is connected
         if (locationClient.isConnected())
@@ -250,7 +230,8 @@ public class LocationActivity extends FragmentActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.location, menu);
         return true;
@@ -285,6 +266,7 @@ public class LocationActivity extends FragmentActivity implements
                 {
                     try
                     {
+                        // Last parameter is the max number of result wanted
                         _addresses = _geocoder.getFromLocation(mCurrentLocation.latitude, mCurrentLocation.longitude, 1);
                         if(_addresses.size() > 0)
                         {
@@ -407,23 +389,11 @@ public class LocationActivity extends FragmentActivity implements
                     locationClient.removeGeofences(mGeofencesToRemove,
                             (LocationClient.OnRemoveGeofencesResultListener) this);
                     break;
-                case START :
-                    /*
-                     * Request activity recognition updates using the
-                     * preset detection interval and PendingIntent.
-                     * This call is synchronous.
-                     */
-                    mActivityRecognitionClient.requestActivityUpdates(DETECTION_INTERVAL_MILLISECONDS,
-                            mActivityRecognitionPendingIntent);
-                    break;
-                case STOP :
-                    mActivityRecognitionClient.removeActivityUpdates(mActivityRecognitionPendingIntent);
-                    break;
                     /*
                      * An enum was added to the definition of REQUEST_TYPE,
                      * but it doesn't match a known case. Throw an exception.
                      */
-                default :
+                default:
                     try {
                         throw new Exception("Unknown request type in onConnected().");
                     } catch (Exception e) {
@@ -431,23 +401,11 @@ public class LocationActivity extends FragmentActivity implements
                     }
                     break;
             }
-        }
 
-        /*
-         * Request activity recognition updates using the preset
-         * detection interval and PendingIntent. This call is
-         * synchronous.
-         */
-        /*mActivityRecognitionClient.requestActivityUpdates(
-                DETECTION_INTERVAL_MILLISECONDS,
-                mActivityRecognitionPendingIntent);*/
-        /*
-         * Since the preceding call is synchronous, turn off the
-         * in progress flag and disconnect the client
-         */
-        mInProgress = false;
-        mActivityRecognitionClient.disconnect();
+            mInProgress = false;
+        }
     }
+
 
     @Override
     public void onDisconnected()
@@ -458,8 +416,6 @@ public class LocationActivity extends FragmentActivity implements
         mInProgress = false;
         // Destroy the current location client
         locationClient = null;
-        // Delete the client
-        mActivityRecognitionClient = null;
     }
 
     @Override
@@ -497,21 +453,7 @@ public class LocationActivity extends FragmentActivity implements
             * If no resolution is available, display a dialog to the
             * user with the error.
             */
-            // Get the error code
-            int errorCode = connectionResult.getErrorCode();
-            // Get the error dialog from Google Play services
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode, this,
-                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
-            // If Google Play services can provide an error dialog
-            if (errorDialog != null)
-            {
-                // Create a new DialogFragment for the error dialog
-                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                // Set the dialog in the DialogFragment
-                errorFragment.setDialog(errorDialog);
-                // Show the error dialog in the DialogFragment
-                errorFragment.show(getSupportFragmentManager(), "Error Detection in" + getCallingActivity());
-            }
+
         }
     }
 
@@ -521,6 +463,25 @@ public class LocationActivity extends FragmentActivity implements
         mCurrentLocation = new LatLng(location.getLatitude(), location.getLongitude());
     }
     //endregion
+
+    private boolean servicesConnected() {
+        // Check that Google Play services is available
+        int resultCode =
+                GooglePlayServicesUtil.
+                        isGooglePlayServicesAvailable(this);
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            Log.d("Activity Recognition",
+                    "Google Play services is available.");
+            // Continue
+            return true;
+            // Google Play services was not available for some reason
+        } else {
+
+            return false;
+        }
+    }
 
     //region Geofencing
 
@@ -532,6 +493,7 @@ public class LocationActivity extends FragmentActivity implements
     {
         // Create an explicit Intent
         Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+        startService(intent);
         /*
          * Return the PendingIntent
          */
@@ -707,171 +669,6 @@ public class LocationActivity extends FragmentActivity implements
     }
     //endregion
 
-    // region Error dialog
-
-    // Define a DialogFragment that displays the error dialog
-    public static class ErrorDialogFragment extends DialogFragment
-    {
-        // Global field to contain the error dialog
-        private Dialog mDialog;
-
-        // Default constructor. Sets the dialog field to null
-        public ErrorDialogFragment()
-        {
-            super();
-            mDialog = null;
-        }
-
-        // Set the dialog to display
-        public void setDialog(Dialog dialog)
-        {
-            mDialog = dialog;
-        }
-
-        // Return a Dialog to the DialogFragment.
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState)
-        {
-            return mDialog;
-        }
-    }
-    //endregion
-
-    /*
-     * Handle results returned to the FragmentActivity
-     * by Google Play services
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        // Decide what to do based on the original request code
-        switch (requestCode)
-        {
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST:
-                /*
-                * If the result code is Activity.RESULT_OK, try
-                * to connect again
-                */
-                switch (resultCode)
-                {
-                    case Activity.RESULT_OK:
-                        // Try the request again
-                        onActivityResult(requestCode, resultCode, data);
-                        break;
-                }
-        }
-    }
-
-    //region Activity Recognition
-    /**
-     * Request activity recognition updates based on the current
-     * detection interval.
-     *
-     */
-    public void startUpdates()
-    {
-        // Set the request type to START
-        mRequestType = REQUEST_TYPE.START;
-
-        // Check for Google Play services
-        if (!servicesConnected())
-            return;
-
-        // If a request is not already underway
-        if (!mInProgress)
-        {
-            // Indicate that a request is in progress
-            mInProgress = true;
-            // Request a connection to Location Services
-            mActivityRecognitionClient.connect();
-            //
-        }
-        else
-        {
-            // A request is already underway. To handle this situation:
-            // Disconnect the client
-            locationClient.disconnect();
-            // Reset the flag
-            mInProgress = false;
-            // Retry the request.
-            startUpdates();
-        }
-    }
-
-    /**
-     * Turn off activity recognition updates
-     *
-     */
-    public void stopUpdates()
-    {
-        // Set the request type to STOP
-        mRequestType = REQUEST_TYPE.STOP;
-        /*
-         * Test for Google Play services after setting the request type.
-         * If Google Play services isn't present, the request can be
-         * restarted.
-         */
-        if (!servicesConnected())
-            return;
-
-        // If a request is not already underway
-        if (!mInProgress)
-        {
-            // Indicate that a request is in progress
-            mInProgress = true;
-            // Request a connection to Location Services
-            mActivityRecognitionClient.connect();
-            //
-        }
-        else
-        {
-            // A request is already underway. To handle this situation:
-            // Disconnect the client
-            locationClient.disconnect();
-            // Reset the flag
-            mInProgress = false;
-            // Retry the request.
-            stopUpdates();
-        }
-    }
-    //endregion
-
-    //region Google play services
-    private boolean servicesConnected()
-    {
-        // Check that Google Play services is available
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        // If Google Play services is available
-        if (ConnectionResult.SUCCESS == resultCode)
-        {
-            // In debug mode, log the status
-            Log.d("Location Updates", "Google Play services is available.");
-            // Continue
-            return true;
-            // Google Play services was not available for some reason.
-            // resultCode holds the error code.
-        }
-        else
-        {
-            // Get the error dialog from Google Play services
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog
-                    (resultCode, this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-            // If Google Play services can provide an error dialog
-            if (errorDialog != null)
-            {
-                // Create a new DialogFragment for the error dialog
-                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                // Set the dialog in the DialogFragment
-                errorFragment.setDialog(errorDialog);
-                // Show the error dialog in the DialogFragment
-                errorFragment.show(getSupportFragmentManager(), "Error in " + getCallingActivity());
-            }
-
-            return false;
-        }
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -904,7 +701,7 @@ public class LocationActivity extends FragmentActivity implements
 
         pushNotificationController.askForLocationFromChild(childEmail);
 
-        Toast.makeText(getApplicationContext(), "Ask for location", Toast.LENGTH_LONG).show();
+        // Toast.makeText(getApplicationContext(), "Ask for location", Toast.LENGTH_LONG).show();
     }
 
     public void receiveLocation(String location){
@@ -938,4 +735,112 @@ public class LocationActivity extends FragmentActivity implements
         // Toast.makeText(this, currentPosition.toString(), Toast.LENGTH_LONG).show();
     }
     //endregion
+
+    public void showCurrentPositionOnMap()
+    {
+        // Show the position of the currently selected child
+        List<Address> addresses;
+        String language = "da";
+        String country = "DK";
+        Locale local = new Locale(language, country);
+        Geocoder geocoder = new Geocoder(this, local);
+        StringBuffer markerInfo = new StringBuffer();
+        Child current = childModelController.getCurrentChild();
+
+        if (currentPosition != null)
+        {
+            try
+            {
+                // Extract the address from the location coordinates using a geocoder
+                addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                if(addresses.size() > 0)
+                {
+                    for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
+                    {
+                        markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                        markerInfo.append("\n");
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            // Set the maptype
+            map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            // Add a marker with the selected Child's name and current location
+            map.addMarker(new MarkerOptions().position(currentPosition)
+                    .title(current.getName() + "\n").snippet(markerInfo.toString()));
+
+            // Set the camera position to zoom in on the current location
+            CameraPosition currentChildPosition = new CameraPosition.Builder()
+                    .target(currentPosition).zoom(17).bearing(90).tilt(0).build();
+            map.animateCamera(
+                    CameraUpdateFactory.newCameraPosition(currentChildPosition));
+        }
+        else
+        {
+            Toast.makeText(this, "Barnets lokation endnu ikke modtaget, vent venligst", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /*private class AskForLocation extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // Toast.makeText(getApplicationContext(), "Asking for location", Toast.LENGTH_SHORT).show();
+            askForLocation();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            // showCurrentPositionOnMap();
+            List<Address> addresses;
+            String language = "da";
+            String country = "DK";
+            Locale local = new Locale(language, country);
+            Geocoder geocoder = new Geocoder(getApplicationContext(), local);
+            StringBuffer markerInfo = new StringBuffer();
+            Child current = childModelController.getCurrentChild();
+
+            if (currentPosition != null)
+            {
+                try
+                {
+                    addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                    if(addresses.size() > 0)
+                    {
+                        for(int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++)
+                        {
+                            markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                            markerInfo.append("\n");
+                        }
+                    }
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                // Set the maptype
+                map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                // Add a marker with the selected Child's name and current location
+                map.addMarker(new MarkerOptions().position(currentPosition)
+                        .title(current.getName() + "\n").snippet(markerInfo.toString()));
+
+                // Set the camera position to zoom in on the current location
+                CameraPosition currentChildPosition = new CameraPosition.Builder()
+                        .target(currentPosition).zoom(17).bearing(90).tilt(0).build();
+                map.animateCamera(
+                        CameraUpdateFactory.newCameraPosition(currentChildPosition));
+            }
+        }
+    }*/
 }
+
+
+
+

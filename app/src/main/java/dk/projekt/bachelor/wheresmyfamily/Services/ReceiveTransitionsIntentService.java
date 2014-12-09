@@ -3,6 +3,7 @@ package dk.projekt.bachelor.wheresmyfamily.Services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
@@ -56,6 +57,8 @@ public class ReceiveTransitionsIntentService extends IntentService
             * of the geofence or geofences that triggered the transition
             */
 
+            Toast.makeText(this, "ReceiveTransitionsIntentService running", Toast.LENGTH_SHORT).show();
+
             // Get the type of transition (entry or exit)
             int transitionType =
                     LocationClient.getGeofenceTransition(intent);
@@ -73,6 +76,10 @@ public class ReceiveTransitionsIntentService extends IntentService
                 {
                     // Store the Id of each geofence
                     triggerIds[i] = triggerList.get(i).getRequestId();
+                    if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER)
+                        Toast.makeText(this, "Ankomst" + triggerIds[i], Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Afgang" + triggerIds[i], Toast.LENGTH_SHORT).show();
                 }
 
                 /*
@@ -80,6 +87,7 @@ public class ReceiveTransitionsIntentService extends IntentService
                 * display them, or display the details associated with
                 * them. FIXME
                 */
+
             }
              else
             {
