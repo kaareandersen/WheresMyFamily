@@ -6,6 +6,8 @@ import android.content.Intent;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
+import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
+
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
@@ -40,7 +42,6 @@ public class ActivityRecognitionIntentService extends IntentService
              * Get an integer describing the type of activity
              */
             int activityType = mostProbableActivity.getType();
-            String activityName = getNameFromType(activityType);
             /*
              * At this point, you have retrieved all the information
              * for the current update. You can display this
@@ -48,22 +49,13 @@ public class ActivityRecognitionIntentService extends IntentService
              * send it to an Activity or Service in a broadcast
              * Intent. FIXME
              */
-        }
-        else
-        {
-            /*
-             * This implementation ignores intents that don't contain
-             * an activity update. If you wish, you can report them as
-             * errors. FIXME
-             */
+            Intent intent1 = new Intent(this, LoggedInChild.class);
+            intent1.putExtra("ActivityRecognition", getNameFromType(activityType));
+            sendBroadcast(intent1);
         }
     }
 
-    /**
-     * Map detected activity types to strings
-     *@param activityType The detected activity type
-     *@return A user-readable name for the type
-     */
+
     private String getNameFromType(int activityType) {
         switch(activityType) {
             case DetectedActivity.IN_VEHICLE:

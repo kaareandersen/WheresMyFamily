@@ -1,7 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.DataModel;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by Tommy on 24-09-2014.
@@ -55,34 +54,11 @@ public class Child extends User implements Serializable {
     public Boolean getIsCurrent() {
         return isCurrentChild;
     }
+
     @Override
     public User setIsCurrent(Boolean isCurrent) {
         this.isCurrentChild = isCurrent;
         return this;
-    }
-
-    public Child getCurrentChild(ArrayList<Child> _myChildren)
-    {
-        Child temp = new Child();
-        ArrayList<Child> tempList;
-        tempList = _myChildren;
-
-        if(tempList.size() > 0)
-        {
-            for(int i = 0; i < tempList.size(); i++)
-            {
-                if(tempList.get(i).getIsCurrent())
-                    temp = tempList.get(i);
-            }
-        }
-
-        if(temp != null)
-            return temp;
-        else
-        {
-            temp.setName("Unknown");
-            return temp;
-        }
     }
     //endregion
 }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,25 +21,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import dk.projekt.bachelor.wheresmyfamily.GeofenceStorage;
+import dk.projekt.bachelor.wheresmyfamily.Controller.WmfGeofenceController;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 public class FavoritePlaces extends ListActivity {
 
+    //region Fields
     private ListView m_list;
     GeofenceStorage geofenceStorage;
-    WmfGeofence wmfGeofence;
+    WmfGeofenceController wmfGeofenceController;
     private PlaceAdapter geofenceAdapter;
     private ArrayList<WmfGeofence> myGeofences;
     private Runnable viewChild;
     ListView myList;
-
-    //region Fields
     private final String TAG = "Mine steder";
-    private TextView geoFencename;
-    private EditText parentName;
     private ProgressDialog progressDialog = null;
+    //endregion
 
 
 
@@ -84,6 +82,12 @@ public class FavoritePlaces extends ListActivity {
         myGeofences = geofenceStorage.getGeofences(this);
 
         myList.setAdapter(new PlaceAdapter(this, R.layout.geofence_favorites_row, myGeofences));
+
+        if (myGeofences.size() > 0)
+        {
+            wmfGeofenceController = new WmfGeofenceController();
+            wmfGeofenceController.noCurrentGeofence(myGeofences);
+        }
     }
 
     @Override
@@ -91,7 +95,6 @@ public class FavoritePlaces extends ListActivity {
         super.onPause();
 
         geofenceStorage.setGeofences(this, myGeofences);
-
     }
 
     @Override
@@ -122,12 +125,15 @@ public class FavoritePlaces extends ListActivity {
     private AdapterView.OnItemClickListener listlistener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView parent, View arg1, int position,long arg3) {
-            Intent childClick = new Intent(FavoritePlaces.this, OverviewActivity.class);
+            Intent childClick = new Intent(FavoritePlaces.this, NewCalEventActivity.class);
+            childClick.putExtra("Position", position);
             startActivity(childClick);
+
+            myGeofences.get(position).setIsCurrent(true);
         }
     };
 
-    private class PlaceAdapter extends ArrayAdapter<WmfGeofence>
+    public  class PlaceAdapter extends ArrayAdapter<WmfGeofence>
     {
         public PlaceAdapter(Context context, int textViewResourceId, ArrayList<WmfGeofence> items)
         {
@@ -153,7 +159,7 @@ public class FavoritePlaces extends ListActivity {
                 TextView tt = (TextView) v.findViewById(R.id.geofence_name_text_view);
 
                 if (tt != null)
-                    tt.setText("Name: " + wmfGeofence.getGeofenceId());
+                    tt.setText(wmfGeofence.getGeofenceId());
             }
 
             return v;

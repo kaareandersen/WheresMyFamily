@@ -30,7 +30,7 @@
     <string name="child_email_textView_title">Email</string>
 
     <!-- child_overview -->
-    <string name="title_activity_child_overview">child_overview</string>
+    <string name="title_activity_child_overview">Oversigt</string>
     <string name="my_children_title">Mine børn</string>
     <string name="action_search"></string>
     <string name="title_activity_child_info">child_info</string>
@@ -48,12 +48,12 @@
     </string-array>
 
     <!-- calendar_view -->
-    <string name="title_activity_calendar_view">calendar_view</string>
+    <string name="title_activity_calendar_view">Kalender</string>
     <string name="calendar_add_event_button_text">+</string>
     <string name="title_activity_position">position</string>
     <string name="title_activity_calendar">Kalender</string>
-    <string name="title_activity_child__start__screen">Child_Start_Screen</string>
-    <string name="title_activity_parent__start__screen">Parent_Start_Screen</string>
+    <string name="title_activity_child__start__screen">Forside</string>
+    <string name="title_activity_parent__start__screen">Forside</string>
     <string name="action_logout">Log Ud</string>
     <string name="action_deleteusr">Slet Bruger</string>
 
@@ -78,11 +78,11 @@
     <string name="title_activity_sign_in_screen">Log Ind</string>
 
     <!-- logged_in -->
-    <string name="title_activity_logged_in"></string>
+    <string name="title_activity_logged_in">Mine børn</string>
     <string name="main_no_items">Der er ikke gemt nogen børn</string>
 
     <!-- logged_in_child -->
-    <string name="title_activity_logged_in_child">LoggedInChild</string>
+    <string name="title_activity_logged_in_child">Logget ind</string>
 
     <!-- parent_info -->
     <string name="title_activity_parent_info">Forælder Info</string>
@@ -93,8 +93,7 @@
 
     <!-- swipe_menu -->
     <string name="title_activity_swipe_menu">SwipeMenu</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_register_parent">Registrer Forælder</string>
+    <string name="title_activity_register_parent">Registrér Forælder</string>
     <string name="register_with_gcm">Register with GCM</string>
     <string name="not_registered">Not yet registered</string>
     <string name="register_with_no_tags">Register without Tags</string>
@@ -127,7 +126,7 @@
     <string name="overview_address_text_view">Adresse</string>
     <string name="overview_address_hint_text">Søg på adresse</string>
     <string name="overview_save_place_button">Tilføj til mine steder</string>
-    <string name="title_activity_new_location">NewLocation</string>
+    <string name="title_activity_new_location">Nyt sted</string>
     <string name="overview_name_textview">Navn:</string>
     <string name="overview_phone_textview">Mobilnummer:</string>
     <string name="overview_position_textview">Position:</string>
@@ -139,7 +138,7 @@
 
     <!-- AddNewLocation -->
     <string name="add_new_location_headline">Tilføj steder til favoritter</string>
-    <string name="title_activity_favorite_places">FavoritePlaces</string>
+    <string name="title_activity_favorite_places">Gemte steder</string>
 
     <!--FavoritePlaces-->
     <string name="favorite_places_headline">Favoritliste</string>

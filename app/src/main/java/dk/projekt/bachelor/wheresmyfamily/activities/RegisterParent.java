@@ -22,17 +22,19 @@ import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 import java.util.ArrayList;
 
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.Controller.ParentModelController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
-import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback,
-        NfcAdapter.OnNdefPushCompleteCallback // FIXME
+        NfcAdapter.OnNdefPushCompleteCallback
 {
     //region Fields
     NfcAdapter nfcAdapter;
@@ -54,6 +56,8 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
+    ChildModelController childModelController = new ChildModelController();
+    ParentModelController parentModelController = new ParentModelController();
     UserInfoStorage storage = new UserInfoStorage();
     //endregion
 
@@ -67,13 +71,9 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // Toast.makeText(this, "RegisterParent OnCreate", Toast.LENGTH_SHORT).show();
-
         childNameInfoText = (TextView) findViewById(R.id.childNameInfo);
         childPhoneInfoText = (TextView) findViewById(R.id.childPhoneInfo);
         childEmailInfoText = (TextView) findViewById(R.id.childEmailInfo);
-
-        mChildren = storage.loadChildren(this);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -97,9 +97,8 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     protected void onResume() {
         super.onResume();
 
-        // Toast.makeText(this, "RegisterParent OnResume", Toast.LENGTH_SHORT).show();
-
-        mChildren = storage.loadChildren(this);
+        mChildren = childModelController.getMyChildren(this);
+        storage.loadParents(this);
 
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         MobileServicesClient mobileServicesClient = myApp.getAuthService();
@@ -162,8 +161,6 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     protected void onPause() {
         super.onPause();
 
-        // Toast.makeText(this, "RegisterParent OnPause", Toast.LENGTH_SHORT).show();
-
         storage.saveChildren(this, mChildren);
     }
 
@@ -172,6 +169,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         super.onRestart();
 
         mChildren = storage.loadChildren(this);
+
     }
 
     @Override
@@ -244,6 +242,8 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         mParents.add(new Parent(userName, userPhone, userMail, null));
         storage.saveParents(this, mParents);
+        Toast.makeText(this, "Din forælder " + parent.getName() + " Tlf. " + parent.getPhone() + " er nu registréret",
+                Toast.LENGTH_SHORT).show();
 
         isNFCMessageNew = false;
     }
@@ -253,66 +253,4 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
         Toast.makeText(this, "Din forælder " + parent.getName() + " Tlf. " + parent.getPhone() + " er nu registréret",
                 Toast.LENGTH_SHORT).show();
     }
-
-    /*public void saveParent(Parent parent)
-    {
-        try
-        {
-            InternalStorage.writeObject(this, "Parent", parent);
-        }
-        catch(IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public Parent loadParent()
-    {
-        Parent retVal = null;
-
-        try
-        {
-            retVal = (Parent) InternalStorage.readObject(this, "Parent");
-        }
-        catch(FileNotFoundException fe)
-        {
-            fe.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        catch (ClassNotFoundException ce)
-        {
-            ce.printStackTrace();
-        }
-
-        return retVal == null ? new Parent() : retVal;
-    }
-
-    public void saveChildren(ArrayList<Child> myChildren)
-    {
-        try
-        {
-            InternalStorage.writeObject(this, "Children", myChildren);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ArrayList<Child> loadChildren()
-    {
-        ArrayList<Child> retVal = null;
-
-        try
-        {
-            retVal = (ArrayList<Child>) InternalStorage.readObject(this, "Children");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return retVal == null ? new ArrayList<Child>() : retVal;
-    }*/
 }

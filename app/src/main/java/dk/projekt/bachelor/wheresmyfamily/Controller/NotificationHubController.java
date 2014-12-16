@@ -13,7 +13,7 @@ import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
 /**
  * Created by KaareAndersen on 20/11/14.
  */
-public class NotificationHubController {
+public class    NotificationHubController {
 
     private final String TAG = "NotificationHubController";
 

@@ -109,10 +109,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="dk.projekt.bachelor.wheresmyfamily.activities.SwipeMenu"
-            android:label="@string/title_activity_swipe_menu" >
-        </activity>
-        <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.RegisterChild"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_register_child"
@@ -197,7 +193,8 @@
         </activity>
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.NewCalEventActivity"
-            android:label="@string/title_activity_new_cal_event" >
+            android:label="@string/title_activity_new_cal_event"
+            android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.CalendarActivity">
             <intent-filter>
                 <action android:name="new.calendar.event" />
             </intent-filter>
@@ -232,7 +229,8 @@
 
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.AddNewLocation"
-            android:label="@string/title_activity_new_location" >
+            android:label="@string/title_activity_new_location"
+            android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.FavoritePlaces">
         </activity>
 
         <receiver android:name="dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver" >
@@ -243,7 +241,8 @@
 
         <activity
             android:name="dk.projekt.bachelor.wheresmyfamily.activities.FavoritePlaces"
-            android:label="@string/title_activity_favorite_places" >
+            android:label="@string/title_activity_favorite_places"
+            android:parentActivityName="dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity">
         </activity>
 
         <service

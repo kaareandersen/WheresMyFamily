@@ -54,6 +54,7 @@ public class Parent extends User implements Serializable {
     public Boolean getIsCurrent() {
         return isCurrentParent;
     }
+
     @Override
     public User setIsCurrent(Boolean isCurrent) {
         this.isCurrentParent = isCurrent;

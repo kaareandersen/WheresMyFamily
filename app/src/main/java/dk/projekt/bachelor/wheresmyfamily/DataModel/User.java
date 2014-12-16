@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Tommy on 24-11-2014.
  */
-public class User implements Serializable {
+public abstract class User implements Serializable {
 
     private String userName;
     private String userPhone;
