@@ -20,27 +20,29 @@ public class WmfGeofenceController {
 
     ArrayList<Geofence> myGeofences = new ArrayList<Geofence>();
     ArrayList<Geofence> activeGeofences;
+    WmfGeofence currentGeofence;
     GeofenceStorage geofenceStorage;
     ArrayList<WmfGeofence> wmfGeofences;
     WmfGeofence wmfGeofence;
 
     public WmfGeofenceController() {}
 
-    public ArrayList<Geofence> getAllGeofences(Context context)
+    public ArrayList<WmfGeofence> getAllGeofences(Context context)
     {
+        geofenceStorage = new GeofenceStorage(context);
         wmfGeofences = geofenceStorage.getGeofences(context);
 
-        for(int i = 0; i < wmfGeofences.size(); i++)
+        if(wmfGeofences.size() > 0)
         {
-            wmfGeofence = wmfGeofences.get(i);
-            myGeofences.add(i, wmfGeofence.toGeofence());
+            return wmfGeofences;
         }
-
-        return myGeofences;
+        else
+            return new ArrayList<WmfGeofence>();
     }
 
     public void setActiveGeofences(Context context, ArrayList<Geofence> _myGeofences)
     {
+        geofenceStorage = new GeofenceStorage(context);
         wmfGeofences = geofenceStorage.getGeofences(context);
 
         for(int j = 0; j < wmfGeofences.size(); j++)
@@ -73,17 +75,39 @@ public class WmfGeofenceController {
         return null;
     }
 
-    /*
-     * Create a PendingIntent that triggers an IntentService in your
-     * app when a geofence transition occurs.
-     */
+    public WmfGeofence getCurrentGeofence(Context context)
+    {
+        currentGeofence = new WmfGeofence();
+
+        if(myGeofences.size() > 0)
+        {
+            for(int i = 0; i < wmfGeofences.size(); i++)
+            {
+                if(wmfGeofences.get(i).getIsActive())
+                    currentGeofence = wmfGeofences.get(i);
+            }
+        }
+
+        if(currentGeofence != null)
+            return currentGeofence;
+        else
+            return new WmfGeofence();
+    }
+
+    public void noCurrentGeofence(ArrayList<WmfGeofence> _myGeofences)
+    {
+        for(int i = 0; i <_myGeofences.size(); i++)
+        {
+            _myGeofences.get(i).setIsCurrent(false);
+        }
+    }
+
     public PendingIntent getTransitionPendingIntent(Context context)
     {
         // Create an explicit Intent
         Intent intent = new Intent(context, ReceiveTransitionsIntentService.class);
-        /*
-         * Return the PendingIntent
-         */
+        intent.putExtra("AddGeofence", "ADD");
+
         return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

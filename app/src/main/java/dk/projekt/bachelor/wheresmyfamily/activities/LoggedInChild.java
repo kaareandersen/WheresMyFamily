@@ -81,10 +81,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
     private static final float SMALLEST_DISPLACEMENT_IN_METERS = 25;
 
-    /*
-     * Use to set an expiration time for a geofence. After this amount
-     * of time Location Services will stop tracking the geofence.
-     */
     private static final long SECONDS_PER_HOUR = 60;
     private static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
     private static final long GEOFENCE_EXPIRATION_TIME =
@@ -103,11 +99,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     JSONArray mChildren = new JSONArray();
     ArrayList<Parent> mParents = new ArrayList<Parent>();
-    /*String childrenPrefName = "myChildren";
-    String parentsPrefName = "myParents";
-    String childrenKey = "childrenInfo";
-    String parentsKey = "parentsInfo";*/
-    // UserInfoStorage storage = new UserInfoStorage();
+
     ParentModelController parentModelController;
     // Store the PendingIntent used to send activity recognition events back to the app
     private PendingIntent mActivityRecognitionPendingIntent;
@@ -134,14 +126,14 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         mNotificationHubController = new NotificationHubController(this);
         pushNotificationController = new PushNotificationController(this);
 
-
+        parentModelController = new ParentModelController();
 
         // Reference UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
         parentInfoName = (TextView) findViewById(R.id.parentinput);
         parentInfoPhone = (TextView) findViewById(R.id.phoneinput);
 
-        mParents = storage.loadParents(this);
+        mParents = parentModelController.getMyParents(this);
 
         if (mParents.size() > 0) {
             parentInfoName.setText(mParents.get(0).getName());
@@ -181,25 +173,15 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT_IN_METERS);
 
         locationClient.connect();
-        /*
-         * Instantiate a new activity recognition client. Since the
-         * parent Activity implements the connection listener and
-         * connection failure listener, the constructor uses "this"
-         * to specify the values of those parameters.
-         */
+
         mActivityRecognitionClient =
                 new ActivityRecognitionClient(this, this, this);
 
         mActivityRecognitionClient.connect();
-        /*
-         * Create the PendingIntent that Location Services uses
-         * to send activity recognition updates back to this app.
-         */
+
         Intent intent = new Intent(
                 this, ActivityRecognitionIntentService.class);
-        /*
-         * Return a PendingIntent that starts the IntentService.
-         */
+
         mActivityRecognitionPendingIntent =
                 PendingIntent.getService(this, 0, intent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
@@ -224,11 +206,10 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     protected void onResume() {
         super.onResume();
 
-
         /*Intent intent = new Intent(this, ActivityRecognitionIntentService.class);
         startService(intent);*/
 
-        mParents = storage.loadParents(this);
+        mParents = parentModelController.getMyParents(this);
 
         if (mParents.size() > 0) {
             parentInfoName.setText(mParents.get(0).getName());
@@ -306,9 +287,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     }
 
     public void getAndPushLocation() {
-        //TODO
-        // storage.loadParents(this);
-        // parentEmail = mParents.get(0).getEmail();
+
         String location = currentLocation.toString();
 
         pushNotificationController.sendLocationFromChild(parentEmail, location);
@@ -330,38 +309,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
-
-        // Ensure that the child has a postion from the start
-        // onLocationChanged(locationClient.getLastLocation());
-
-        /*if (mRequestType != null && locationClient.isConnected()) {
-            switch (mRequestType) {
-
-                case START:
-                    *//*
-                     * Request activity recognition updates using the
-                     * preset detection interval and PendingIntent.
-                     * This call is synchronous.
-                     *//*
-                    mActivityRecognitionClient.requestActivityUpdates(DETECTION_INTERVAL_MILLISECONDS,
-                            mActivityRecognitionPendingIntent);
-                    break;
-                case STOP:
-                    mActivityRecognitionClient.removeActivityUpdates(mActivityRecognitionPendingIntent);
-                    break;
-                    *//*
-                     * An enum was added to the definition of REQUEST_TYPE,
-                     * but it doesn't match a known case. Throw an exception.
-                     *//*
-                default:
-                    try {
-                        throw new Exception("Unknown request type in onConnected().");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        }*/
     }
 
     @Override
@@ -383,19 +330,13 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
             try {
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                * Thrown if Google Play services canceled the original
-                * PendingIntent
-                */
+
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
                 e.printStackTrace();
             }
         } else {
-            /*
-            * If no resolution is available, display a dialog to the
-            * user with the error.
-            */
+
             // Get the error code
             int errorCode = connectionResult.getErrorCode();
             // Get the error dialog from Google Play services
@@ -410,10 +351,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         // Decide what to do based on the original request code
         switch (requestCode) {
             case CONNECTION_FAILURE_RESOLUTION_REQUEST:
-                /*
-                * If the result code is Activity.RESULT_OK, try
-                * to connect again
-                */
+
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // Try the request again
@@ -425,10 +363,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     //region Activity Recognition
 
-    /**
-     * Request activity recognition updates based on the current
-     * detection interval.
-     */
+
     public void startUpdates() {
         // Set the request type to START
         mRequestType = REQUEST_TYPE.START;
@@ -455,17 +390,11 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         }
     }
 
-    /**
-     * Turn off activity recognition updates
-     */
+
     public void stopUpdates() {
         // Set the request type to STOP
         mRequestType = REQUEST_TYPE.STOP;
-        /*
-         * Test for Google Play services after setting the request type.
-         * If Google Play services isn't present, the request can be
-         * restarted.
-         */
+
         if (!servicesConnected())
             return;
 
@@ -477,7 +406,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
             mActivityRecognitionClient.connect();
             //
         } else {
-            // A request is already underway. To handle this situation:
             // Disconnect the client
             locationClient.disconnect();
             // Reset the flag

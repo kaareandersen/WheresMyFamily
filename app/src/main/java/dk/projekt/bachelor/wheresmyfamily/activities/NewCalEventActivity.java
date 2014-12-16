@@ -22,6 +22,11 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,7 +36,7 @@ import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.TimeZone;
+import java.util.List;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
@@ -39,17 +44,36 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.WmfGeofenceController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class NewCalEventActivity extends BaseActivity implements
-        View.OnClickListener, OnItemSelectedListener {
+        View.OnClickListener, OnItemSelectedListener, GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener,
+        LocationClient.OnRemoveGeofencesResultListener
+{
     private final String TAG = "NewCalEventActivity";
-    // UserInfoStorage storage = new UserInfoStorage();
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
     private ArrayList<WmfGeofence> geofences;
     GeofenceStorage geofenceStorage;
+    private ArrayList<Geofence> activeGeofences = new ArrayList<Geofence>();
+
+    private LocationClient locationClient;
+
+    private PendingIntent mGeofenceRequestIntent;
+
+    // Store the list of geofence Ids to remove
+    List<String> mGeofencesToRemove;
+
+    // Defines the allowable request types.
+    public enum REQUEST_TYPE {ADD, REMOVE_INTENT, REMOVE_LIST }
+    private REQUEST_TYPE mRequestType;
+    // Flag that indicates if a request is underway.
+    private boolean mInProgress;
+    ArrayList<com.google.android.gms.location.Geofence> mCurrentGeofences;
+
 
     private Activity mActivity;
     // Widget GUI
@@ -69,7 +93,7 @@ public class NewCalEventActivity extends BaseActivity implements
     private PendingIntent pendingIntent;
     Child currentChild;
     public static final String NEW_CALENDAR_EVENT_ACTION = "new.calendar.event";
-    // AlarmService alarmService;
+
     Bundle bundle = new Bundle();
     ChildModelController childModelController = new ChildModelController();
 
@@ -80,6 +104,7 @@ public class NewCalEventActivity extends BaseActivity implements
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        mInProgress = false;
 
         geofenceStorage = new GeofenceStorage(this);
         geofences = geofenceStorage.getGeofences(this);
@@ -110,12 +135,11 @@ public class NewCalEventActivity extends BaseActivity implements
         {
             locationList[i] = geofences.get(i).getGeofenceId();
         }
-
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, locationList);
         adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // View position = adapter_state.getDropDownView(getIntent().getIntExtra("Position", 0), spinnerLocation, FavoritePlaces.PlaceAdapter.);
+
         spinnerLocation.setAdapter(adapter_state);
         spinnerLocation.setOnItemSelectedListener(this);
 
@@ -149,6 +173,8 @@ public class NewCalEventActivity extends BaseActivity implements
                 }
             }
         });
+
+        locationClient = new LocationClient(this, this, this);
 
         alarmReceiver = new AlarmReceiver();
     }
@@ -187,7 +213,19 @@ public class NewCalEventActivity extends BaseActivity implements
 
         m_My_children = childModelController.getMyChildren(this);
 
+        spinnerLocation.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, locationList));
+
         txtChild.setText(childModelController.getCurrentChild().getName());
+        cEmail = childModelController.getCurrentChild().getEmail();
+        selectedChild = childModelController.getCurrentChild().getName();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        spinnerLocation.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, locationList));
     }
 
     @Override
@@ -231,7 +269,6 @@ public class NewCalEventActivity extends BaseActivity implements
 
             //Convert minute/hour to int
             String[] sepTime = startTime.split(":");
-
             int hour = Integer.parseInt(sepTime[0]);
             int minute = Integer.parseInt(sepTime[1]);
             // int seconds = Integer.parseInt(sepDate[2]);
@@ -252,22 +289,25 @@ public class NewCalEventActivity extends BaseActivity implements
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.DAY_OF_MONTH, date);
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("Geofences", geofences);
-
             WmfGeofenceController wmfGeofenceController = new WmfGeofenceController();
-            PendingIntent pendingIntent1 = wmfGeofenceController.getTransitionPendingIntent(this);
-            try {
-                pendingIntent1.send();
-            } catch (PendingIntent.CanceledException e) {
-                e.printStackTrace();
+            ArrayList<WmfGeofence> temp = wmfGeofenceController.getAllGeofences(this);
+            mCurrentGeofences = new ArrayList<Geofence>();
+            String text = spinnerLocation.getSelectedItem().toString();
+
+            for(int i = 0; i < temp.size(); i++)
+            {
+                if(temp.get(i).getGeofenceId() == text)
+                    mCurrentGeofences.add(temp.get(i).toGeofence());
             }
 
+            addGeofences();
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                    0, intent, 0);
             AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-            // Don't do anything here as this will fire the alarm instantly
+
             saveEvent();
 
             return true;
@@ -390,6 +430,9 @@ public class NewCalEventActivity extends BaseActivity implements
     }
 
     public void saveEvent(){
+        spinnerLoc = spinnerLocation.getSelectedItem().toString();
+        spinnerRep = spinnerRepeat.getSelectedItem().toString();
+
         if (txtEvent.getText().toString().equals("") ||
                 txtEvent.getText().toString().equals("") ||
                 txtEndTime.getText().toString().equals("") ||
@@ -414,91 +457,236 @@ public class NewCalEventActivity extends BaseActivity implements
                             if (exception == null) {
                                 eventID = jsonObject.get("id").getAsString();
                                 //TODO
-                                //Gem id i shared preff her!!
+                                //Gem id i shared prefs her!!
                                 mActivity.finish();
                             } else {
                                 Toast.makeText(getApplicationContext(),
-                                        "There was an error registering the event: " + exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
-                                Log.e(TAG, "There was an error registering the event: " + exception.getMessage());
+                                        "There was an error registering the event: " +
+                                                exception.getCause().getMessage(),
+                                                    Toast.LENGTH_LONG).show();
+                                Log.e(TAG, "There was an error registering the event: " +
+                                        exception.getMessage());
                             }
                         }
                     });
             }
         }
 
-    /*public void startRepeatingTimer() {
-        Context context = this.getApplicationContext();
-        if(alarmReceiver != null){
-            alarmReceiver.SetAlarm(context);
-        }else{
-            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        if (mRequestType != null)
+        {
+            switch (mRequestType)
+            {
+                case ADD:
+                    mGeofenceRequestIntent = getTransitionPendingIntent();
+                    // Send a request to add the current geofences
+                    locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
+                    Toast.makeText(this, "AddGeofence request sent", Toast.LENGTH_SHORT).show();
+                    break;
+                case REMOVE_INTENT:
+                    mGeofenceRequestIntent = getTransitionPendingIntent();
+                    locationClient.removeGeofences(mGeofenceRequestIntent, this);
+                    Toast.makeText(this, "RemoveGeofence request sent", Toast.LENGTH_SHORT).show();
+                    break;
+                case REMOVE_LIST:
+                    locationClient.removeGeofences(mGeofencesToRemove, this);
+                    Toast.makeText(this, "RemoveAllGeofences request sent", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    try {
+                        throw new Exception("Unknown request type in onConnected().");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+
+            mInProgress = false;
         }
     }
 
-    public void cancelRepeatingTimer(){
-        Context context = this.getApplicationContext();
-        if(alarmReceiver != null){
-            alarmReceiver.CancelAlarm(context);
-        }else{
-            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-        }
+    @Override
+    public void onDisconnected() {
+
     }
 
-    public void onetimeTimer(){
-        Context context = this.getApplicationContext();
-        if(alarmReceiver != null){
-            alarmReceiver.setOnetimeAlarm(context);
-        }else{
-            Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-        }
-    }*/
+    @Override
+    public void onAddGeofencesResult(int i, String[] strings) {
 
-    public Calendar getAlarmTime(Intent intent)
+    }
+
+    private PendingIntent getTransitionPendingIntent()
     {
-        Calendar calendar = Calendar.getInstance();
-        TimeZone timeZone = TimeZone.getDefault();
-        calendar.setTimeZone(timeZone);
+        // Create an explicit Intent
+        Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+        startService(intent);
 
-        int date;
-        int month;
-        int year;
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 
-        /*Intent intent = new Intent(this, AlarmService.class);
-        intent.putExtras(bundle);*/
-        // Bundle bundle = intent.getExtras();
-        //String eventName = bundle.getString("event_name");
-        // String newEventName = bundle.getString("message");
-        String startDate = intent.getStringExtra("start_date");
-        String startTime = intent.getStringExtra("start_time");
-        String endDate = intent.getStringExtra("end_date");
-        String endTime = intent.getStringExtra("end_time");
-        //int eventId = Integer.parseInt(bundle.getString("event_id"));
+    @Override
+    public void onRemoveGeofencesByRequestIdsResult(int i, String[] strings) {
 
-        //Convert date/month/year to int
-        String[] sepDate = startDate.split("-");
-        date = Integer.parseInt(sepDate[0]);
-        month = Integer.parseInt(sepDate[1]);
-        year = Integer.parseInt(sepDate[2]);
+    }
 
-        //Convert minute/hour to int
-        String[] sepTime = startTime.split(":");
+    @Override
+    public void onRemoveGeofencesByPendingIntentResult(int i, PendingIntent pendingIntent) {
 
-        int hour = Integer.parseInt(sepTime[0]);
-        int minute = Integer.parseInt(sepTime[1]);
-        // int seconds = Integer.parseInt(sepDate[2]);
+    }
 
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.AM_PM,Calendar.PM);
+    private boolean servicesConnected() {
 
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.DAY_OF_MONTH, date);
-        // January is month 0!!!!
-        // Very important to remember to roll back the time one month!!!!
-        // calendar.roll(Calendar.MONTH, false);
+        int resultCode =
+                GooglePlayServicesUtil.
+                        isGooglePlayServicesAvailable(this);
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            Log.d("Activity Recognition",
+                    "Google Play services is available.");
+            // Continue
+            return true;
+            // Google Play services was not available for some reason
+        } else {
 
-        return calendar;
+            return false;
+        }
+    }
+
+    /**
+     * Start a request for geofence monitoring by calling
+     * LocationClient.connect().
+     */
+    public void addGeofences()
+    {
+        // Start a request to add geofences
+        mRequestType = REQUEST_TYPE.ADD;
+        /*
+         * Test for Google Play services after setting the request type.
+         * If Google Play services isn't present, the proper request
+         * can be restarted.
+         */
+        if (!servicesConnected())
+            return;
+
+        locationClient = new LocationClient(this, this, this);
+        // If a request is not already underway
+        if (!mInProgress)
+        {
+            // Indicate that a request is underway
+            mInProgress = true;
+            // Request a connection from the client to Location Services
+            locationClient.connect();
+        }
+        else
+        {
+            // A request is already underway. To handle this situation:
+            // Disconnect the client
+            locationClient.disconnect();
+            // Reset the flag
+            mInProgress = false;
+            // Retry the request.
+            addGeofences(); // requestIntent
+        }
+    }
+    /**
+     * Start a request to remove geofences by calling
+     * LocationClient.connect()
+     */
+    public void removeAllGeofences() // PendingIntent requestIntent
+    {
+        // Record the type of removal request
+        mRequestType = REQUEST_TYPE.REMOVE_INTENT;
+        /*
+         * Test for Google Play services after setting the request type.
+         * If Google Play services isn't present, the request can be
+         * restarted.
+         */
+        if (!servicesConnected())
+            return;
+
+        /*// Store the PendingIntent
+        mGeofenceRequestIntent = requestIntent;*/
+        /*
+         * Create a new location client object. Since the current
+         * activity class implements ConnectionCallbacks and
+         * OnConnectionFailedListener, pass the current activity object
+         * as the listener for both parameters
+         */
+        locationClient = new LocationClient(this, this, this);
+        // If a request is not already underway
+        if (!mInProgress)
+        {
+            // Indicate that a request is underway
+            mInProgress = true;
+            // Request a connection from the client to Location Services
+            locationClient.connect();
+        }
+        else
+        {
+            // A request is already underway. To handle this situation:
+            // Disconnect the client
+            locationClient.disconnect();
+            // Reset the flag
+            mInProgress = false;
+            // Retry the request.
+            removeAllGeofences(); // requestIntent
+        }
+    }
+
+
+
+    /**
+     * Start a request to remove monitoring by
+     * calling LocationClient.connect()
+     *
+     */
+    public void removeGeofences(List<String> geofenceIds)
+    {
+        // If Google Play services is unavailable, exit
+        // Record the type of removal request
+        mRequestType = REQUEST_TYPE.REMOVE_LIST;
+        /*
+         * Test for Google Play services after setting the request type.
+         * If Google Play services isn't present, the request can be
+         * restarted.
+         */
+        if (!servicesConnected())
+            return;
+
+        // Store the list of geofences to remove
+        mGeofencesToRemove = geofenceIds;
+        /*
+         * Create a new location client object. Since the current
+         * activity class implements ConnectionCallbacks and
+         * OnConnectionFailedListener, pass the current activity object
+         * as the listener for both parameters
+         */
+        locationClient = new LocationClient(this, this, this);
+        // If a request is not already underway
+        if (!mInProgress)
+        {
+            // Indicate that a request is underway
+            mInProgress = true;
+            // Request a connection from the client to Location Services
+            locationClient.connect();
+        }
+        else
+        {
+            // A request is already underway. To handle this situation:
+            // Disconnect the client
+            locationClient.disconnect();
+            // Reset the flag
+            mInProgress = false;
+            // Retry the request.
+            removeGeofences(geofenceIds);
+        }
     }
 }

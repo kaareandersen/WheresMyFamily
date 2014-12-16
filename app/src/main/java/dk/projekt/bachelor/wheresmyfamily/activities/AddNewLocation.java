@@ -1,5 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
@@ -38,14 +39,13 @@ import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 public class AddNewLocation extends Activity  implements View.OnClickListener, AdapterView.OnItemClickListener {
 
+    //region Fields
     Button btnAddPlace;
     EditText placeField;
     EditText radiusField;
     AutoCompleteTextView autoCompView;
     List<Address> addresses;
-    /*
-     * Internal geofence objects for geofence 1 and 2
-     */
+
     private WmfGeofence wmfGeofence;
     private GeofenceStorage geofenceStorage;
     // Internal List of WmfGeofence objects
@@ -57,11 +57,15 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
     private static final String API_KEY = "AIzaSyDIniWz3GEaexDmz81ytotIowpcS3CPbVI";
     private static final String LOG_TAG = "WheresMyFamily";
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_location);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         geofenceStorage = new GeofenceStorage(this);
 
@@ -158,19 +162,17 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
             Log.e(LOG_TAG, "Cannot process JSON results", e);
         }
 
-        return resultList;
+        if(resultList != null)
+            return resultList;
+        else
+            Toast.makeText(this, "Ukorrekt adresse, prøv venligst igen", Toast.LENGTH_SHORT).show();
+
+        return new ArrayList<String>();
     }
 
     @Override
     public void onClick(View view) {
         if(view == btnAddPlace) {
-            /*Intent intent = new Intent(this, LocationActivity.class);
-            intent.putExtra("Name", addresses.get(0).getAddressLine(0));
-            intent.putExtra("Address", addresses.get(0).getAddressLine(1));
-            intent.putExtra("PostalCodeCity", addresses.get(0).getAddressLine(2));
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, ConnectionResult.SUCCESS,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
 
             if(autoCompView != null)
             {
@@ -189,8 +191,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
 
-        //*/ Set the Locale too "Danish spoken in Denmark" to get the most
-        // relevant search results for Denmark
         String language = "da";
         String country = "DK";
         Locale local = new Locale(language, country);
@@ -203,8 +203,6 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         try
         {
             addresses = geocoder.getFromLocationName(str, 1);
-            if(addresses.size() > 0)
-                Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
         }
         catch (IOException e)
         {
@@ -261,11 +259,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         }
     }
 
-    /**
-     * Get the geofence parameters for each geofence from the UI
-     * and add them to a List.
-     */
-    public void createGeofence() // PendingIntent pendingIntent?? FIXME
+    private void createGeofence()
     {
         wmfGeofence = new WmfGeofence(
                 placeField.getText().toString(),
@@ -275,10 +269,11 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
                 com.google.android.gms.location.Geofence.NEVER_EXPIRE,
                 // This geofence records both entry and exit transitions
                 com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_ENTER |
-                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT, false);
+                        com.google.android.gms.location.Geofence.GEOFENCE_TRANSITION_EXIT,
+                false, false);
+
         // Store this geofence
         geofenceStorage = new GeofenceStorage(this);
-
         geofenceList.add(geofenceList.size(), wmfGeofence);
         geofenceStorage.setGeofences(this, geofenceList);
     }

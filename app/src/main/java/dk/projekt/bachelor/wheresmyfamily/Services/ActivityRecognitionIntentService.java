@@ -55,11 +55,7 @@ public class ActivityRecognitionIntentService extends IntentService
         }
     }
 
-    /**
-     * Map detected activity types to strings
-     *@param activityType The detected activity type
-     *@return A user-readable name for the type
-     */
+
     private String getNameFromType(int activityType) {
         switch(activityType) {
             case DetectedActivity.IN_VEHICLE:

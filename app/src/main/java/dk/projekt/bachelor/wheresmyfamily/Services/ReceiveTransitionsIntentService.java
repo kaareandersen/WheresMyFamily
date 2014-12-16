@@ -12,27 +12,15 @@ import java.util.List;
 
 import static com.google.android.gms.location.LocationClient.getTriggeringGeofences;
 
-/**
- * A subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p/>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
+
 public class ReceiveTransitionsIntentService extends IntentService
 {
-    /**
-     * Sets an identifier for the service
-     */
+
     public ReceiveTransitionsIntentService()
     {
         super("ReceiveTransitionsIntentService");
     }
-    /**
-     * Handles incoming intents
-     *@param intent The Intent sent by Location Services. This Intent is provided to
-     * Location Services (inside a PendingIntent) when you call addGeofences()
-     */
+
     @Override
     protected void onHandleIntent(Intent intent)
     {
@@ -45,17 +33,10 @@ public class ReceiveTransitionsIntentService extends IntentService
             Log.e("ReceiveTransitionsIntentService",
                     "Location Services error: " +
                             Integer.toString(errorCode));
-            /*
-             * You can also send the error code to an Activity or
-             * Fragment with a broadcast Intent
-             */
+
         }
         else
         {
-            /*
-            * If there's no error, get the transition type and the IDs
-            * of the geofence or geofences that triggered the transition
-            */
 
             Toast.makeText(this, "ReceiveTransitionsIntentService running", Toast.LENGTH_SHORT).show();
 
@@ -83,7 +64,7 @@ public class ReceiveTransitionsIntentService extends IntentService
                 }
 
                 /*
-                * At this point, you can store the IDs for further use
+                * At this point,  store the IDs for further use
                 * display them, or display the details associated with
                 * them. FIXME
                 */

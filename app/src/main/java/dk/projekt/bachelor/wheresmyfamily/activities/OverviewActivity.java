@@ -68,7 +68,6 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 
             @Override
             public void onClick(View arg0) {
-                // Child temp = new Child();
                 child = childModelController.getCurrentChild();
 
                 Intent callIntent = new Intent(Intent.ACTION_CALL);

@@ -34,7 +34,7 @@ import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNdefMessageCallback,
-        NfcAdapter.OnNdefPushCompleteCallback // FIXME
+        NfcAdapter.OnNdefPushCompleteCallback
 {
     //region Fields
     NfcAdapter nfcAdapter;
@@ -70,8 +70,6 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // Toast.makeText(this, "RegisterParent OnCreate", Toast.LENGTH_SHORT).show();
 
         childNameInfoText = (TextView) findViewById(R.id.childNameInfo);
         childPhoneInfoText = (TextView) findViewById(R.id.childPhoneInfo);
@@ -163,10 +161,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
     protected void onPause() {
         super.onPause();
 
-        // Toast.makeText(this, "RegisterParent OnPause", Toast.LENGTH_SHORT).show();
-
         storage.saveChildren(this, mChildren);
-
     }
 
     @Override
@@ -247,6 +242,8 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         mParents.add(new Parent(userName, userPhone, userMail, null));
         storage.saveParents(this, mParents);
+        Toast.makeText(this, "Din forælder " + parent.getName() + " Tlf. " + parent.getPhone() + " er nu registréret",
+                Toast.LENGTH_SHORT).show();
 
         isNFCMessageNew = false;
     }

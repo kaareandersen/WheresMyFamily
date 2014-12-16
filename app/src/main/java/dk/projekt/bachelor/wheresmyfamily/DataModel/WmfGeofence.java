@@ -14,6 +14,7 @@ import java.io.Serializable;
 public class WmfGeofence implements Serializable
 {
 
+    //region Fields
     private String geofenceId;
     private double latitude;
     private double longitude;
@@ -21,11 +22,13 @@ public class WmfGeofence implements Serializable
     private long expirationDuration;
     private int transitionType;
     private Boolean isActive;
+    private Boolean isCurrent;
+    //endregion
 
     public WmfGeofence() {}
 
     public WmfGeofence(String _geofenceId, double _latitude, double _longitude, float _radius,
-                       long _expirationDuration, int _transitionType, Boolean _isActive)
+                       long _expirationDuration, int _transitionType, Boolean _isActive, Boolean _isCurrent)
     {
         setGeofenceId(_geofenceId);
         setLatitude(_latitude);
@@ -34,6 +37,7 @@ public class WmfGeofence implements Serializable
         setExpirationDuration(_expirationDuration);
         setTransitionType(_transitionType);
         setIsActive(false);
+        setIsCurrent(false);
     }
 
     // region Get and set
@@ -78,6 +82,12 @@ public class WmfGeofence implements Serializable
     }
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+    public Boolean getIsCurrent() {
+        return isCurrent;
+    }
+    public void setIsCurrent(Boolean isCurrent) {
+        this.isCurrent = isCurrent;
     }
     //endregion
 

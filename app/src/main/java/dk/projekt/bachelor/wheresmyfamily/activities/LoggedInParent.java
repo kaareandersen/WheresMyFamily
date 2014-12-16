@@ -47,7 +47,6 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -284,8 +283,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private void getChild() throws FileNotFoundException, IOException {
         try
         {
-            // m_My_children = childModelController.getMyChildren(this);
-
             Thread.sleep(1000);
             Log.i("ARRAY", "" + m_My_children.size());
         } catch (Exception e){
@@ -300,64 +297,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     public void onConnected(Bundle bundle) {
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
-
-        /*if (mRequestType != null)
-        {
-            switch (mRequestType)
-            {
-                case ADD:
-                    mGeofenceRequestIntent = getTransitionPendingIntent();
-                    // Send a request to add the current geofences
-                    locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
-                case REMOVE_INTENT:
-                    mGeofenceRequestIntent = getTransitionPendingIntent();
-                    locationClient.removeGeofences(mGeofenceRequestIntent,
-                            (LocationClient.OnRemoveGeofencesResultListener) this);
-                    break;
-                case REMOVE_LIST:
-                    locationClient.removeGeofences(mGeofencesToRemove,
-                            (LocationClient.OnRemoveGeofencesResultListener) this);
-                    break;
-                case START :
-                    *//*
-                     * Request activity recognition updates using the
-                     * preset detection interval and PendingIntent.
-                     * This call is synchronous.
-                     *//*
-                    mActivityRecognitionClient.requestActivityUpdates(DETECTION_INTERVAL_MILLISECONDS,
-                            mActivityRecognitionPendingIntent);
-                    break;
-                case STOP :
-                    mActivityRecognitionClient.removeActivityUpdates(mActivityRecognitionPendingIntent);
-                    break;
-                    *//*
-                     * An enum was added to the definition of REQUEST_TYPE,
-                     * but it doesn't match a known case. Throw an exception.
-                     *//*
-                default :
-                    try {
-                        throw new Exception("Unknown request type in onConnected().");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        }*/
-
-        /*
-         * Request activity recognition updates using the preset
-         * detection interval and PendingIntent. This call is
-         * synchronous.
-         */
-        /*mActivityRecognitionClient.requestActivityUpdates(
-                DETECTION_INTERVAL_MILLISECONDS,
-                mActivityRecognitionPendingIntent);*/
-        /*
-         * Since the preceding call is synchronous, turn off the
-         * in progress flag and disconnect the client
-         */
-        /*mInProgress = false;
-        mActivityRecognitionClient.disconnect();*/
     }
 
     @Override
@@ -384,22 +323,13 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         // Turn off the request flag
         mInProgress = false;
 
-        /*
-        * Google Play services can resolve some errors it detects.
-        * If the error has a resolution, try sending an Intent to
-        * start a Google Play services activity that can resolve
-        * error.
-        */
         if (connectionResult.hasResolution())
         {
             try
             {
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                * Thrown if Google Play services canceled the original
-                * PendingIntent
-                */
+
             }
             catch (IntentSender.SendIntentException e)
             {
@@ -410,9 +340,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         else
         {
             /*
-            * If no resolution is available, display a dialog to the
-            * user with the error.
-            *//*
             // Get the error code
             int errorCode = connectionResult.getErrorCode();
             // Get the error dialog from Google Play services
@@ -483,17 +410,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     };
     //endregion
 
-    public void callApi(View view) {
-
-        mMobileServicesClient.callApi();
-    }
-
-    public void reg(View v)
-    {
-        Intent register = new Intent(this, RegisterChild.class);
-        startActivity(register);
-    }
-
     public void deleteDialogBox(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -523,52 +439,4 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    public void createLocation(View view)
-    {
-        Intent intent = new Intent(this, OverviewActivity.class);
-        startActivity(intent);
-    }
-
-    /*
-     * Create a PendingIntent that triggers an IntentService in your
-     * app when a geofence transition occurs.
-     */
-    private PendingIntent getTransitionPendingIntent()
-    {
-        // Create an explicit Intent
-        Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
-        /*
-         * Return the PendingIntent
-         */
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    //region Internal storage from early in the project
-/* public void saveChildren(ArrayList<Child> myChildren)
-    {
-        try
-        {
-            InternalStorage.writeObject(this, "Children", myChildren);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-   /* public ArrayList<Child> loadChildren()
-    {
-        ArrayList<Child> retVal = null;
-
-        try
-        {
-            retVal = (ArrayList<Child>) InternalStorage.readObject(this, "Children");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return retVal == null ? new ArrayList<Child>() : retVal;
-    }*/
-    //endregion
 }

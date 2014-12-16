@@ -33,10 +33,7 @@ public class GeofenceStorage
     private static final String PREFIX = "json";
     public static final String GEOFENCE_PREFS_NAME = "GEOFENCE_PREFS";
     public static final String GEOFENCE_FAVORITES = "GEOFENCE_FAVORITES";
-    /*
-    * Invalid values, used to test geofence storage when
-    * retrieving geofences
-    */
+
     public static final long INVALID_LONG_VALUE = -999l;
     public static final float INVALID_FLOAT_VALUE = -999.0f;
     public static final int INVALID_INT_VALUE = -999;
@@ -86,70 +83,41 @@ public class GeofenceStorage
         editor.commit();
     }
 
-    /**
-     * Returns a stored geofence by its id, or returns null
-     * if it's not found.
-     *
-     * @param id The ID of a stored geofence
-     * @return A geofence defined by its center and radius. See
-     */
+
     public WmfGeofence getGeofence(String id)
     {
-            /*
-            * Get the latitude for the geofence identified by id, or
-            * INVALID_FLOAT_VALUE if it doesn't exist
-            */
-        double lat = geofencePrefs.getFloat(getGeofenceFieldKey(id, KEY_LATITUDE), INVALID_FLOAT_VALUE);
-            /*
-             * Get the longitude for the geofence identified by id, or
-             * INVALID_FLOAT_VALUE if it doesn't exist
-             */
-        double lng = geofencePrefs.getFloat(getGeofenceFieldKey(id, KEY_LONGITUDE), INVALID_FLOAT_VALUE);
-            /*
-             * Get the radius for the geofence identified by id, or
-             * INVALID_FLOAT_VALUE if it doesn't exist
-             */
-        float radius = geofencePrefs.getFloat(getGeofenceFieldKey(id, KEY_RADIUS), INVALID_FLOAT_VALUE);
-            /*
-             * Get the expiration duration for the geofence identified
-             * by id, or INVALID_LONG_VALUE if it doesn't exist
-             */
-        long expirationDuration =
-                geofencePrefs.getLong(getGeofenceFieldKey(id, KEY_EXPIRATION_DURATION), INVALID_LONG_VALUE);
-            /*
-             * Get the transition type for the geofence identified by
-             * id, or INVALID_INT_VALUE if it doesn't exist
-             */
+
+        double lat = geofencePrefs.getFloat(getGeofenceFieldKey(id, KEY_LATITUDE),
+                INVALID_FLOAT_VALUE);
+        double lng = geofencePrefs.getFloat(getGeofenceFieldKey(id, KEY_LONGITUDE),
+                INVALID_FLOAT_VALUE);
+        float radius = geofencePrefs.getFloat(getGeofenceFieldKey(id, KEY_RADIUS),
+                INVALID_FLOAT_VALUE);
+        long expirationDuration = geofencePrefs.getLong(getGeofenceFieldKey(id,
+                KEY_EXPIRATION_DURATION), INVALID_LONG_VALUE);
         int transitionType = geofencePrefs.getInt(getGeofenceFieldKey(id, KEY_TRANSITION_TYPE),
                 INVALID_INT_VALUE);
-        // If none of the values is incorrect, return the object
+
         if (
                 lat != GeofenceStorage.INVALID_FLOAT_VALUE &&
-                        lng != GeofenceStorage.INVALID_FLOAT_VALUE &&
-                        radius != GeofenceStorage.INVALID_FLOAT_VALUE &&
-                        expirationDuration != GeofenceStorage.INVALID_LONG_VALUE &&
-                        transitionType != GeofenceStorage.INVALID_INT_VALUE
-                )
+                lng != GeofenceStorage.INVALID_FLOAT_VALUE &&
+                radius != GeofenceStorage.INVALID_FLOAT_VALUE &&
+                expirationDuration != GeofenceStorage.INVALID_LONG_VALUE &&
+                transitionType != GeofenceStorage.INVALID_INT_VALUE
+            )
         {
             // Return a true WmfGeofence object
-            return new WmfGeofence(id, lat, lng, radius, expirationDuration, transitionType, false);
-            // Otherwise, return null.
+            return new WmfGeofence(id, lat, lng, radius, expirationDuration, transitionType,
+                    false, false);
         }
         else
             return null;
     }
-    /**
-     * Save a wmfGeofence.
-     * @param wmfGeofence The WmfGeofence containing the
-     * values you want to save in SharedPreferences
-     */
+
+    // Save a wmfGeofence containing the desired values to save in SharedPreferences
     public void setGeofence(String id, WmfGeofence wmfGeofence)
     {
-            /*
-             * Get a SharedPreferences editor instance. Among other
-             * things, SharedPreferences ensures that updates are atomic
-             * and non-concurrent
-             */
+
         SharedPreferences.Editor editor = geofencePrefs.edit();
         // Write the WmfGeofence values to SharedPreferences
         editor.putFloat(getGeofenceFieldKey(id, KEY_LATITUDE), (float) wmfGeofence.getLatitude());
@@ -163,10 +131,7 @@ public class GeofenceStorage
     }
 
     public void clearGeofence(String id) {
-            /*
-             * Remove a flattened geofence object from storage by
-             * removing all of its keys
-             */
+
         SharedPreferences.Editor editor = geofencePrefs.edit();
         editor.remove(getGeofenceFieldKey(id, KEY_LATITUDE));
         editor.remove(getGeofenceFieldKey(id, KEY_LONGITUDE));
@@ -175,15 +140,7 @@ public class GeofenceStorage
         editor.remove(getGeofenceFieldKey(id, KEY_TRANSITION_TYPE));
         editor.commit();
     }
-    /**
-     * Given a WmfGeofence object's ID and the name of a field
-     * (for example, KEY_LATITUDE), return the key name of the
-     * object's values in SharedPreferences.
-     *
-     * @param id The ID of a WmfGeofence object
-     * @param fieldName The field represented by the key
-     * @return The full key name of a value in SharedPreferences
-     */
+
     private String getGeofenceFieldKey(String id, String fieldName)
     {
         return KEY_PREFIX + "_" + id + "_" + fieldName;

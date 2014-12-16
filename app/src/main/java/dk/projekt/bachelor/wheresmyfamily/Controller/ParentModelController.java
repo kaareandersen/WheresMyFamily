@@ -52,12 +52,4 @@ public class ParentModelController {
     {
         userInfoStorage.saveParents(context, _myParents);
     }
-
-    public void noCurrentParent()
-    {
-        for(int i = 0; i < myParents.size(); i++)
-        {
-            myParents.get(i).setIsCurrent(false);
-        }
-    }
 }

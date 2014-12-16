@@ -58,7 +58,7 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
-    // UserInfoStorage storage = new UserInfoStorage();
+
     ChildModelController childModelController = new ChildModelController();
     ParentModelController parentModelController = new ParentModelController();
     //endregion
@@ -163,7 +163,6 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
         }
         catch (Exception e1)
         {
-            // Toast.makeText(this, "Der skete en fejl i registréringen, prøv venligt igen", Toast.LENGTH_SHORT).show();
             e1.printStackTrace();
         }
     }
@@ -244,8 +243,8 @@ public class RegisterChild extends BaseActivity implements NfcAdapter.CreateNdef
 
         childModelController.setMyChildren(this, mChildren);
 
-        /*Toast.makeText(this, "Dit barn " + userName + " Tlf. " + userPhone + " er nu registréret",
-                Toast.LENGTH_SHORT).show();*/
+        Toast.makeText(this, "Dit barn " + userName + " Tlf. " + userPhone + " er nu registréret",
+                Toast.LENGTH_SHORT).show();
 
         isNFCMessageNew = false;
     }

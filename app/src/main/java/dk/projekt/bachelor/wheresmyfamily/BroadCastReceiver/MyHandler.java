@@ -54,6 +54,7 @@ public class MyHandler extends NotificationsHandler {
             loggedinchild.getAndPushLocation();
         }
         if (sepMessage[0].equals("ReceiveLocation")){
+            // Bundle[{msg=ReceiveLoc ation:Loca tion[fused 56,147154,10,150219 acc=24 et=+7d15h33m53s517ms alt=80.02072416373049 vel=1.6083485 bear=25.0], from=911215571794, collapse_key=do_not_collapse}]
             String location = sepMessage[1];
             newMessage = "Lokation modtaget";
             NOTIFICATION_ID = 3;
