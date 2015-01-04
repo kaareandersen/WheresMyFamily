@@ -43,11 +43,7 @@ public class MyHandler extends NotificationsHandler {
             String eventID = sepMessage[1];
             NOTIFICATION_ID = 1;
 
-            //LoggedInChild loggedinchild = LoggedInChild.instance;
-            //loggedinchild.getEventId(eventID);
-
             pushNotificationController.getEventId(eventID);
-
         }
         if(sepMessage[0].equals("GetLocation")){
             newMessage = "Lokations anmodning modtaget";
