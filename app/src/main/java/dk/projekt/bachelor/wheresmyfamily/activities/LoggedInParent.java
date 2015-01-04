@@ -21,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -35,7 +34,6 @@ import com.google.gson.JsonElement;
 import com.microsoft.windowsazure.messaging.NotificationHub;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
-import com.microsoft.windowsazure.notifications.NotificationsManager;
 
 import org.json.JSONArray;
 
@@ -44,13 +42,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.MyHandler;
+import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
-import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 
 
@@ -80,6 +76,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private NotificationHub mHub;
     private String mRegistrationId;
     LocationClient locationClient;
+    Location currentLocation;
 
     ArrayList<Child> mChildren = new ArrayList<Child>();
     JSONArray mParents = new JSONArray();
@@ -87,7 +84,9 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
-    UserInfoStorage storage = new UserInfoStorage();
+    // UserInfoStorage storage = new UserInfoStorage();
+    ChildModelController childModelController = new ChildModelController();
+    Child currentChild = new Child();
     // Define an object that holds accuracy and frequency parameters
     private LocationRequest mLocationRequest;
 
@@ -98,6 +97,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
     private static final int FASTEST_INTERVAL_IN_SECONDS = 10;
     private static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+    private static final float SMALLEST_DISPLACEMENT_IN_METERS = 50;
 
     /*
      * Use to set an expiration time for a geofence. After this amount
@@ -147,6 +147,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         myApp.setCurrentActivity(this);
         mMobileServicesClient = myApp.getAuthService();
+
+        // childModelController = new ChildModelController();
 
         m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
         myList = (ListView)findViewById(android.R.id.list);
@@ -205,35 +207,62 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         // Set the fastest update interval to 10 seconds
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setSmallestDisplacement(SMALLEST_DISPLACEMENT_IN_METERS);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        m_My_children = storage.loadChildren(this);
+        m_My_children = childModelController.getMyChildren(this);
 
         // If any children are registered
-        if(m_My_children.size() > 0)
+        if(m_My_children.size() >= 0)
         {
             // Since we are on the home page, set current child to none
-            for(int i = 0; i < m_My_children.size(); i++)
-            {
-                m_My_children.get(i).setIsCurrent(false);
-            }
+            childModelController.noCurrentChild(m_My_children);
         }
         // Refresh the list of children
         myList.setAdapter(new ChildAdapter(this, R.layout.row, m_My_children));
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPause() {
+        super.onPause();
+
+        childModelController.setMyChildren(this, m_My_children);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.logged_in, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.action_logout:
+                mMobileServicesClient.logout(true);
+                mNotificationHubController.unRegisterNH();
+                return true;
+            case R.id.action_deleteusr:
+                deleteDialogBox();
+                return true;
+            case R.id.action_addChild:
+                Intent register = new Intent(this, RegisterChild.class);
+                startActivity(register);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     //endregion
@@ -243,7 +272,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         public void run() {
             if (m_My_children != null && m_My_children.size() > 0){
                 m_adapter.notifyDataSetChanged();
-                for (int i=0;i< m_My_children.size();i++)
+                for (int i = 0; i < m_My_children.size(); i++)
                     m_adapter.add(m_My_children.get(i));
             }
             m_ProgressDialog.dismiss();
@@ -254,8 +283,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     private void getChild() throws FileNotFoundException, IOException {
         try
         {
-            m_My_children = storage.loadChildren(this);
-
             Thread.sleep(1000);
             Log.i("ARRAY", "" + m_My_children.size());
         } catch (Exception e){
@@ -268,67 +295,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     //region Location callback methods
     @Override
     public void onConnected(Bundle bundle) {
-        Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
-
-        /*if (mRequestType != null)
-        {
-            switch (mRequestType)
-            {
-                case ADD:
-                    mGeofenceRequestIntent = getTransitionPendingIntent();
-                    // Send a request to add the current geofences
-                    locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
-                case REMOVE_INTENT:
-                    mGeofenceRequestIntent = getTransitionPendingIntent();
-                    locationClient.removeGeofences(mGeofenceRequestIntent,
-                            (LocationClient.OnRemoveGeofencesResultListener) this);
-                    break;
-                case REMOVE_LIST:
-                    locationClient.removeGeofences(mGeofencesToRemove,
-                            (LocationClient.OnRemoveGeofencesResultListener) this);
-                    break;
-                case START :
-                    *//*
-                     * Request activity recognition updates using the
-                     * preset detection interval and PendingIntent.
-                     * This call is synchronous.
-                     *//*
-                    mActivityRecognitionClient.requestActivityUpdates(DETECTION_INTERVAL_MILLISECONDS,
-                            mActivityRecognitionPendingIntent);
-                    break;
-                case STOP :
-                    mActivityRecognitionClient.removeActivityUpdates(mActivityRecognitionPendingIntent);
-                    break;
-                    *//*
-                     * An enum was added to the definition of REQUEST_TYPE,
-                     * but it doesn't match a known case. Throw an exception.
-                     *//*
-                default :
-                    try {
-                        throw new Exception("Unknown request type in onConnected().");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        }*/
-
-        /*
-         * Request activity recognition updates using the preset
-         * detection interval and PendingIntent. This call is
-         * synchronous.
-         */
-        /*mActivityRecognitionClient.requestActivityUpdates(
-                DETECTION_INTERVAL_MILLISECONDS,
-                mActivityRecognitionPendingIntent);*/
-        /*
-         * Since the preceding call is synchronous, turn off the
-         * in progress flag and disconnect the client
-         */
-        /*mInProgress = false;
-        mActivityRecognitionClient.disconnect();*/
     }
 
     @Override
@@ -343,14 +311,11 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
 
     @Override
     public void onLocationChanged(Location location) {
-
+        currentLocation = location;
     }
 
     @Override
-    public void onAddGeofencesResult(int i, String[] strings) {
-
-
-    }
+    public void onAddGeofencesResult(int i, String[] strings) {}
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult)
@@ -358,22 +323,13 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         // Turn off the request flag
         mInProgress = false;
 
-        /*
-        * Google Play services can resolve some errors it detects.
-        * If the error has a resolution, try sending an Intent to
-        * start a Google Play services activity that can resolve
-        * error.
-        */
         if (connectionResult.hasResolution())
         {
             try
             {
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                * Thrown if Google Play services canceled the original
-                * PendingIntent
-                */
+
             }
             catch (IntentSender.SendIntentException e)
             {
@@ -384,9 +340,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         else
         {
             /*
-            * If no resolution is available, display a dialog to the
-            * user with the error.
-            *//*
             // Get the error code
             int errorCode = connectionResult.getErrorCode();
             // Get the error dialog from Google Play services
@@ -457,56 +410,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     };
     //endregion
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.logged_in, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch (id) {
-            case R.id.action_logout:
-                mMobileServicesClient.logout(true);
-                mNotificationHubController.unRegisterNH();
-                return true;
-            case R.id.action_deleteusr:
-                deleteDialogBox();
-                return true;
-            case R.id.action_addChild:
-                Intent register = new Intent(this, RegisterChild.class);
-                startActivity(register);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        storage.saveChildren(this, m_My_children);
-    }
-
-    public void callApi(View view) {
-
-        mMobileServicesClient.callApi();
-    }
-
-    public void reg(View v)
-    {
-        Intent register = new Intent(this, RegisterChild.class);
-        startActivity(register);
-    }
-
     public void deleteDialogBox(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -536,50 +439,4 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-    public void createLocation(View view)
-    {
-        Intent intent = new Intent(this, OverviewActivity.class);
-        startActivity(intent);
-    }
-
-    /*
-     * Create a PendingIntent that triggers an IntentService in your
-     * app when a geofence transition occurs.
-     */
-    private PendingIntent getTransitionPendingIntent()
-    {
-        // Create an explicit Intent
-        Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
-        /*
-         * Return the PendingIntent
-         */
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    /* public void saveChildren(ArrayList<Child> myChildren)
-    {
-        try
-        {
-            InternalStorage.writeObject(this, "Children", myChildren);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-   /* public ArrayList<Child> loadChildren()
-    {
-        ArrayList<Child> retVal = null;
-
-        try
-        {
-            retVal = (ArrayList<Child>) InternalStorage.readObject(this, "Children");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return retVal == null ? new ArrayList<Child>() : retVal;
-    }*/
 }

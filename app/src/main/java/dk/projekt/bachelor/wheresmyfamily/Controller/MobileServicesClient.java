@@ -292,7 +292,8 @@ public class MobileServicesClient {
 
     @SuppressWarnings("unchecked")
     public void newCalEvent(final String partitionkey, final String rowkey,
-                             final String eventname, final String location, final String child, final String startdate, final String starttime,
+                             final String eventname, final String location, final String child,
+                             final String startdate, final String starttime,
                              final String enddate, final String endtime, final String repeat,
                              final TableJsonOperationCallback callback) {
         new AsyncTask() {

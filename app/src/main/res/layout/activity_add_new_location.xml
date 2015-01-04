@@ -10,7 +10,8 @@
         android:id="@+id/head_line_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="@dimen/activity_horizontal_margin">
 
         <TextView
             android:layout_width="match_parent"
@@ -23,7 +24,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@android:color/darker_gray"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
     </LinearLayout>
 
 
@@ -32,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/head_line_layout">
 
         <TextView
@@ -42,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:gravity="center"
-            android:textSize="@dimen/activity_vertical_margin" />
+            android:textSize="18dp" />
         <EditText
             android:id="@+id/place_edit_text"
             android:layout_width="fill_parent"
@@ -58,19 +60,19 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/overview_place_layout"
-        >
+        android:layout_margin="@dimen/activity_horizontal_margin">
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/overview_address_text_view"
             android:gravity="center"
-            android:textSize="@dimen/activity_vertical_margin" />
+            android:textSize="18dp" />
         <AutoCompleteTextView
             android:id="@+id/address_autocomplete_edit_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/overview_address_hint_text"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:inputType="textCapSentences"
             android:selectAllOnFocus="false" />
     </LinearLayout>
@@ -80,13 +82,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/overview_address_layout"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="@dimen/activity_vertical_margin"
+            android:textSize="18dp"
             android:text="@string/overview_radius_text_view"
             />
 
@@ -95,15 +97,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/overview_radius_edit_text"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
         </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/radius_layout"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:gravity="right"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center_vertical|right"
         android:orientation="vertical">
 
         <Button
@@ -114,8 +117,7 @@
             android:background="@drawable/add_new_place_icon"
             android:clickable="true"
             android:onClick="onClick"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             />
     </LinearLayout>
-
-
 </RelativeLayout>

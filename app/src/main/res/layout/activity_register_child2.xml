@@ -14,12 +14,14 @@
         android:id="@+id/parentNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/parentNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:text="@string/parent_name_textView_title"
             android:textSize="18dp"
             android:textStyle="bold"/>
@@ -28,6 +30,7 @@
             android:id="@+id/parentNameInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_name_hint"
             android:inputType="text"
@@ -38,12 +41,14 @@
         android:id="@+id/parentPhoneLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_below="@+id/parentNameLayout">
 
         <TextView
             android:id="@+id/parentPhoneTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:text="@string/parent_phone_textView_title"
             android:textSize="18dp"
             android:textStyle="bold"/>
@@ -52,6 +57,7 @@
             android:id="@+id/parentPhoneInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_marginLeft="10dp"
             android:hint="@string/register_child_phone_hint"
             android:inputType="phone"
@@ -61,12 +67,14 @@
         android:id="@+id/parentEmailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_below="@+id/parentPhoneLayout">
 
         <TextView
             android:id="@+id/parentEmailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:text="@string/parent_email_textView_title"
             android:textSize="18dp"
             android:textStyle="bold"/>
@@ -75,6 +83,7 @@
             android:id="@+id/parentEmailInfo"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_marginLeft="10dp"
             android:inputType="textEmailAddress"/>
     </LinearLayout>
@@ -82,13 +91,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_below="@+id/parentEmailLayout"
         android:orientation="vertical"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="25dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:text="@string/register_child_headline"
             android:layout_marginBottom="5dp"
             android:textSize="16dp"
@@ -97,11 +108,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register_child_description" />
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:text="@string/register_child_description"
+            android:textSize="18dp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/nfc" />
         </LinearLayout>

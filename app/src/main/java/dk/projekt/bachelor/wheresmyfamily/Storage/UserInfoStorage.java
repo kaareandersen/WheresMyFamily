@@ -1,4 +1,4 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.Storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -28,72 +28,6 @@ public final class UserInfoStorage
     {
         super();
     };
-
-    /*public boolean saveChildArray(Child[] array, String arrayName, Context mContext) {
-        SharedPreferences prefs = mContext.getSharedPreferences("childPrefs", 0);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(arrayName +"_size", array.length);
-        for(int i=0;i<array.length;i++)
-            editor.putString(arrayName + "_" + i, array[i]);
-        return editor.commit();
-    }
-
-    public Child[] loadChildArray(String arrayName, Context mContext) {
-        SharedPreferences prefs = mContext.getSharedPreferences("childPrefs", 0);
-        int size = prefs.getInt(arrayName + "_size", 0);
-        Child array[] = new Child[][size];
-        for(int i=0;i<size;i++)
-            array[i] = prefs.getString(arrayName + "_" + i, null);
-        return array;
-    }*/
-
-    /*public static void saveJSONObject(Context c, String prefName, String key, JSONObject object) {
-
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(UserInfoStorage.PREFIX + key, object.toString());
-        editor.commit();
-    }
-
-    public static void saveChildArray(Context c, String prefName, String key, ArrayList<Child> array) {
-
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(UserInfoStorage.PREFIX + key, array.toString());
-        editor.commit();
-    }
-
-    public static JSONObject loadJSONObject(Context c, String prefName, String key) throws JSONException {
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        return new JSONObject(settings.getString(UserInfoStorage.PREFIX + key, "{}"));
-    }
-
-    public static ArrayList<Child> loadChildArray(Context c, String prefName, String key) {
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        return new ArrayList<Child>((java.util.Collection<? extends Child>) settings.getAll()); // (UserInfoStorage.PREFIX + key, "[]")));
-    }
-
-    public static void saveParentArray(Context c, String prefName, String key, ArrayList<Parent> array) {
-
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(UserInfoStorage.PREFIX + key, array.toString());
-        editor.commit();
-    }
-
-    public static ArrayList<Parent> loadParentArray(Context c, String prefName, String key) {
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        return new ArrayList<Parent>((java.util.Collection<? extends Parent>) settings.getAll()); // Integer.parseInt(settings.getString(UserInfoStorage.PREFIX + key, "[]")));
-    }
-
-    public static void remove(Context c, String prefName, String key) {
-        SharedPreferences settings = c.getSharedPreferences(prefName, 0);
-        if (settings.contains(UserInfoStorage.PREFIX + key)) {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.remove(UserInfoStorage.PREFIX + key);
-            editor.commit();
-        }
-    }*/
 
     // These eight methods are used for maintaining favorites.
     public void saveChildren(Context context, List<Child> children) {
@@ -156,8 +90,7 @@ public final class UserInfoStorage
         settings = context.getSharedPreferences(PARENT_PREFS_NAME,
                 Context.MODE_PRIVATE);
 
-        if (settings.contains(PARENT_FAVORITES))
-        {
+        if (settings.contains(PARENT_FAVORITES)) {
             String jsonFavorites = settings.getString(PARENT_FAVORITES, null);
             Gson gson = new Gson();
             Parent[] favoriteItems = gson.fromJson(jsonFavorites,
@@ -167,9 +100,9 @@ public final class UserInfoStorage
             parents = new ArrayList<Parent>(parents);
 
             return (ArrayList<Parent>) parents;
-        }
-        else
+        } else {
             return new ArrayList<Parent>();
+        }
     }
 
     public void addParent(Context context, Parent parent) {

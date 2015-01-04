@@ -1,27 +1,26 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import android.content.Intent;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-import android.widget.CheckBox;
-
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 import dk.projekt.bachelor.wheresmyfamily.R;
+import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 public class CreateUserScreen extends BaseActivity {
 
@@ -54,12 +53,10 @@ public class CreateUserScreen extends BaseActivity {
         mTxtEmail = (EditText) findViewById(R.id.txtRegisterEmail);
         mTxtPhone = (EditText) findViewById(R.id.txtRegisterPhone);
         mChbChild = (CheckBox) findViewById(R.id.checkBoxRegChild);
-        //chcBoxChild = false;
 
         //Set click listeners
         btnRegister.setOnClickListener(registerClickListener);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

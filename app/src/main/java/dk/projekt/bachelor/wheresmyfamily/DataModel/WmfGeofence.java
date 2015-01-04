@@ -1,26 +1,34 @@
-package dk.projekt.bachelor.wheresmyfamily;
+package dk.projekt.bachelor.wheresmyfamily.DataModel;
 
 /**
  * Created by Tommy on 25-11-2014.
  */
+
+import java.io.Serializable;
 
 /**
  * A WmfGeofence object, defined by its center and radius.
  * It also holds a name, an expiration duration
  * and which transition types to monitor
  */
-public class WmfGeofence
+public class WmfGeofence implements Serializable
 {
-    // Instance variables
+
+    //region Fields
     private String geofenceId;
     private double latitude;
     private double longitude;
     private float radius;
     private long expirationDuration;
     private int transitionType;
+    private Boolean isActive;
+    private Boolean isCurrent;
+    //endregion
+
+    public WmfGeofence() {}
 
     public WmfGeofence(String _geofenceId, double _latitude, double _longitude, float _radius,
-                       long _expirationDuration, int _transitionType)
+                       long _expirationDuration, int _transitionType, Boolean _isActive, Boolean _isCurrent)
     {
         setGeofenceId(_geofenceId);
         setLatitude(_latitude);
@@ -28,6 +36,8 @@ public class WmfGeofence
         setRadius(_radius);
         setExpirationDuration(_expirationDuration);
         setTransitionType(_transitionType);
+        setIsActive(false);
+        setIsCurrent(false);
     }
 
     // region Get and set
@@ -66,6 +76,18 @@ public class WmfGeofence
     }
     public void setGeofenceId(String geofenceId) {
         this.geofenceId = geofenceId;
+    }
+    public Boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    public Boolean getIsCurrent() {
+        return isCurrent;
+    }
+    public void setIsCurrent(Boolean isCurrent) {
+        this.isCurrent = isCurrent;
     }
     //endregion
 

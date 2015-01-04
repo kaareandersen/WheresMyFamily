@@ -1,12 +1,5 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
-import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,10 +15,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
-import dk.projekt.bachelor.wheresmyfamily.R;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
+import com.microsoft.windowsazure.mobileservices.TableJsonQueryCallback;
+
 import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
+import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
+import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
 
 public class LogInScreen extends BaseActivity {
@@ -89,7 +89,7 @@ public class LogInScreen extends BaseActivity {
         alert.setTitle("Send password");
         alert.setMessage("Skriv din email for at modtage dit password");
 
-// Set an EditText view to get user input
+        // Set an EditText view to get user input
         final EditText input = new EditText(this);
         alert.setView(input);
 
@@ -97,14 +97,14 @@ public class LogInScreen extends BaseActivity {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
                         //Pass email to azure
-                        mMobileServicesClient.sendEmailPassW(value, new TableJsonOperationCallback() {
+                        mMobileServicesClient.sendEmailPassW(value,
+                                new TableJsonOperationCallback() {
                             @Override
                             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
-                                if (exception == null){
-
-                                }
+                                if (exception == null){}
                                 else {
-                                    Log.e(TAG, "There was an exception sending email: " + exception.getMessage());
+                                    Log.e(TAG, "There was an exception sending email: " +
+                                            exception.getMessage());
                                 }
                             }
                         });
