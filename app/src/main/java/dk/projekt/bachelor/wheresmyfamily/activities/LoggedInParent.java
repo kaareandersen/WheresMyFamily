@@ -84,7 +84,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
     String parentsPrefName = "myParents";
     String childrenKey = "childrenInfo";
     String parentsKey = "parentsInfo";
-    // UserInfoStorage storage = new UserInfoStorage();
     ChildModelController childModelController = new ChildModelController();
     Child currentChild = new Child();
     // Define an object that holds accuracy and frequency parameters
@@ -130,6 +129,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
 
     ListView myList;
 
+
     //endregion
 
     //region Lifecycle events
@@ -140,6 +140,7 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
 
         getListView().setOnItemClickListener(listlistener);
 
+
         //Because BaseActivity extension isn't possible
         mNotificationHubController = new NotificationHubController(this);
 
@@ -147,8 +148,6 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         AuthenticationApplication myApp = (AuthenticationApplication) getApplication();
         myApp.setCurrentActivity(this);
         mMobileServicesClient = myApp.getAuthService();
-
-        // childModelController = new ChildModelController();
 
         m_adapter = new ChildAdapter(this, R.layout.row, m_My_children);
         myList = (ListView)findViewById(android.R.id.list);
@@ -166,12 +165,15 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
         };
         Thread thread = new Thread(null, viewChild, "MagenToBackground");
         thread.start();
-        m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Vent venligt...", "Henter data ...", true);
+        m_ProgressDialog = ProgressDialog.show(LoggedInParent.this, "Vent venligst...",
+                "Henter data ...", true);
 /*
         mGcm = GoogleCloudMessaging.getInstance(this);
 
         String connectionString =
-                "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
+                "Endpoint=sb://wheresmyfamilumshub-ns.servicebus.windows.net/;SharedAccessKeyName=
+                DefaultListenSharedAccessSignature;SharedAccessKey=
+                ND9FwY7wdab88K5p7jxxUEgmHk8z1LCHGfDEqg8UFHY=";
         mHub = new NotificationHub("WheresMyFamiluMSHub", connectionString, this);
         NotificationsManager.handleNotifications(this, SENDER_ID, MyHandler.class);*/
 
@@ -191,7 +193,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
                     uName = item.getAsJsonObject().getAsJsonPrimitive("UserName").getAsString();
                     mNotificationHubController.registerWithNotificationHubs(uEmail);
                 } else {
-                    Log.e(TAG, "There was an exception getting auth data: " + exception.getMessage());
+                    Log.e(TAG, "There was an exception getting auth data: " +
+                            exception.getMessage());
                 }
             }
         });
@@ -328,7 +331,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
             try
             {
                 // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                connectionResult.startResolutionForResult(this,
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
             }
             catch (IntentSender.SendIntentException e)
@@ -353,7 +357,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
                 // Set the dialog in the DialogFragment
                 errorFragment.setDialog(errorDialog);
                 // Show the error dialog in the DialogFragment
-                errorFragment.show(getSupportFragmentManager(), "Error Detection in" + getCallingActivity());*/
+                errorFragment.show(getSupportFragmentManager(), "Error Detection in" +
+                getCallingActivity());*/
         }
     }
     //endregion

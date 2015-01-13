@@ -1,9 +1,11 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,8 +55,10 @@ public class FavoritePlaces extends ListActivity {
 
         myGeofences = new ArrayList<WmfGeofence>();
         geofenceStorage = new GeofenceStorage(this);
+        wmfGeofenceController = new WmfGeofenceController();
 
         getListView().setOnItemClickListener(listlistener);
+        getListView().setOnItemLongClickListener(longClickListener);
 
         this.geofenceAdapter = new PlaceAdapter(this, R.layout.geofence_favorites_row, myGeofences);
         myList = (ListView)findViewById(android.R.id.list);
@@ -133,12 +137,25 @@ public class FavoritePlaces extends ListActivity {
         }
     };
 
+
+    public AdapterView.OnItemLongClickListener longClickListener = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+            deleteDialogBox(position);
+            geofenceAdapter.notifyDataSetChanged();
+
+            return true;
+        }
+    };
+
     public  class PlaceAdapter extends ArrayAdapter<WmfGeofence>
     {
         public PlaceAdapter(Context context, int textViewResourceId, ArrayList<WmfGeofence> items)
         {
             super(context, textViewResourceId, items);
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent)
         {
@@ -149,8 +166,6 @@ public class FavoritePlaces extends ListActivity {
                 v = vi.inflate(R.layout.geofence_favorites_row, null);
             }
 
-            /*Child c = null;
-            c = m_My_children.get(position);*/
             WmfGeofence wmfGeofence = null;
             wmfGeofence = myGeofences.get(position);
 
@@ -190,5 +205,40 @@ public class FavoritePlaces extends ListActivity {
                 Log.e("BACKGROUND_PROC", e.getMessage());
         }
         runOnUiThread(returnRes);
+    }
+
+    public void deleteDialogBox(final int _position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Bekræft sletning af Gemt sted");
+        builder.setMessage("Er du sikker?");
+
+        builder.setPositiveButton("JA", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // Remove the selected place from favorites
+                myGeofences.remove(_position);
+
+                // Save the changes
+                wmfGeofenceController.setMyGeofences(getApplicationContext(), myGeofences);
+
+                // Close the dialog
+                dialog.dismiss();
+
+            }
+
+        });
+
+        builder.setNegativeButton("NEJ", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

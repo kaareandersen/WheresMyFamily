@@ -172,17 +172,20 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
     @Override
     public void onClick(View view) {
-        if(view == btnAddPlace) {
+        if(view == btnAddPlace)
+        {
 
-            if(autoCompView != null)
+            if(autoCompView != null && placeField != null && radiusField != null &&
+                    addresses != null)
             {
                 createGeofence();
 
-                Toast.makeText(this, placeField.getText().toString() + " er føjet til favoritter", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, placeField.getText().toString() + " er føjet til favoritter",
+                        Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(this, "Kan ikke finde adressen pga. manglende oplysinger, prøv venligst igen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Udfyld alle felter og prøv igen", Toast.LENGTH_SHORT).show();
             }
 
         }

@@ -46,5 +46,6 @@ public class AlarmService extends Service {
 
         PushNotificationController pushNotificationController = new PushNotificationController(this);
         pushNotificationController.askForLocationFromChild(childModelController.getCurrentChild().getEmail());
+
     }
 }
