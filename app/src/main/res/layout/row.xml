@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginRight="6dip"
-        android:src="@drawable/ic_action_help"
+        android:src="@drawable/ic_action_person"
         />
     <LinearLayout
         android:id="@+id/row_layout"

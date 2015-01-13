@@ -157,20 +157,9 @@ public class MobileServicesClient {
      */
     @SuppressWarnings("unchecked")
     public void setUserData(final String userId, final String token) {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... params) {
-                try {
-                    MobileServiceUser user = new MobileServiceUser(userId);
-                    user.setAuthenticationToken(token);
-                    mClient.setCurrentUser(user);
-                } catch (Exception e) {
-                    Log.e(TAG, "Issue setting user data: " + e.getMessage());
-                    return e;
-                }
-                return null;
-            }
-        }.execute(null, null, null);
+        MobileServiceUser user = new MobileServiceUser(userId);
+        user.setAuthenticationToken(token);
+        mClient.setCurrentUser(user);
     }
 
     /***

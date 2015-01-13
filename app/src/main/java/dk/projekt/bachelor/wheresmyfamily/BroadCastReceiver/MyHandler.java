@@ -71,19 +71,37 @@ public class MyHandler extends NotificationsHandler {
         mNotificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(ctx, id,
-                new Intent(ctx, LoggedInParent.class), 0);
+        if (NOTIFICATION_ID == 3) {
+            PendingIntent contentIntent = PendingIntent.getActivity(ctx, id,
+                    new Intent(ctx, LoggedInParent.class), 0);
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(ctx)
-                        .setSmallIcon(R.drawable.family_white)
-                        .setContentTitle("Wheres My Family")
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(ctx)
+                            .setSmallIcon(R.drawable.family_white)
+                            .setContentTitle("Wheres My Family")
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(msg))
+                            .setContentText(msg);
 
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-        Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+        }
+        else if (NOTIFICATION_ID == 1 || NOTIFICATION_ID == 2){
+            PendingIntent contentIntent = PendingIntent.getActivity(ctx, id,
+                    new Intent(ctx, LoggedInChild.class), 0);
+
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(ctx)
+                            .setSmallIcon(R.drawable.family_white)
+                            .setContentTitle("Wheres My Family")
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(msg))
+                            .setContentText(msg);
+
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+        }
     }
 }
