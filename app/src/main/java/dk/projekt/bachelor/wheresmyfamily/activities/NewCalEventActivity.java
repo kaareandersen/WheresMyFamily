@@ -54,6 +54,7 @@ public class NewCalEventActivity extends BaseActivity implements
         GooglePlayServicesClient.OnConnectionFailedListener, LocationClient.OnAddGeofencesResultListener,
         LocationClient.OnRemoveGeofencesResultListener
 {
+    //region Fields
     private final String TAG = "NewCalEventActivity";
     private ArrayList<Child> m_My_children = new ArrayList<Child>();
     private ArrayList<WmfGeofence> geofences;
@@ -96,7 +97,9 @@ public class NewCalEventActivity extends BaseActivity implements
 
     Bundle bundle = new Bundle();
     ChildModelController childModelController = new ChildModelController();
+    //endregion
 
+    //region Life cycle events
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +134,7 @@ public class NewCalEventActivity extends BaseActivity implements
 
         geofences = geofenceStorage.getGeofences(this);
 
+
         for (int i = 0; i < geofences.size(); i++)
         {
             locationList[i] = geofences.get(i).getGeofenceId();
@@ -138,10 +142,10 @@ public class NewCalEventActivity extends BaseActivity implements
         spinnerLocation = (Spinner) findViewById(R.id.spinnerPlace);
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, locationList);
-        adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinnerLocation.setAdapter(adapter_state);
         spinnerLocation.setOnItemSelectedListener(this);
+        // Select the item parsed from the favorite list selection performed by the user
+        spinnerLocation.setSelection(getIntent().getIntExtra("Position", 0));
 
         spinnerRepeat = (Spinner) findViewById(R.id.spinnerRepeat);
 
@@ -150,7 +154,6 @@ public class NewCalEventActivity extends BaseActivity implements
         adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRepeat.setAdapter(adapter_repeat);
         spinnerRepeat.setOnItemSelectedListener(this);
-
 
         //Fetch auth data (the username) on load
         mMobileServicesClient.getAuthData(new TableJsonQueryCallback() {
@@ -213,9 +216,6 @@ public class NewCalEventActivity extends BaseActivity implements
 
         m_My_children = childModelController.getMyChildren(this);
 
-        spinnerLocation.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, locationList));
-
         txtChild.setText(childModelController.getCurrentChild().getName());
         cEmail = childModelController.getCurrentChild().getEmail();
         selectedChild = childModelController.getCurrentChild().getName();
@@ -224,8 +224,7 @@ public class NewCalEventActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        spinnerLocation.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, locationList));
+
     }
 
     @Override
@@ -248,73 +247,98 @@ public class NewCalEventActivity extends BaseActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
-            Intent intent = new Intent(this, AlarmReceiver.class);
+        switch (id) {
+            case R.id.action_save:
+                Intent intent = new Intent(this, AlarmReceiver.class);
 
-            int date;
-            int month;
-            int year;
+                String startDateText = txtStartDate.getText().toString();
+                String startTimeText = txtStartTime.getText().toString();
+                String endDateText = txtEndDate.getText().toString();
+                String endTimeText = txtEndTime.getText().toString();
+                //int eventId = Integer.parseInt(bundle.getString("event_id"));
 
-            String startDate = txtStartDate.getText().toString();
-            String startTime = txtStartTime.getText().toString();
-            String endDate = txtEndDate.getText().toString();
-            String endTime = txtEndTime.getText().toString();
-            //int eventId = Integer.parseInt(bundle.getString("event_id"));
+                //Convert start date/month/year to int
+                String[] sepStartDate = startDateText.split("-");
+                int startDate = Integer.parseInt(sepStartDate[0]);
+                int startMonth = Integer.parseInt(sepStartDate[1]);
+                int startYear = Integer.parseInt(sepStartDate[2]);
 
-            //Convert date/month/year to int
-            String[] sepDate = startDate.split("-");
-            date = Integer.parseInt(sepDate[0]);
-            month = Integer.parseInt(sepDate[1]);
-            year = Integer.parseInt(sepDate[2]);
+                //Convert start minute/hour to int
+                String[] sepStartTime = startTimeText.split(":");
+                int startHour = Integer.parseInt(sepStartTime[0]);
+                int startMinute = Integer.parseInt(sepStartTime[1]);
+                // int seconds = Integer.parseInt(sepDate[2]);
 
-            //Convert minute/hour to int
-            String[] sepTime = startTime.split(":");
-            int hour = Integer.parseInt(sepTime[0]);
-            int minute = Integer.parseInt(sepTime[1]);
-            // int seconds = Integer.parseInt(sepDate[2]);
+                // calendar.set(Calendar.AM_PM, Calendar.AM);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTimeInMillis(System.currentTimeMillis());
 
-            // calendar.set(Calendar.AM_PM, Calendar.AM);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
+                calendarStart.set(Calendar.HOUR_OF_DAY, startHour);
+                calendarStart.set(Calendar.MINUTE, startMinute);
+                calendarStart.set(Calendar.SECOND, 0);
 
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, minute);
-            calendar.set(Calendar.SECOND, 0);
+                // January is month 0!!!!
+                // Very important to remember to roll back the time one month!!!!
+                --startMonth;
 
-            // January is month 0!!!!
-            // Very important to remember to roll back the time one month!!!!
-            --month;
+                calendarStart.set(Calendar.MONTH, startMonth);
+                calendarStart.set(Calendar.YEAR, startYear);
+                calendarStart.set(Calendar.DAY_OF_MONTH, startDate);
 
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.DAY_OF_MONTH, date);
+                Calendar calendarEnd = Calendar.getInstance();
 
-            WmfGeofenceController wmfGeofenceController = new WmfGeofenceController();
-            ArrayList<WmfGeofence> temp = wmfGeofenceController.getAllGeofences(this);
-            mCurrentGeofences = new ArrayList<Geofence>();
-            String text = spinnerLocation.getSelectedItem().toString();
+                //Convert end date/month/year to int
+                String[] sepEndDate = endDateText.split("-");
+                int endDate = Integer.parseInt(sepEndDate[0]);
+                int endMonth = Integer.parseInt(sepEndDate[1]);
+                int endYear = Integer.parseInt(sepEndDate[2]);
 
-            for(int i = 0; i < temp.size(); i++)
-            {
-                if(temp.get(i).getGeofenceId() == text)
-                    mCurrentGeofences.add(temp.get(i).toGeofence());
-            }
+                //Convert end minute/hour to int
+                String[] sepEndTime = endTimeText.split(":");
+                int endHour = Integer.parseInt(sepEndTime[0]);
+                int endMinute = Integer.parseInt(sepEndTime[1]);
 
-            addGeofences();
+                calendarEnd.set(Calendar.HOUR_OF_DAY, endHour);
+                calendarEnd.set(Calendar.MINUTE, endMinute);
+                calendarEnd.set(Calendar.SECOND, 0);
 
+                // January is month 0!!!!
+                // Very important to remember to roll back the time one month!!!!
+                --endMonth;
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
-                    0, intent, 0);
-            AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                calendarEnd.set(Calendar.MONTH, endMonth);
+                calendarEnd.set(Calendar.YEAR, endYear);
+                calendarEnd.set(Calendar.DAY_OF_MONTH, endDate);
 
-            saveEvent();
+                WmfGeofenceController wmfGeofenceController = new WmfGeofenceController();
+                ArrayList<WmfGeofence> temp = wmfGeofenceController.getAllGeofences(this);
+                spinnerLocation.getSelectedItemPosition();
+                String text = spinnerLocation.getSelectedItem().toString();
+                mCurrentGeofences = new ArrayList<Geofence>();
 
-            return true;
+                for (int i = 0; i < temp.size(); i++) {
+                    if (temp.get(i).getGeofenceId().toString().equals(text))
+                    {
+                        temp.get(i).setExpirationDuration(calendarEnd.getTimeInMillis());
+                        mCurrentGeofences.add(temp.get(i).toGeofence());
+                    }
+                }
+
+                addGeofences();
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                        0, intent, 0);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);
+
+                saveEvent();
+
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+    //endregion
 
 
     @Override
@@ -420,8 +444,14 @@ public class NewCalEventActivity extends BaseActivity implements
         /*spinnerLocation.setSelection(position);
         spinnerLoc = (String) spinnerLocation.getSelectedItem();
 
+
         spinnerRepeat.setSelection(position);
         spinnerRep = (String) spinnerRepeat.getSelectedItem();*/
+        /*WmfGeofenceController wmfGeofenceController = new WmfGeofenceController();
+        wmfGeofenceController.noCurrentGeofence(geofences);
+        geofences.get(position).setIsCurrent(true);
+        mCurrentGeofences = new ArrayList<Geofence>();
+        mCurrentGeofences.add(geofences.get(position).toGeofence());*/
     }
 
     @Override
@@ -485,17 +515,20 @@ public class NewCalEventActivity extends BaseActivity implements
             switch (mRequestType)
             {
                 case ADD:
+                    mInProgress = true;
                     mGeofenceRequestIntent = getTransitionPendingIntent();
                     // Send a request to add the current geofences
                     locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
                     Toast.makeText(this, "AddGeofence request sent", Toast.LENGTH_SHORT).show();
                     break;
                 case REMOVE_INTENT:
+                    mInProgress = true;
                     mGeofenceRequestIntent = getTransitionPendingIntent();
                     locationClient.removeGeofences(mGeofenceRequestIntent, this);
                     Toast.makeText(this, "RemoveGeofence request sent", Toast.LENGTH_SHORT).show();
                     break;
                 case REMOVE_LIST:
+                    mInProgress = true;
                     locationClient.removeGeofences(mGeofencesToRemove, this);
                     Toast.makeText(this, "RemoveAllGeofences request sent", Toast.LENGTH_SHORT).show();
                     break;
@@ -566,6 +599,10 @@ public class NewCalEventActivity extends BaseActivity implements
      */
     public void addGeofences()
     {
+        /*// Disconnect the locationClient to ensure call to onConnected
+        if(locationClient.isConnected())
+            locationClient.disconnect();*/
+
         // Start a request to add geofences
         mRequestType = REQUEST_TYPE.ADD;
         /*
@@ -576,12 +613,14 @@ public class NewCalEventActivity extends BaseActivity implements
         if (!servicesConnected())
             return;
 
-        locationClient = new LocationClient(this, this, this);
+
         // If a request is not already underway
         if (!mInProgress)
         {
             // Indicate that a request is underway
             mInProgress = true;
+
+            locationClient = new LocationClient(this, this, this);
             // Request a connection from the client to Location Services
             locationClient.connect();
         }

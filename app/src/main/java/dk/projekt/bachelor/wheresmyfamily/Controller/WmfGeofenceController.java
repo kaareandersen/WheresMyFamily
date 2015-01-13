@@ -1,8 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.Controller;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
@@ -10,7 +8,6 @@ import com.google.android.gms.location.Geofence;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
-import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.GeofenceStorage;
 
 /**
@@ -38,6 +35,12 @@ public class WmfGeofenceController {
         }
         else
             return new ArrayList<WmfGeofence>();
+    }
+
+    public void setMyGeofences(Context context, ArrayList<WmfGeofence> _myGeofences)
+    {
+        geofenceStorage = new GeofenceStorage(context);
+        geofenceStorage.setGeofences(context, _myGeofences);
     }
 
     public void setActiveGeofences(Context context, ArrayList<Geofence> _myGeofences)
@@ -100,14 +103,5 @@ public class WmfGeofenceController {
         {
             _myGeofences.get(i).setIsCurrent(false);
         }
-    }
-
-    public PendingIntent getTransitionPendingIntent(Context context)
-    {
-        // Create an explicit Intent
-        Intent intent = new Intent(context, ReceiveTransitionsIntentService.class);
-        intent.putExtra("AddGeofence", "ADD");
-
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +45,10 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 
     private String filename = null;
 
+    private DrawerLayout drawerLayout;
+    private ListView drawerListView;
+    private String[] navigationDrawerList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,12 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
             }
 
         });
+
+        /*drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerListView = (ListView) findViewById(R.id.left_drawer);
+        navigationDrawerList = getResources().getStringArray(R.array.navigation_drawer_array);
+        drawerListView.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, navigationDrawerList));
+        drawerListView.setOnItemClickListener(this);*/
     }
 
     @Override

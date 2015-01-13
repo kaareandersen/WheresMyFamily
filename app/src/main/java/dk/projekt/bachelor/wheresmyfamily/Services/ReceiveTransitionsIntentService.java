@@ -37,7 +37,6 @@ public class ReceiveTransitionsIntentService extends IntentService
         }
         else
         {
-
             Toast.makeText(this, "ReceiveTransitionsIntentService running", Toast.LENGTH_SHORT).show();
 
             // Get the type of transition (entry or exit)
@@ -59,8 +58,10 @@ public class ReceiveTransitionsIntentService extends IntentService
                     triggerIds[i] = triggerList.get(i).getRequestId();
                     if(transitionType == Geofence.GEOFENCE_TRANSITION_ENTER)
                         Toast.makeText(this, "Ankomst" + triggerIds[i], Toast.LENGTH_SHORT).show();
-                    else
+                    else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT)
                         Toast.makeText(this, "Afgang" + triggerIds[i], Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(this, "Barnet er på positionen", Toast.LENGTH_SHORT).show();
                 }
 
                 /*
@@ -73,7 +74,7 @@ public class ReceiveTransitionsIntentService extends IntentService
              else
             {
                 // An invalid transition was reported
-                Log.e("ReceiveTransitionsIntentService", "WmfGeofence transition error: " +
+                Log.e("ReceiveTransitionsIntentService", "Geofence transition error: " +
                         Integer.toString(transitionType));
             }
         }

@@ -145,4 +145,11 @@
     <string name="action_add_new_place"></string>
     <string name="showpositionoverview">Gå til</string>
 
+    <!--NavigationDrawer-->
+    <string-array name="navigation_drawer_array">
+        <item>Forside</item>
+        <item>Steder</item>
+        <item>Kalenderaftale</item>
+    </string-array>
+
 </resources>

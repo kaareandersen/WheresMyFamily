@@ -97,6 +97,6 @@ public class WmfGeofence implements Serializable
         // Create a new google Location geofence
         return new com.google.android.gms.location.Geofence.Builder().setRequestId(getGeofenceId()).setTransitionTypes(transitionType)
                 .setCircularRegion(getLatitude(), getLongitude(), getRadius())
-                .setExpirationDuration(expirationDuration).build();
+                .setExpirationDuration(getExpirationDuration()).build();
     }
 }
