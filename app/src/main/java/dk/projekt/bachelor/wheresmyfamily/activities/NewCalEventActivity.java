@@ -148,7 +148,6 @@ public class NewCalEventActivity extends BaseActivity implements
         spinnerLocation.setSelection(getIntent().getIntExtra("Position", 0));
 
         spinnerRepeat = (Spinner) findViewById(R.id.spinnerRepeat);
-
         ArrayAdapter<String> adapter_repeat = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, repeat);
         adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

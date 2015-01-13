@@ -152,7 +152,7 @@ public class MobileServicesClient {
     }
 
     /**
-     * Creates a nwe MobileServiceUser using a userId and token passed in.
+     * Creates a new MobileServiceUser using a userId and token passed in.
      * Also sets the current provider
      */
     @SuppressWarnings("unchecked")
@@ -188,24 +188,12 @@ public class MobileServicesClient {
      * NOTE:  This is not secure and is just used as a storage mechanism.  In reality, you would want to
      * come up with a more secure way of storing this information.
      */
-    @SuppressWarnings("unchecked")
     public void saveUserData() {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... params) {
-                try {
-                    SharedPreferences settings = mContext.getSharedPreferences("UserData", 0);
-                    SharedPreferences.Editor preferencesEditor = settings.edit();
-                    preferencesEditor.putString("userid", mClient.getCurrentUser().getUserId());
-                    preferencesEditor.putString("token", mClient.getCurrentUser().getAuthenticationToken());
-                    preferencesEditor.commit();
-                } catch (Exception e) {
-                    Log.e(TAG, "Issue saving user data: " + e.getMessage());
-                    return e;
-                }
-                return null;
-            }
-        }.execute(null, null, null);
+        SharedPreferences settings = mContext.getSharedPreferences("UserData", 0);
+        SharedPreferences.Editor preferencesEditor = settings.edit();
+        preferencesEditor.putString("userid", mClient.getCurrentUser().getUserId());
+        preferencesEditor.putString("token", mClient.getCurrentUser().getAuthenticationToken());
+        preferencesEditor.commit();
     }
 
     /**

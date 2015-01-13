@@ -44,7 +44,6 @@ public class MyHandler extends NotificationsHandler {
             NOTIFICATION_ID = 1;
 
             pushNotificationController.getEventId(eventID);
-
         }
         if(sepMessage[0].equals("GetLocation")){
             newMessage = "Lokations anmodning modtaget";
