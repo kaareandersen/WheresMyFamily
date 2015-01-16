@@ -68,7 +68,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     UserInfoStorage storage = new UserInfoStorage();
     String parentEmail;
 
-
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
 
@@ -108,11 +107,15 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     private ActivityRecognitionClient mActivityRecognitionClient;
 
     // Defines the allowable request types.
-    public enum REQUEST_TYPE {
+    public enum REQUEST_TYPE { ADD, REMOVE_INTENT, REMOVE_LIST,
         START, STOP
     }
 
     private REQUEST_TYPE mRequestType;
+
+    private PendingIntent mGeofenceRequestIntent;
+
+    ArrayList<com.google.android.gms.location.Geofence> mCurrentGeofences;
     //endregion
 
     //region Lifecycle events
@@ -316,6 +319,29 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
+
+        if (mRequestType != null)
+        {
+            switch (mRequestType)
+            {
+                case ADD:
+                    mInProgress = true;
+                    mGeofenceRequestIntent = getTransitionPendingIntent();
+                    // Send a request to add the current geofences
+                    locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
+                    Toast.makeText(this, "AddGeofence request sent", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    try {
+                        throw new Exception("Unknown request type in onConnected().");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+
+            mInProgress = false;
+        }
     }
 
     @Override
@@ -327,6 +353,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     @Override
     public void onAddGeofencesResult(int i, String[] strings) {
+
 
     }
 
@@ -486,6 +513,58 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
             return false;
         }
+    }
+
+    /**
+     * Start a request for geofence monitoring by calling
+     * LocationClient.connect().
+     */
+    public void addGeofences()
+    {
+        /*// Disconnect the locationClient to ensure call to onConnected
+        if(locationClient.isConnected())
+            locationClient.disconnect();*/
+
+        // Start a request to add geofences
+        mRequestType = REQUEST_TYPE.ADD;
+        /*
+         * Test for Google Play services after setting the request type.
+         * If Google Play services isn't present, the proper request
+         * can be restarted.
+         */
+        if (!servicesConnected())
+            return;
+
+
+        // If a request is not already underway
+        if (!mInProgress)
+        {
+            // Indicate that a request is underway
+            mInProgress = true;
+
+            locationClient = new LocationClient(this, this, this);
+            // Request a connection from the client to Location Services
+            locationClient.connect();
+        }
+        else
+        {
+            // A request is already underway. To handle this situation:
+            // Disconnect the client
+            locationClient.disconnect();
+            // Reset the flag
+            mInProgress = false;
+            // Retry the request.
+            addGeofences(); // requestIntent
+        }
+    }
+
+    private PendingIntent getTransitionPendingIntent()
+    {
+        // Create an explicit Intent
+        Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+        startService(intent);
+
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }
     //endregion

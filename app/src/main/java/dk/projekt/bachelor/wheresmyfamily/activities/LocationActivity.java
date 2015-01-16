@@ -174,7 +174,7 @@ public class LocationActivity extends FragmentActivity implements
 
         locationClient.connect();
 
-        getSreenDimanstions();
+        getScreenDimentions();
 
         // Initialize the map
         map = ((SupportMapFragment) getSupportFragmentManager()
@@ -271,7 +271,7 @@ public class LocationActivity extends FragmentActivity implements
         switch (item.getItemId())
         {
             case R.id.navigate_to_child:
-                findDirections( AMSTERDAM.latitude, AMSTERDAM.longitude,PARIS.latitude, PARIS.longitude, GMapV2Direction.MODE_DRIVING );
+                findDirections( mCurrentLocation.latitude, mCurrentLocation.longitude, currentPosition.latitude, currentPosition.longitude, GMapV2Direction.MODE_DRIVING );
                 break;
             case R.id.menu_set_hybrid:
                 map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -602,20 +602,13 @@ public class LocationActivity extends FragmentActivity implements
             newPolyline.remove();
         }
         newPolyline = map.addPolyline(rectLine);
-        if (isTravelingToParis)
-        {
-            latlngBounds = createLatLngBoundsObject(AMSTERDAM, PARIS);
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBounds, width, height, 150));
-        }
-        else
-        {
-            latlngBounds = createLatLngBoundsObject(AMSTERDAM, FRANKFURT);
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBounds, width, height, 150));
-        }
+
+        latlngBounds = createLatLngBoundsObject(mCurrentLocation, currentPosition);
+        map.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBounds, width, height, 150));
 
     }
 
-    private void getSreenDimanstions()
+    private void getScreenDimentions()
     {
         Display display = getWindowManager().getDefaultDisplay();
         width = display.getWidth();
