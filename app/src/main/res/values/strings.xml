@@ -118,6 +118,7 @@
     <string name="menu_zoom_out_title">Zoom out</string>
     <string name="menu_add_new_place">Nyt sted</string>
     <string name="menu_show_child_position">Barnets position</string>
+    <string name="menu_navigate_child_position">Vis navigering</string>
 
     <!-- Overview -->
     <string name="overview_title_edit_text">Tilføj et nyt sted</string>

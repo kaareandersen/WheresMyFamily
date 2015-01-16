@@ -377,6 +377,11 @@ public class LocationActivity extends FragmentActivity implements
                     Toast.makeText(this, "Barnets lokation endnu ikke modtaget, vent venligst", Toast.LENGTH_LONG).show();
                 }
                 break;
+            /*case R.id.navigate_child_position:
+                Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse
+                        ("http://maps.google.com/maps?saddr=20.344,34.34&daddr=20.5666,45.345"));
+                startActivity(intent);
+                break;*/
             case R.id.action_overview:
                 Intent overview = new Intent(this, OverviewActivity.class);
                 startActivity(overview);

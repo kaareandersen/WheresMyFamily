@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -21,6 +23,9 @@ public class AlarmService extends Service {
     Bundle bundle;
     Calendar newCalendarEventStartTime;
     ArrayList<Child> myChildren = new ArrayList<Child>();
+    LatLng currentPosition;
+    LatLng peripheralPosition;
+    int earthRadius = 6378137;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -33,6 +38,15 @@ public class AlarmService extends Service {
 
         askForLocation();
 
+        /*
+        * Use an approximation to compute the position
+        * The radius of earth in meters: 6378137
+        * lat = lat0 + (180/pi)*(dy/6378137)
+        * lon = lon0 + (180/pi)*(dx/6378137)/cos(lat0)*/
+
+        /*LatLng peripheralPosition = new LatLng
+                (currentPosition.latitude + (180/Math.PI)*(25/earthRadius),
+                (180/Math.PI)*(25/earthRadius)/Math.cos(Math.PI/180.0*currentPosition.latitude));*/
         Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(500);
 
