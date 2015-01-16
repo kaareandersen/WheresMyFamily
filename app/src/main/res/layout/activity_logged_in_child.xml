@@ -18,7 +18,7 @@
         android:text="Barn"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,8 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:textSize="18dp"/>
-    </RelativeLayout>
+            android:textSize="18dp"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewChildTitle"
