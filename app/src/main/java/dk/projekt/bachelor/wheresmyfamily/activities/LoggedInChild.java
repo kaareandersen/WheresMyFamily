@@ -45,6 +45,7 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
@@ -122,7 +123,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         instance = this;
 
-        //Notifacation hub Azure
+        //Notification hub Azure
         mNotificationHubController = new NotificationHubController(this);
         pushNotificationController = new PushNotificationController(this);
 
@@ -217,9 +218,15 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
             parentEmail = mParents.get(0).getEmail();
         }
 
-
-
         locationClient.connect();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+        startService(intent);
     }
 
     //endregion

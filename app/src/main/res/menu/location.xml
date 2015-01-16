@@ -49,6 +49,10 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_show_child_position"/>
+    <item android:id="@+id/navigate_child_position"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_navigate_child_position"/>
 
 </menu>
     </item>
