@@ -73,7 +73,7 @@ public class NewCalEventActivity extends BaseActivity implements
     private REQUEST_TYPE mRequestType;
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
-    ArrayList<com.google.android.gms.location.Geofence> mCurrentGeofences;
+    ArrayList<WmfGeofence> mCurrentGeofences;
 
 
     private Activity mActivity;
@@ -84,6 +84,7 @@ public class NewCalEventActivity extends BaseActivity implements
 
     // Variable for storing current date and time
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private long expiration;
     private String spinnerLoc, spinnerRep, pEmail, cEmail, selectedChild, eventID;
     Spinner spinner;
     AlarmReceiver alarmReceiver;
@@ -313,17 +314,18 @@ public class NewCalEventActivity extends BaseActivity implements
                 ArrayList<WmfGeofence> temp = wmfGeofenceController.getAllGeofences(this);
                 spinnerLocation.getSelectedItemPosition();
                 String text = spinnerLocation.getSelectedItem().toString();
-                mCurrentGeofences = new ArrayList<Geofence>();
+                mCurrentGeofences = new ArrayList<WmfGeofence>();
+                expiration = calendarEnd.getTimeInMillis();
 
                 for (int i = 0; i < temp.size(); i++) {
                     if (temp.get(i).getGeofenceId().toString().equals(text))
                     {
                         temp.get(i).setExpirationDuration(calendarEnd.getTimeInMillis());
-                        mCurrentGeofences.add(temp.get(i).toGeofence());
+                        mCurrentGeofences.add(temp.get(i));
                     }
                 }
 
-                addGeofences();
+                // addGeofences();
 
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                         0, intent, 0);
@@ -473,11 +475,11 @@ public class NewCalEventActivity extends BaseActivity implements
             return;
         } else {
             mMobileServicesClient.newCalEvent(pEmail, cEmail, txtEvent.getText().toString(),
-                    spinnerLoc, selectedChild,
+                    mCurrentGeofences.get(0), selectedChild,
                     txtStartDate.getText().toString(),
                     txtStartTime.getText().toString(),
                     txtEndDate.getText().toString(),
-                    txtEndTime.getText().toString(),
+                    txtEndTime.getText().toString(), expiration,
                     spinnerRep,
                     new TableJsonOperationCallback() {
                         @Override
@@ -509,7 +511,7 @@ public class NewCalEventActivity extends BaseActivity implements
     @Override
     public void onConnected(Bundle bundle) {
 
-        if (mRequestType != null)
+/*        if (mRequestType != null)
         {
             switch (mRequestType)
             {
@@ -541,7 +543,7 @@ public class NewCalEventActivity extends BaseActivity implements
             }
 
             mInProgress = false;
-        }
+        }*/
     }
 
     @Override

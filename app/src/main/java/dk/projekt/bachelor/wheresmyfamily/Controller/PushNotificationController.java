@@ -1,25 +1,20 @@
 package dk.projekt.bachelor.wheresmyfamily.Controller;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 
 /**
  * Created by KaareAndersen on 20/11/14.
@@ -30,6 +25,7 @@ public class PushNotificationController {
     private static Context mContext;
     private static MobileServicesClient mMobileServicesClient;
     private static CEventChildController cEventChildController;
+    private ArrayList<WmfGeofence> currentGeofences;
 
     public PushNotificationController(Context context) {
         mContext = context;
@@ -45,6 +41,8 @@ public class PushNotificationController {
                                     ServiceFilterResponse response) {
                 if (exception == null) {
 
+                    currentGeofences = new ArrayList<WmfGeofence>();
+
                     int id = 10;
                     //Get values for event from Azure tables
                     String eventid = jsonObject.getAsJsonPrimitive("id").getAsString();
@@ -53,6 +51,11 @@ public class PushNotificationController {
                     String startTime = jsonObject.getAsJsonPrimitive("StartTime").getAsString();
                     String endDate = jsonObject.getAsJsonPrimitive("EndDate").getAsString();
                     String endTime = jsonObject.getAsJsonPrimitive("EndTime").getAsString();
+                    String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
+                    String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
+                    String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
+
+                    // WmfGeofence temp = new WmfGeofence(eventid, latitude, longitude, Float.parseFloat(radius), )
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");
@@ -95,6 +98,8 @@ public class PushNotificationController {
                     calendar.set(Calendar.HOUR_OF_DAY, hour);
                     calendar.set(Calendar.MINUTE, minute);
                     calendar.set(Calendar.SECOND, 0);
+
+
 
                     Toast.makeText(mContext, "Kalender hentet", Toast.LENGTH_LONG).show();
 

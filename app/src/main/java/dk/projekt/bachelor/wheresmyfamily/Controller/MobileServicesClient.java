@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.activities.Main;
 
 
@@ -281,9 +282,9 @@ public class MobileServicesClient {
 
     @SuppressWarnings("unchecked")
     public void newCalEvent(final String partitionkey, final String rowkey,
-                             final String eventname, final String location, final String child,
+                             final String eventname, final WmfGeofence location, final String child,
                              final String startdate, final String starttime,
-                             final String enddate, final String endtime, final String repeat,
+                             final String enddate, final String endtime, final long expiration, final String repeat,
                              final TableJsonOperationCallback callback) {
         new AsyncTask() {
             @Override
@@ -293,12 +294,16 @@ public class MobileServicesClient {
                     newEvent.addProperty("PartitionKey", partitionkey);
                     newEvent.addProperty("RowKey", rowkey);
                     newEvent.addProperty("EventName", eventname);
-                    newEvent.addProperty("Location", location);
+                    newEvent.addProperty("GeofenceId", location.getGeofenceId());
+                    newEvent.addProperty("Latitude", location.getLatitude());
+                    newEvent.addProperty("Longitude", location.getLongitude());
+                    newEvent.addProperty("Radius", location.getRadius());
                     newEvent.addProperty("Child", child);
                     newEvent.addProperty("StartDate", startdate);
                     newEvent.addProperty("StartTime", starttime);
                     newEvent.addProperty("EndDate", enddate);
                     newEvent.addProperty("EndTime", endtime);
+                    newEvent.addProperty("Expiration", expiration);
                     newEvent.addProperty("Repeat", repeat);
                     mTableCalendarEvents.insert(newEvent, callback);
                 } catch (Exception e) {

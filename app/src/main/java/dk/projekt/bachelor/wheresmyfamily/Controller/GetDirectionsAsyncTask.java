@@ -1,12 +1,15 @@
 package dk.projekt.bachelor.wheresmyfamily.Controller;
 
-import java.util.ArrayList;
-import java.util.Map;
-import org.w3c.dom.Document;
-import com.google.android.gms.maps.model.LatLng;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 import dk.projekt.bachelor.wheresmyfamily.activities.LocationActivity;
 
@@ -70,6 +73,6 @@ public class GetDirectionsAsyncTask extends AsyncTask<Map<String, String>, Objec
 
     private void processException()
     {
-        Toast.makeText(activity, "Error retriving data", 3000).show();
+        Toast.makeText(activity, "Error retrieving data", Toast.LENGTH_SHORT).show();
     }
 }
