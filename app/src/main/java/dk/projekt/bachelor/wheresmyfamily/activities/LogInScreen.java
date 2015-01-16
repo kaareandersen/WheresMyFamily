@@ -127,7 +127,7 @@ public class LogInScreen extends BaseActivity {
                 if (mTxtPassword.getText().toString().equals("") ||
                         mTxtEmail.getText().toString().equals("")) {
                     Toast.makeText(getApplicationContext(),
-                            "Email or Password not entered", Toast.LENGTH_SHORT).show();
+                            "Email eller Password er ikke indtastet", Toast.LENGTH_SHORT).show();
                     Log.w(TAG, "Email or Password not entered");
                     return;
                 }
@@ -166,7 +166,7 @@ public class LogInScreen extends BaseActivity {
 
                         } else {
                             Toast.makeText(getApplicationContext(),
-                                    "Error loggin in: " + exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
+                                    "Login mislykkedes: " + exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
                             Log.e(TAG, "Error loggin in: " + exception.getMessage());
                         }
                     }

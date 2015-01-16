@@ -109,5 +109,31 @@
                 style="?android:attr/actionButtonStyle"
                 android:src="@android:drawable/ic_menu_call" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/overview_future_events_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="@string/overview_future_events_textview"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
+        </LinearLayout>
+
+
+
+        <ListView
+            android:id="@+id/event_list_child"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/activity_vertical_margin">
+        </ListView>
+
     </LinearLayout>
 </RelativeLayout>

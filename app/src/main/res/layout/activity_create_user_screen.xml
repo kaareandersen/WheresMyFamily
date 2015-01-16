@@ -20,9 +20,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:padding="10dp"
-        android:background="@drawable/linearlayout_bg"
         >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:background="@drawable/linearlayout_bg">
 
         <EditText
             android:id="@+id/txtRegisterEmail"
@@ -87,6 +91,7 @@
             android:drawableLeft="@drawable/ic_action_phone"
             android:singleLine="true"
             android:inputType="phone"/>
+        </LinearLayout>
 
         <CheckBox
             android:layout_width="wrap_content"
@@ -95,7 +100,7 @@
             android:id="@+id/checkBoxRegChild"
             android:layout_marginTop="-2dp"
             android:padding="10dp"
-            android:textColor="#bbbbbb"
+            android:textColor="@color/white"
             android:onClick="onCheckboxClicked"
             />
 
