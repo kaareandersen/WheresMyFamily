@@ -88,8 +88,12 @@ public class CreateUserScreen extends BaseActivity {
         switch(view.getId()) {
             case R.id.checkBoxRegChild:
                 if (checked)
+                {
                 //Child
                 chcBoxChild = true;
+                Toast.makeText(getApplicationContext(),
+                        "Du er valgt som barn", Toast.LENGTH_SHORT).show();
+                }
                 else
                 //Parent
                 chcBoxChild = false;
@@ -107,12 +111,12 @@ public class CreateUserScreen extends BaseActivity {
                     mTxtEmail.getText().toString().equals("") ||
                     mTxtPhone.getText().toString().equals("")) {
                 Toast.makeText(getApplicationContext(),
-                        "You must enter all fields to register", Toast.LENGTH_SHORT).show();
+                        "Alle felter skal udfyldes for at registrere", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "You must enter all fields to register");
                 return;
             } else if (!mTxtPassword.getText().toString().equals(mTxtConfirm.getText().toString())) {
                 Toast.makeText(getApplicationContext(),
-                        "The passwords you've entered don't match", Toast.LENGTH_SHORT).show();
+                        "Kodeordene er ikke ens", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "The passwords you've entered don't match");
                 return;
             } else {
@@ -130,6 +134,8 @@ public class CreateUserScreen extends BaseActivity {
                                     mMobileServicesClient.setUserAndSaveData(jsonObject);
 
                                     mActivity.finish();
+                                    Toast.makeText(getApplicationContext(),
+                                            "Din Brugerprofil er nu oprettet", Toast.LENGTH_SHORT).show();
 
                                     if (chcBoxChild == true) {
                                         Intent loggedInChildIntent = new Intent(getApplicationContext(), LoggedInChild.class);
@@ -141,7 +147,7 @@ public class CreateUserScreen extends BaseActivity {
                                     }
                                 } else {
                                     Toast.makeText(getApplicationContext(),
-                                            "There was an error registering the user: "+ exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
+                                            "Der skete en fejl under registringen af bruger: "+ exception.getCause().getMessage(), Toast.LENGTH_LONG).show();
                                     Log.e(TAG, "There was an error registering the user: " + exception.getMessage());
                                 }
                             }

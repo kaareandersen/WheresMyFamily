@@ -3,7 +3,7 @@
     tools:context="dk.projekt.bachelor.wheresmyfamily.activities.FavoritePlaces">
     <item android:id="@+id/action_add_place"
         android:title="@string/action_add_new_place"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:icon="@drawable/ic_action_new"
         android:orderInCategory="100"
         android:showAsAction="always" />
 </menu>

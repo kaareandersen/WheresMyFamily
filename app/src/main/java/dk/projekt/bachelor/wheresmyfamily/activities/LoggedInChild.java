@@ -16,7 +16,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +70,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     private LocationRequest mLocationRequest;
     UserInfoStorage storage = new UserInfoStorage();
     String parentEmail;
+    ListView listView ;
 
     // Flag that indicates if a request is underway.
     private boolean mInProgress;
@@ -278,6 +282,8 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
                 // Do nothing but close the dialog
                 mMobileServicesClient.deleteUser();
                 mNotificationHubController.unRegisterNH();
+                Toast.makeText(getApplicationContext(),
+                        "Din Brugerprofil er nu slettet!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
 
@@ -353,7 +359,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
     @Override
     public void onAddGeofencesResult(int i, String[] strings) {
-
 
     }
 
@@ -565,6 +570,49 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         startService(intent);
 
         return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public void listEvents(){
+        // Get ListView object from xml
+        listView = (ListView) findViewById(R.id.event_list_child);
+
+        // Defined Array values to show in ListView
+        String[] values = new String[] {};
+
+        // Define a new Adapter
+        // First parameter - Context
+        // Second parameter - Layout for the row
+        // Third parameter - ID of the TextView to which the data is written
+        // Forth - the Array of data
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+
+        // ListView Item Click Listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition     = position;
+
+                // ListView Clicked item value
+                String  itemValue    = (String) listView.getItemAtPosition(position);
+
+                // Show Alert
+                Toast.makeText(getApplicationContext(),
+                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
+                        .show();
+
+            }
+
+        });
     }
 }
     //endregion

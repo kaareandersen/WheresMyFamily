@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -427,6 +428,8 @@ public class LoggedInParent extends ListActivity implements GooglePlayServicesCl
                 // Do nothing but close the dialog
                 mMobileServicesClient.deleteUser();
                 mNotificationHubController.unRegisterNH();
+                Toast.makeText(getApplicationContext(),
+                        "Din Brugerprofil er nu slettet!", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
 

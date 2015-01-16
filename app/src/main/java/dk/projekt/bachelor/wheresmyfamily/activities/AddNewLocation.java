@@ -296,10 +296,7 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
         alert.setTitle("Hjælp");
         alert.setMessage("udfyl udfyld udfyld");
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
+        alert.setIcon(R.drawable.ic_action_help);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
