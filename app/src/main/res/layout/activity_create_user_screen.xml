@@ -28,29 +28,29 @@
             android:padding="10dp"
             android:background="@drawable/linearlayout_bg">
 
+            <EditText
+                android:id="@+id/txtRegisterUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_top_bg"
+                android:layout_marginTop="-2dp"
+                android:padding="10dp"
+                android:hint="Navn"
+                android:inputType="textPersonName"
+                android:textColorHint="#bbbbbb"
+                android:drawableLeft="@drawable/user"
+                android:singleLine="true"/>
+
         <EditText
             android:id="@+id/txtRegisterEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_top_bg"
+            android:background="@drawable/eddittext_default_middle"
             android:padding="10dp"
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:textColorHint="#bbbbbb"
             android:drawableLeft="@drawable/email"
-            android:singleLine="true"/>
-
-        <EditText
-            android:id="@+id/txtRegisterUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/eddittext_default_middle"
-            android:layout_marginTop="-2dp"
-            android:padding="10dp"
-            android:hint="Bruger Navn"
-            android:inputType="textPersonName"
-            android:textColorHint="#bbbbbb"
-            android:drawableLeft="@drawable/user"
             android:singleLine="true"/>
 
         <EditText
