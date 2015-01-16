@@ -29,6 +29,7 @@ public class PushNotificationController {
         mContext = context;
         mMobileServicesClient = new MobileServicesClient(mContext);
         cEventChildController = new CEventChildController(mContext);
+        loggedInChild = new LoggedInChild();
     }
 
     public void getEventId(String eventID){
@@ -65,7 +66,7 @@ public class PushNotificationController {
                     int hour = Integer.parseInt(sepTime[0]);
                     int minute = Integer.parseInt(sepTime[1]);
 
-                    loggedInChild.AlarmHandler(Integer.parseInt(expiration),hour, minute, month, year, date);
+                    loggedInChild.AlarmHandler(hour, minute, month, year, date);
 
                     /*
 
