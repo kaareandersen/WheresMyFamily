@@ -19,7 +19,7 @@
             android:layout_margin="@dimen/activity_vertical_margin"
             android:gravity="center"
             android:text="@string/add_new_location_headline"
-            android:background="@color/wallet_highlighted_text_holo_dark"
+
             android:textSize="24dp" />
         <View
             android:layout_width="match_parent"

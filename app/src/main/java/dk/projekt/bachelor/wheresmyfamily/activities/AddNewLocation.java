@@ -2,7 +2,9 @@ package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -18,6 +20,10 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toast;
+
+import com.google.gson.JsonObject;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -108,6 +114,10 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
 
         ////noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_help){
+            helpMenu();
             return true;
         }
 
@@ -279,5 +289,24 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         geofenceStorage = new GeofenceStorage(this);
         geofenceList.add(geofenceList.size(), wmfGeofence);
         geofenceStorage.setGeofences(this, geofenceList);
+    }
+
+    public void helpMenu(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle("Hjælp");
+        alert.setMessage("udfyl udfyld udfyld");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+            }
+        });
+
+        alert.show();
     }
 }

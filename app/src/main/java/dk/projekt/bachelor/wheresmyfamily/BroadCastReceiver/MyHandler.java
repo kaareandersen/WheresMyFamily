@@ -71,7 +71,7 @@ public class MyHandler extends NotificationsHandler {
         mNotificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (NOTIFICATION_ID == 3) {
+        //if (NOTIFICATION_ID == 3) {
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, id,
                     new Intent(ctx, LoggedInParent.class), 0);
 
@@ -86,7 +86,7 @@ public class MyHandler extends NotificationsHandler {
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
             Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
-        }
+       /* }
         else if (NOTIFICATION_ID == 1 || NOTIFICATION_ID == 2){
             PendingIntent contentIntent = PendingIntent.getActivity(ctx, id,
                     new Intent(ctx, LoggedInChild.class), 0);
@@ -102,6 +102,6 @@ public class MyHandler extends NotificationsHandler {
             mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
             Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 }

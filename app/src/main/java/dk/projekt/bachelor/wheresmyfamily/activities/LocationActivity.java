@@ -5,15 +5,18 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -30,14 +33,21 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.GMapV2Direction;
+import dk.projekt.bachelor.wheresmyfamily.Controller.GetDirectionsAsyncTask;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
 import dk.projekt.bachelor.wheresmyfamily.R;
@@ -119,6 +129,17 @@ public class LocationActivity extends FragmentActivity implements
     ImageButton addgeofenceButton;
     //endregion
 
+    //Navigering
+    private static final LatLng AMSTERDAM = new LatLng(52.37518, 4.895439);
+    private static final LatLng PARIS = new LatLng(48.856132, 2.352448);
+    private static final LatLng FRANKFURT = new LatLng(50.111772, 8.682632);
+    private SupportMapFragment fragment;
+    private LatLngBounds latlngBounds;
+    private Button bNavigation;
+    private Polyline newPolyline;
+    private boolean isTravelingToParis = false;
+    private int width, height;
+
     public LocationActivity(){}
 
     //region Lifecycle events
@@ -152,6 +173,8 @@ public class LocationActivity extends FragmentActivity implements
             locationClient = new LocationClient(this, this, this);
 
         locationClient.connect();
+
+        getSreenDimanstions();
 
         // Initialize the map
         map = ((SupportMapFragment) getSupportFragmentManager()
@@ -247,6 +270,9 @@ public class LocationActivity extends FragmentActivity implements
     {
         switch (item.getItemId())
         {
+            case R.id.navigate_to_child:
+                findDirections( AMSTERDAM.latitude, AMSTERDAM.longitude,PARIS.latitude, PARIS.longitude, GMapV2Direction.MODE_DRIVING );
+                break;
             case R.id.menu_set_hybrid:
                 map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 break;
@@ -557,6 +583,63 @@ public class LocationActivity extends FragmentActivity implements
         {
             Toast.makeText(this, "Barnets lokation endnu ikke modtaget, vent venligst", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void handleGetDirectionsResult(ArrayList<LatLng> directionPoints) {
+        PolylineOptions rectLine = new PolylineOptions().width(5).color(Color.RED);
+
+        for(int i = 0 ; i < directionPoints.size() ; i++)
+        {
+            rectLine.add(directionPoints.get(i));
+        }
+        if (newPolyline != null)
+        {
+            newPolyline.remove();
+        }
+        newPolyline = map.addPolyline(rectLine);
+        if (isTravelingToParis)
+        {
+            latlngBounds = createLatLngBoundsObject(AMSTERDAM, PARIS);
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBounds, width, height, 150));
+        }
+        else
+        {
+            latlngBounds = createLatLngBoundsObject(AMSTERDAM, FRANKFURT);
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(latlngBounds, width, height, 150));
+        }
+
+    }
+
+    private void getSreenDimanstions()
+    {
+        Display display = getWindowManager().getDefaultDisplay();
+        width = display.getWidth();
+        height = display.getHeight();
+    }
+
+    private LatLngBounds createLatLngBoundsObject(LatLng firstLocation, LatLng secondLocation)
+    {
+        if (firstLocation != null && secondLocation != null)
+        {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(firstLocation).include(secondLocation);
+
+            return builder.build();
+        }
+        return null;
+    }
+
+    public void findDirections(double fromPositionDoubleLat, double fromPositionDoubleLong, double toPositionDoubleLat, double toPositionDoubleLong, String mode)
+    {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(GetDirectionsAsyncTask.USER_CURRENT_LAT, String.valueOf(fromPositionDoubleLat));
+        map.put(GetDirectionsAsyncTask.USER_CURRENT_LONG, String.valueOf(fromPositionDoubleLong));
+        map.put(GetDirectionsAsyncTask.DESTINATION_LAT, String.valueOf(toPositionDoubleLat));
+        map.put(GetDirectionsAsyncTask.DESTINATION_LONG, String.valueOf(toPositionDoubleLong));
+        map.put(GetDirectionsAsyncTask.DIRECTIONS_MODE, mode);
+
+        GetDirectionsAsyncTask asyncTask = new GetDirectionsAsyncTask(this);
+        asyncTask.execute(map);
     }
 }
 

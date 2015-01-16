@@ -10,62 +10,79 @@
 
     android:background="@color/themecolor">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:padding="10dp"
-        android:id="@+id/linearLayout"
-        android:background="@drawable/linearlayout_bg">
+        android:layout_centerInParent="true">
 
-        <EditText
-            android:id="@+id/etLogEmail"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittext_top_bg"
-            android:padding="10dp"
-            android:hint="Email"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#cccccc"
-            android:drawableLeft="@drawable/email"
-            android:singleLine="true"/>
+            android:id="@+id/linearLayout">
 
-        <EditText
-            android:id="@+id/etLogPass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_bottom_bg"
-            android:layout_marginTop="-2dp"
-            android:padding="10dp"
-            android:hint="Password"
-            android:textColorHint="#cccccc"
-            android:password="true"
-            android:drawableLeft="@drawable/password"
-            android:singleLine="true"/>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:background="@drawable/linearlayout_bg"
+                android:padding="10dp">
 
-        <Button
-            android:id="@+id/btnSignIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_margin="4dp"
-            android:text="Log Ind"
-            style="@style/DefaultButtonText"
-            android:background="@drawable/button_default_bg"
-            />
+                <EditText
+                    android:id="@+id/etLogEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_top_bg"
+                    android:padding="10dp"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:textColorHint="#cccccc"
+                    android:drawableLeft="@drawable/email"
+                    android:singleLine="true"/>
 
-    </LinearLayout>
+                <EditText
+                    android:id="@+id/etLogPass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_bottom_bg"
+                    android:layout_marginTop="-2dp"
+                    android:padding="10dp"
+                    android:hint="Password"
+                    android:textColorHint="#cccccc"
+                    android:password="true"
+                    android:drawableLeft="@drawable/password"
+                    android:singleLine="true"/>
+            </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Glemt Login Oplysninger?"
-        android:id="@+id/txtForgetPass"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:clickable="true"
-        android:textColor="@color/linkblue"/>
+            <Button
+                android:id="@+id/btnSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_margin="4dp"
+                android:text="Log Ind"
+                style="@style/DefaultButtonText"
+                android:background="@drawable/button_default_bg"
+                />
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/glemt_login"
+                android:id="@+id/txtForgetPass"
+                android:layout_below="@+id/linearLayout"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:textColor="@color/linkblue"
+                android:paddingTop="15dp"/>
+           </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

@@ -3,4 +3,11 @@
     tools:context="dk.projekt.bachelor.wheresmyfamily.activities.AddNewLocation">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_help"
+        android:title="Tilføj Barn"
+        android:icon="@drawable/ic_action_help_white"
+        android:showAsAction="always"
+        android:orderInCategory="2" />
 </menu>

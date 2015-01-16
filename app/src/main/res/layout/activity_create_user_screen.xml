@@ -10,6 +10,11 @@
 
     android:background="@color/themecolor">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -105,5 +110,5 @@
             android:background="@drawable/button_default_bg"/>
 
         </LinearLayout>
-
+    </ScrollView>
 </RelativeLayout>
