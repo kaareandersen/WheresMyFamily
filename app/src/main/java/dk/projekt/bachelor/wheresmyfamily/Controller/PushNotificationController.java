@@ -1,7 +1,6 @@
 package dk.projekt.bachelor.wheresmyfamily.Controller;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,11 +9,9 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
-import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 
 /**
  * Created by KaareAndersen on 20/11/14.
@@ -24,6 +21,7 @@ public class PushNotificationController {
     private final static String TAG = "PushNotificationController";
     private static Context mContext;
     private static MobileServicesClient mMobileServicesClient;
+    private static LoggedInChild loggedInChild;
     private static CEventChildController cEventChildController;
     private ArrayList<WmfGeofence> currentGeofences;
 
@@ -54,8 +52,7 @@ public class PushNotificationController {
                     String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
                     String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
                     String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
-
-                    // WmfGeofence temp = new WmfGeofence(eventid, latitude, longitude, Float.parseFloat(radius), )
+                    String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");
@@ -67,6 +64,10 @@ public class PushNotificationController {
                     String[] sepTime = startTime.split(":");
                     int hour = Integer.parseInt(sepTime[0]);
                     int minute = Integer.parseInt(sepTime[1]);
+
+                    loggedInChild.AlarmHandler(Integer.parseInt(expiration),hour, minute, month, year, date);
+
+                    /*
 
                     Calendar c = Calendar.getInstance();
                     int currentyear = c.get(Calendar.YEAR);
@@ -97,7 +98,7 @@ public class PushNotificationController {
                     calendar.set(Calendar.DAY_OF_MONTH, date);
                     calendar.set(Calendar.HOUR_OF_DAY, hour);
                     calendar.set(Calendar.MINUTE, minute);
-                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.SECOND, 0);*/
 
 
 
