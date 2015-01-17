@@ -637,7 +637,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         calendarStart.set(Calendar.YEAR, startYear);
         calendarStart.set(Calendar.DAY_OF_MONTH, startDate);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, expiration, pendingIntent);
