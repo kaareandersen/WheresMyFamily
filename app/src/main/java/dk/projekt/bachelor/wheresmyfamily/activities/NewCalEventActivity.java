@@ -2,7 +2,6 @@ package dk.projekt.bachelor.wheresmyfamily.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -327,10 +326,10 @@ public class NewCalEventActivity extends BaseActivity implements
 
                 // addGeofences();
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                /*PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                         0, intent, 0);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);*/
 
                 saveEvent();
 
