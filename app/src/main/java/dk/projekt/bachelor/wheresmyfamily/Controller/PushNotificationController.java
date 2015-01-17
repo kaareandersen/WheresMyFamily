@@ -50,10 +50,10 @@ public class PushNotificationController {
                     String startTime = jsonObject.getAsJsonPrimitive("StartTime").getAsString();
                     String endDate = jsonObject.getAsJsonPrimitive("EndDate").getAsString();
                     String endTime = jsonObject.getAsJsonPrimitive("EndTime").getAsString();
-                    String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
-                    String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
-                    String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
-                    String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();
+                    //String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
+                    //String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
+                    //String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
+                    //String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");
@@ -66,10 +66,10 @@ public class PushNotificationController {
                     int hour = Integer.parseInt(sepTime[0]);
                     int minute = Integer.parseInt(sepTime[1]);
 
+                    loggedInChild = new LoggedInChild();
                     loggedInChild.AlarmHandler(hour, minute, month, year, date);
 
                     /*
-
                     Calendar c = Calendar.getInstance();
                     int currentyear = c.get(Calendar.YEAR);
                     int currentmonth = c.get(Calendar.MONTH);
