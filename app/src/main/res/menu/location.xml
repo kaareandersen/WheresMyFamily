@@ -4,7 +4,7 @@
         android:id="@+id/menu_settings"
         android:orderInCategory="4"
         android:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/ic_action_location_found"
         android:title="Settings">
 
 <menu>
