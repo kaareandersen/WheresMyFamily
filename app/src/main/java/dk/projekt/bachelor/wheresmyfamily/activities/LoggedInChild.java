@@ -104,8 +104,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     private NotificationHub mHub;
     private String mRegistrationId;
     public static LoggedInChild instance = null;
-    private Activity mActivity;
-    private Context ctx;
 
     JSONArray mChildren = new JSONArray();
     ArrayList<Parent> mParents = new ArrayList<Parent>();
@@ -135,8 +133,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         setContentView(R.layout.activity_logged_in_child);
 
         instance = this;
-        mActivity = this;
-        ctx = this;
 
         //Notification hub Azure
         mNotificationHubController = new NotificationHubController(this);
