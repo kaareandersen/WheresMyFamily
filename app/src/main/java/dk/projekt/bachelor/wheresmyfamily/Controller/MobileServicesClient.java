@@ -294,10 +294,10 @@ public class MobileServicesClient {
                     newEvent.addProperty("PartitionKey", partitionkey);
                     newEvent.addProperty("RowKey", rowkey);
                     newEvent.addProperty("EventName", eventname);
-                    /*newEvent.addProperty("GeofenceId", location.getGeofenceId());
+                    newEvent.addProperty("GeofenceId", location.getGeofenceId());
                     newEvent.addProperty("Latitude", location.getLatitude());
                     newEvent.addProperty("Longitude", location.getLongitude());
-                    newEvent.addProperty("Radius", location.getRadius());*/
+                    newEvent.addProperty("Radius", location.getRadius());
                     newEvent.addProperty("Child", child);
                     newEvent.addProperty("StartDate", startdate);
                     newEvent.addProperty("StartTime", starttime);
