@@ -618,6 +618,32 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         });
     }
+
+    public void AlarmHandler(int expiration, int startHour, int startMinute, int startMonth, int startYear, int startDate)
+    {
+        Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+
+        // calendar.set(Calendar.AM_PM, Calendar.AM);
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTimeInMillis(System.currentTimeMillis());
+
+        calendarStart.set(Calendar.HOUR_OF_DAY, startHour);
+        calendarStart.set(Calendar.MINUTE, startMinute);
+        calendarStart.set(Calendar.SECOND, 0);
+
+        // January is month 0!!!!
+        // Very important to remember to roll back the time one month!!!!
+        --startMonth;
+
+        calendarStart.set(Calendar.MONTH, startMonth);
+        calendarStart.set(Calendar.YEAR, startYear);
+        calendarStart.set(Calendar.DAY_OF_MONTH, startDate);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+                0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);
+    }
 }
     //endregion
 

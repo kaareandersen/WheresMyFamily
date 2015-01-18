@@ -57,6 +57,10 @@ public class PushNotificationController {
                     String startTime = jsonObject.getAsJsonPrimitive("StartTime").getAsString();
                     String endDate = jsonObject.getAsJsonPrimitive("EndDate").getAsString();
                     String endTime = jsonObject.getAsJsonPrimitive("EndTime").getAsString();
+                    /*String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
+                    String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
+                    String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
+                    String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();*/
                     //String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
                     //String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
                     //String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
