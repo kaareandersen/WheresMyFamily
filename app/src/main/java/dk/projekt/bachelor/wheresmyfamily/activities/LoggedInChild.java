@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -50,6 +51,7 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
+import dk.projekt.bachelor.wheresmyfamily.Services.AlarmService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
@@ -617,10 +619,9 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         });
     }
 
-    public void AlarmHandler(int startHour, int startMinute, int startMonth, int startYear, int startDate)
+    public void AlarmHandler(int expiration, int startHour, int startMinute, int startMonth, int startYear, int startDate)
     {
         Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
-        intent.setAction(ACTIVITY_SERVICE);
 
         // calendar.set(Calendar.AM_PM, Calendar.AM);
         Calendar calendarStart = Calendar.getInstance();
@@ -638,7 +639,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         calendarStart.set(Calendar.YEAR, startYear);
         calendarStart.set(Calendar.DAY_OF_MONTH, startDate);
 
-        PendingIntent pendingIntent = PendingIntent.getService(this,
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
                 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);

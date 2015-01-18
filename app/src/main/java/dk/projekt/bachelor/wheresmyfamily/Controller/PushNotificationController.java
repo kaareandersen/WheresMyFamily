@@ -1,6 +1,9 @@
 package dk.projekt.bachelor.wheresmyfamily.Controller;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,8 +12,12 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.Services.AlarmService;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 
 /**
@@ -54,6 +61,10 @@ public class PushNotificationController {
                     String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
                     String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
                     String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();*/
+                    //String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
+                    //String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
+                    //String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
+                    //String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");
@@ -66,10 +77,10 @@ public class PushNotificationController {
                     int hour = Integer.parseInt(sepTime[0]);
                     int minute = Integer.parseInt(sepTime[1]);
 
-                    loggedInChild.AlarmHandler(hour, minute, month, year, date);
-
+                    //loggedInChild = new LoggedInChild();
+                    //loggedInChild.AlarmHandler(hour, minute, month, year, date);
+                    AlarmHandler(hour, minute, month,year,date);
                     /*
-
                     Calendar c = Calendar.getInstance();
                     int currentyear = c.get(Calendar.YEAR);
                     int currentmonth = c.get(Calendar.MONTH);
@@ -139,5 +150,31 @@ public class PushNotificationController {
                 }
             }
         });
+    }
+
+    public void AlarmHandler(int startHour, int startMinute, int startMonth, int startYear, int startDate)
+    {
+
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTimeInMillis(System.currentTimeMillis());
+
+        calendarStart.set(Calendar.HOUR_OF_DAY, startHour);
+        calendarStart.set(Calendar.MINUTE, startMinute);
+        calendarStart.set(Calendar.SECOND, 0);
+
+        // January is month 0!!!!
+        // Very important to remember to roll back the time one month!!!!
+        --startMonth;
+
+        calendarStart.set(Calendar.MONTH, startMonth);
+        calendarStart.set(Calendar.YEAR, startYear);
+        calendarStart.set(Calendar.DAY_OF_MONTH, startDate);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);
     }
 }
