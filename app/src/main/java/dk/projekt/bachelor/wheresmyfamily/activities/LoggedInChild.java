@@ -5,7 +5,6 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -48,12 +47,12 @@ import dk.projekt.bachelor.wheresmyfamily.Controller.MobileServicesClient;
 import dk.projekt.bachelor.wheresmyfamily.Controller.NotificationHubController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.ParentModelController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PushNotificationController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.WmfGeofenceController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Parent;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ActivityRecognitionIntentService;
-import dk.projekt.bachelor.wheresmyfamily.Services.AlarmService;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
-import dk.projekt.bachelor.wheresmyfamily.Storage.UserInfoStorage;
 import dk.projekt.bachelor.wheresmyfamily.authenticator.AuthenticationApplication;
 import dk.projekt.bachelor.wheresmyfamily.helper.BaseActivity;
 
@@ -72,7 +71,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     LocationClient locationClient;
     // Define an object that holds accuracy and frequency parameters
     private LocationRequest mLocationRequest;
-    UserInfoStorage storage = new UserInfoStorage();
     String parentEmail;
     ListView listView ;
 
@@ -109,6 +107,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     ArrayList<Parent> mParents = new ArrayList<Parent>();
 
     ParentModelController parentModelController;
+    WmfGeofenceController wmfGeofenceController;
     // Store the PendingIntent used to send activity recognition events back to the app
     private PendingIntent mActivityRecognitionPendingIntent;
     // Store the current activity recognition client
@@ -124,6 +123,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     private PendingIntent mGeofenceRequestIntent;
 
     ArrayList<com.google.android.gms.location.Geofence> mCurrentGeofences;
+    ArrayList<WmfGeofence> wmfGeofences;
     //endregion
 
     //region Lifecycle events
@@ -139,6 +139,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         pushNotificationController = new PushNotificationController(this);
 
         parentModelController = new ParentModelController();
+        wmfGeofenceController = new WmfGeofenceController();
 
         // Reference UI elements
         mLblUsernameValue = (TextView) findViewById(R.id.lblUsernameValue);
@@ -222,6 +223,13 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         startService(intent);*/
 
         mParents = parentModelController.getMyParents(this);
+
+        wmfGeofences = wmfGeofenceController.getAllGeofences(this);
+
+        for(int i = 0; i < wmfGeofences.size(); i++)
+        {
+            mCurrentGeofences.add(wmfGeofences.get(i).toGeofence());
+        }
 
         if (mParents.size() > 0) {
             parentInfoName.setText(mParents.get(0).getName());

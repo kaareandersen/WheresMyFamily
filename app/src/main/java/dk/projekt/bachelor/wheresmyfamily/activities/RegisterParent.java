@@ -242,7 +242,7 @@ public class RegisterParent extends BaseActivity implements NfcAdapter.CreateNde
 
         mParents.add(new Parent(userName, userPhone, userMail, null));
         storage.saveParents(this, mParents);
-        Toast.makeText(this, "Din forælder " + parent.getName() + " Tlf. " + parent.getPhone() + " er nu registréret",
+        Toast.makeText(this, "Din forælder " + userName + " Tlf. " + userPhone + " er nu registréret",
                 Toast.LENGTH_SHORT).show();
 
         isNFCMessageNew = false;

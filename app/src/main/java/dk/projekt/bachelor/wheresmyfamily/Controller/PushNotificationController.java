@@ -16,8 +16,6 @@ import java.util.Calendar;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
-import dk.projekt.bachelor.wheresmyfamily.Services.AlarmService;
-import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 
 /**
@@ -31,6 +29,7 @@ public class PushNotificationController {
     private static LoggedInChild loggedInChild;
     private static CEventChildController cEventChildController;
     private ArrayList<WmfGeofence> currentGeofences;
+    private WmfGeofenceController wmfGeofenceController;
 
     public PushNotificationController(Context context) {
         mContext = context;
@@ -55,16 +54,25 @@ public class PushNotificationController {
                     String eventName = jsonObject.getAsJsonPrimitive("EventName").getAsString();
                     String startDate = jsonObject.getAsJsonPrimitive("StartDate").getAsString();
                     String startTime = jsonObject.getAsJsonPrimitive("StartTime").getAsString();
+                    String geofenceID = jsonObject.getAsJsonPrimitive("GeofenceId").getAsString();
                     String endDate = jsonObject.getAsJsonPrimitive("EndDate").getAsString();
                     String endTime = jsonObject.getAsJsonPrimitive("EndTime").getAsString();
-                    /*String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
+                    String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
                     String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
                     String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
-                    String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();*/
-                    //String latitude = jsonObject.getAsJsonPrimitive("Latitude").getAsString();
-                    //String longitude = jsonObject.getAsJsonPrimitive("Longitude").getAsString();
-                    //String radius = jsonObject.getAsJsonPrimitive("Radius").getAsString();
-                    //String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();
+                    String expiration = jsonObject.getAsJsonPrimitive("Expiration").getAsString();
+
+                    WmfGeofence temp = new WmfGeofence();
+                    temp.setGeofenceId(geofenceID);
+                    temp.setRadius(Float.parseFloat(radius));
+                    temp.setLatitude(Double.parseDouble(latitude));
+                    temp.setLongitude(Double.parseDouble(longitude));
+                    temp.setExpirationDuration(Long.parseLong(expiration));
+
+                    currentGeofences.add(temp);
+
+                    wmfGeofenceController = new WmfGeofenceController();
+                    wmfGeofenceController.setMyGeofences(mContext, currentGeofences);
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");
@@ -127,10 +135,9 @@ public class PushNotificationController {
         mMobileServicesClient.getLocation(childEmail, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
-                if (exception == null){
+                if (exception == null) {
                     Toast.makeText(mContext, "pushnotifikationcontroller send location", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Log.e(TAG, "There was an exception requesting location from child: " + exception.getMessage());
                 }
             }
@@ -142,10 +149,9 @@ public class PushNotificationController {
         mMobileServicesClient.sendLocation(parentEmail, location, new TableJsonOperationCallback() {
             @Override
             public void onCompleted(JsonObject jsonObject, Exception exception, ServiceFilterResponse response) {
-                if (exception == null){
+                if (exception == null) {
                     Toast.makeText(mContext, "Lokation Sendt!", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     Log.e(TAG, "There was an exception sending location from Child: " + exception.getMessage());
                 }
             }
@@ -174,7 +180,7 @@ public class PushNotificationController {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext,0, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);;
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);
     }
 }

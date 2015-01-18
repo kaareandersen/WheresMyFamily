@@ -147,6 +147,7 @@
     <string name="showpositionoverview">Gå til</string>
     <string name="glemt_login">Glemt dit Password?</string>
     <string name="navigate_to_child">Navigér</string>
+    <string name="main_no_places">Der er ikke gemt nogen steder</string>
 
     <!--NavigationDrawer-->
     <string-array name="navigation_drawer_array">
