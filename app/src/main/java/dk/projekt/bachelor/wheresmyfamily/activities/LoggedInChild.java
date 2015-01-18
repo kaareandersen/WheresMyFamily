@@ -617,9 +617,10 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         });
     }
 
-    public void AlarmHandler(int expiration, int startHour, int startMinute, int startMonth, int startYear, int startDate)
+    public void AlarmHandler(int startHour, int startMinute, int startMonth, int startYear, int startDate)
     {
         Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+        intent.setAction(ACTIVITY_SERVICE);
 
         // calendar.set(Calendar.AM_PM, Calendar.AM);
         Calendar calendarStart = Calendar.getInstance();
@@ -637,7 +638,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         calendarStart.set(Calendar.YEAR, startYear);
         calendarStart.set(Calendar.DAY_OF_MONTH, startDate);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(),
+        PendingIntent pendingIntent = PendingIntent.getService(this,
                 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendarStart.getTimeInMillis(), pendingIntent);
