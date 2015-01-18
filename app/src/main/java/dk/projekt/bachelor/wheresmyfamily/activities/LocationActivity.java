@@ -591,7 +591,7 @@ public class LocationActivity extends FragmentActivity implements
     }
 
     public void handleGetDirectionsResult(ArrayList<LatLng> directionPoints) {
-        PolylineOptions rectLine = new PolylineOptions().width(10).color(Color.BLUE);
+        PolylineOptions rectLine = new PolylineOptions().width(5).color(Color.BLUE);
 
         for(int i = 0 ; i < directionPoints.size() ; i++)
         {

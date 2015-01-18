@@ -36,8 +36,6 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        askForLocation();
-
         /*
         * Use an approximation to compute the position
         * The radius of earth in meters: 6378137
