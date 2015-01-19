@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.location.Geofence;
 import com.google.gson.JsonObject;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
@@ -68,6 +69,7 @@ public class PushNotificationController {
                     temp.setRadius(Float.parseFloat(radius));
                     temp.setLatitude(Double.parseDouble(latitude));
                     temp.setLongitude(Double.parseDouble(longitude));
+                    temp.setTransitionType(Geofence.GEOFENCE_TRANSITION_ENTER);
                     temp.setExpirationDuration(Long.parseLong(expiration));
 
                     currentGeofences.add(temp);
