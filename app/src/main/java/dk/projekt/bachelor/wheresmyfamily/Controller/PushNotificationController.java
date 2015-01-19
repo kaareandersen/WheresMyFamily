@@ -36,7 +36,7 @@ public class PushNotificationController {
         mContext = context;
         mMobileServicesClient = new MobileServicesClient(mContext);
         cEventChildController = new CEventChildController(mContext);
-        loggedInChild = LoggedInChild.instance;
+        loggedInChild = new LoggedInChild();
     }
 
     public void getEventId(String eventID){

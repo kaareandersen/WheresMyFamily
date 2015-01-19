@@ -345,7 +345,6 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
                 case ADD:
                     mInProgress = true;
                     mGeofenceRequestIntent = getTransitionPendingIntent();
-                    mCurrentGeofences.add(wmfGeofences.get(0).toGeofence());
                     // Send a request to add the current geofences
                     locationClient.addGeofences(mCurrentGeofences, mGeofenceRequestIntent, this);
                     Toast.makeText(this, "AddGeofence request sent", Toast.LENGTH_SHORT).show();
