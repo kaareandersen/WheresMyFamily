@@ -36,7 +36,7 @@ public class PushNotificationController {
         mContext = context;
         mMobileServicesClient = new MobileServicesClient(mContext);
         cEventChildController = new CEventChildController(mContext);
-        loggedInChild = new LoggedInChild();
+        loggedInChild = LoggedInChild.instance;
     }
 
     public void getEventId(String eventID){
@@ -74,6 +74,8 @@ public class PushNotificationController {
 
                     wmfGeofenceController = new WmfGeofenceController();
                     wmfGeofenceController.setMyGeofences(mContext, currentGeofences);
+
+                    loggedInChild.addGeofences();
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");
