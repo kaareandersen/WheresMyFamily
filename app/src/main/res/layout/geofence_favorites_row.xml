@@ -31,6 +31,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dip"
-        android:src="@drawable/ic_action_web_site"
+        android:src="@drawable/ic_action_web_site_dark"
         />
 </LinearLayout>
