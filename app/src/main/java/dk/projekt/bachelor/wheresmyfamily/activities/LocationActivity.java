@@ -510,7 +510,6 @@ public class LocationActivity extends FragmentActivity implements
         }
 
         pushNotificationController.askForLocationFromChild(childEmail);
-        Toast.makeText(this, "Anmoder om position", Toast.LENGTH_SHORT).show();
     }
 
     public void receiveLocation(String location){
@@ -518,7 +517,7 @@ public class LocationActivity extends FragmentActivity implements
         //String to convert
         // Bundle[{msg=ReceiveLoc ation:Loca tion[fused 56,147154,10,150219 acc=24 et=+7d15h33m53s517ms
         // alt=80.02072416373049 vel=1.6083485 bear=25.0], from=911215571794, collapse_key=do_not_collapse}]
-        Toast.makeText(this, "Lokation modtaget", Toast.LENGTH_SHORT).show();
+
         StringBuilder stringBuilder = new StringBuilder(location);
         String latitudeString = stringBuilder.substring(15, 24);
         String longitudeString = stringBuilder.substring(25, 35);
