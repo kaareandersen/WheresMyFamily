@@ -164,7 +164,7 @@ public class PushNotificationController {
     public void AlarmHandler(int startHour, int startMinute, int startMonth, int startYear, int startDate)
     {
         Intent intent = new Intent(mContext, AlarmReceiver.class);
-        Intent intent1 = new Intent(mContext,ReceiveTransitionsIntentService.class);
+        Intent intent1 = new Intent(mContext, ReceiveTransitionsIntentService.class);
         mContext.startService(intent1);
 
         Calendar calendarStart = Calendar.getInstance();
