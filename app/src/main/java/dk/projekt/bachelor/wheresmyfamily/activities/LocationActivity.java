@@ -538,6 +538,7 @@ public class LocationActivity extends FragmentActivity implements
         }
 
         currentPosition = new LatLng(latitude, longitude);
+        showCurrentPositionOnMap();
     }
     //endregion
 
@@ -638,6 +639,72 @@ public class LocationActivity extends FragmentActivity implements
 
         GetDirectionsAsyncTask asyncTask = new GetDirectionsAsyncTask(this);
         asyncTask.execute(map);
+
+        addMarkerChild();
+        addMarkerParent();
+    }
+
+    private void addMarkerChild(){
+        List<Address> addresses;
+        String language = "da";
+        String country = "DK";
+        Locale local = new Locale(language, country);
+        Geocoder geocoder = new Geocoder(this, local);
+        StringBuffer markerInfo = new StringBuffer();
+        Child current = childModelController.getCurrentChild();
+
+        if (currentPosition != null) {
+            try {
+                addresses = geocoder.getFromLocation(currentPosition.latitude, currentPosition.longitude, 1);
+                if (addresses.size() > 0) {
+                    for (int j = 0; j < addresses.get(0).getMaxAddressLineIndex(); j++) {
+                        markerInfo.append(addresses.get(0).getAddressLine(j).toString());
+                        markerInfo.append("\n");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Add a marker with the selected Child's name and current location
+            map.addMarker(new MarkerOptions().position(currentPosition)
+                    .title(current.getName() + "\n").snippet(markerInfo.toString()));
+        }
+    }
+
+    private void addMarkerParent(){
+        List<Address> _addresses;
+        String _language = "da";
+        String _country = "DK";
+        Locale _local = new Locale(_language, _country);
+        Geocoder _geocoder = new Geocoder(this, _local);
+        StringBuffer _markerInfo = new StringBuffer();
+
+        if(mCurrentLocation != null)
+        {
+            try
+            {
+                // Last parameter is the max number of result wanted
+                _addresses = _geocoder.getFromLocation(mCurrentLocation.latitude, mCurrentLocation.longitude, 1);
+                if(_addresses.size() > 0)
+                {
+                    for(int j = 0; j < _addresses.get(0).getMaxAddressLineIndex(); j++)
+                    {
+                        _markerInfo.append(_addresses.get(0).getAddressLine(j).toString());
+                        _markerInfo.append("\n");
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            map.addMarker(new MarkerOptions()
+                    .position(mCurrentLocation)
+                    .title("Mig\n").snippet(_markerInfo.toString())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
     }
 }
 
