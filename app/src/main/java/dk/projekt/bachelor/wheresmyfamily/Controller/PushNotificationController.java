@@ -16,6 +16,7 @@ import java.util.Calendar;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
+import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
 import dk.projekt.bachelor.wheresmyfamily.activities.LoggedInChild;
 
 /**

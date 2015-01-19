@@ -198,7 +198,7 @@ public class FavoritePlaces extends ListActivity {
         try {
             myGeofences = geofenceStorage.getGeofences(this);
 
-            Thread.sleep(2000);
+            Thread.sleep(500);
             Log.i("ARRAY", "" + myGeofences.size());
         } catch (Exception e) {
             if(e.getMessage() != null)

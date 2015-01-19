@@ -226,10 +226,10 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         wmfGeofences = wmfGeofenceController.getAllGeofences(this);
 
-        for(int i = 0; i < wmfGeofences.size(); i++)
+/*        for(int i = 0; i < wmfGeofences.size(); i++)
         {
             mCurrentGeofences.add(wmfGeofences.get(i).toGeofence());
-        }
+        }*/
 
         if (mParents.size() > 0) {
             parentInfoName.setText(mParents.get(0).getName());
@@ -556,6 +556,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
         // If a request is not already underway
         if (!mInProgress)
         {
+            locationClient.disconnect();
             // Indicate that a request is underway
             mInProgress = true;
 
