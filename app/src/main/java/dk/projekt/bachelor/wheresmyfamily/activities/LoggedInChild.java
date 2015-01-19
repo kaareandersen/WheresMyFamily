@@ -226,7 +226,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
 
         wmfGeofences = wmfGeofenceController.getAllGeofences(this);
 
-/*        for(int i = 0; i < wmfGeofences.size(); i++)
+        /*for(int i = 0; i < wmfGeofences.size(); i++)
         {
             mCurrentGeofences.add(wmfGeofences.get(i).toGeofence());
         }*/
