@@ -8,20 +8,19 @@
         android:title="Settings">
 
 <menu>
+    <item android:id="@+id/current_child_position"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_show_child_position"/>
+
+    <item android:id="@+id/navigate_to_child"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/navigate_to_child"/>
+
     <item android:id="@+id/map_mode"
         android:showAsAction="never"
         android:title="@string/menu_map_mode_title">
-
-        <item android:id="@+id/current_child_position"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/menu_show_child_position"/>
-
-        <item android:id="@+id/navigate_to_child"
-            android:orderInCategory="100"
-            android:showAsAction="never"
-            android:title="@string/navigate_to_child"/>
-
         <menu>
             <item
                 android:id="@+id/menu_set_hybrid"
