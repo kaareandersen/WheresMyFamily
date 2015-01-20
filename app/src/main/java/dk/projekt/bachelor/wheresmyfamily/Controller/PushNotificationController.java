@@ -77,6 +77,7 @@ public class PushNotificationController {
                     wmfGeofenceController = new WmfGeofenceController();
                     wmfGeofenceController.setMyGeofences(mContext, currentGeofences);
 
+                    // loggedInChild.addGeofences();
                     loggedInChild = LoggedInChild.instance;
                     loggedInChild.addGeofences();
 
