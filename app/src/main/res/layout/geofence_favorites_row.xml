@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginRight="6dip"
-        android:src="@drawable/add_place_icon"
+        android:src="@drawable/ic_action_place_dark"
         />
     <LinearLayout
         android:id="@+id/row_layout"
@@ -31,6 +31,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dip"
-        android:src="@drawable/ic_action_map"
+        android:src="@drawable/ic_action_web_site_dark"
         />
 </LinearLayout>
