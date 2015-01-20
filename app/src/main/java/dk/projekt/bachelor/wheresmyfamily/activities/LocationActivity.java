@@ -404,7 +404,7 @@ public class LocationActivity extends FragmentActivity implements
     @Override
     public void onConnected(Bundle bundle)
     {
-        Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
     }

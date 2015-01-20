@@ -39,8 +39,10 @@ import java.util.List;
 
 import dk.projekt.bachelor.wheresmyfamily.BroadCastReceiver.AlarmReceiver;
 import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.EventController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.WmfGeofenceController;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Event;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.WmfGeofence;
 import dk.projekt.bachelor.wheresmyfamily.R;
 import dk.projekt.bachelor.wheresmyfamily.Services.ReceiveTransitionsIntentService;
@@ -97,6 +99,9 @@ public class NewCalEventActivity extends BaseActivity implements
 
     Bundle bundle = new Bundle();
     ChildModelController childModelController = new ChildModelController();
+
+    private ArrayList<Event> currentEvents = new ArrayList<Event>();
+    private EventController eventController = new EventController();
     //endregion
 
     //region Life cycle events
@@ -224,11 +229,15 @@ public class NewCalEventActivity extends BaseActivity implements
     protected void onStart() {
         super.onStart();
 
+        currentEvents = eventController.getAllEvents(this);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        eventController.setMyEvents(this, currentEvents);
     }
 
     @Override
@@ -500,6 +509,12 @@ public class NewCalEventActivity extends BaseActivity implements
                         }
                     });
             }
+
+            currentEvents.add(new Event(txtEvent.getText().toString(),
+                    txtStartDate.getText().toString(), txtEndDate.getText().toString(), txtStartTime.getText().toString(),
+                     txtEndTime.getText().toString(), ""));
+
+            eventController.setMyEvents(this, currentEvents);
         }
 
     @Override

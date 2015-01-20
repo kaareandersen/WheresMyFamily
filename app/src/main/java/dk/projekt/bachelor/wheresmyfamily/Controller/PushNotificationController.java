@@ -77,7 +77,7 @@ public class PushNotificationController {
                     wmfGeofenceController = new WmfGeofenceController();
                     wmfGeofenceController.setMyGeofences(mContext, currentGeofences);
 
-                    loggedInChild.addGeofences();
+                    // loggedInChild.addGeofences();
 
                     //Convert date/month/year to int
                     String[] sepDate = startDate.split("-");

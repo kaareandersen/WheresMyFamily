@@ -21,10 +21,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
-import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
-import com.microsoft.windowsazure.mobileservices.TableJsonOperationCallback;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -295,7 +291,9 @@ public class AddNewLocation extends Activity  implements View.OnClickListener, A
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle("Hjælp");
-        alert.setMessage("udfyl udfyld udfyld");
+        alert.setMessage("Stednavn er et vilkårligt navn, du selv vælger \n \n" +
+                "Adresse - Vælg et resultat fra listen, der fremkommer under indtastning \n \n"
+                + "Radius - Størrelsen på området skal vurderes og angives" );
         alert.setIcon(R.drawable.ic_action_help);
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

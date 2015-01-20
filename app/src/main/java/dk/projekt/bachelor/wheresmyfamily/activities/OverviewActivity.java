@@ -1,15 +1,20 @@
 package dk.projekt.bachelor.wheresmyfamily.activities;
 
-import android.app.Activity;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -18,15 +23,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import dk.projekt.bachelor.wheresmyfamily.Controller.ChildModelController;
+import dk.projekt.bachelor.wheresmyfamily.Controller.EventController;
 import dk.projekt.bachelor.wheresmyfamily.Controller.PictUtil;
 import dk.projekt.bachelor.wheresmyfamily.DataModel.Child;
+import dk.projekt.bachelor.wheresmyfamily.DataModel.Event;
 import dk.projekt.bachelor.wheresmyfamily.R;
 
 
-public class OverviewActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener
+public class OverviewActivity extends ListActivity implements View.OnClickListener, AdapterView.OnItemClickListener
 {
     ImageButton btnTackPic;
     ImageView ivThumbnailPhoto;
@@ -49,6 +58,13 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
     private ListView drawerListView;
     private String[] navigationDrawerList;
 
+    private ArrayList<Event> currentEvents;
+    private EventController eventController;
+    private EventAdapter eventAdapter;
+    ListView myList;
+    private Runnable viewChild;
+    private ProgressDialog m_ProgressDialog = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +72,9 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         setContentView(R.layout.activity_overview);
 
         myChildren = childModelController.getMyChildren(this);
+
+        eventController = new EventController();
+        currentEvents = eventController.getAllEvents(this);
 
         btnTackPic = (ImageButton) findViewById(R.id.btnTakePic);
 
@@ -67,6 +86,25 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         btnTackPic.setOnClickListener(this);
 
         listEvents();
+
+        eventAdapter = new EventAdapter(this, R.layout.event_row, currentEvents);
+        myList = (ListView)findViewById(android.R.id.list);
+        myList.setAdapter(eventAdapter);
+
+        viewChild = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getChild();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread thread = new Thread(null, viewChild, "MagenToBackground");
+        thread.start();
+        m_ProgressDialog = ProgressDialog.show(OverviewActivity.this, "Vent venligst...",
+                "Henter data ...", true);
 
         ImageButton button = (ImageButton) findViewById(R.id.callchild);
         button.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +135,24 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
 
         currentChild = childModelController.getCurrentChild();
 
+        currentEvents = eventController.getAllEvents(this);
+
+        // Refresh the list of events
+        myList.setAdapter(new EventAdapter(this, R.layout.event_row, currentEvents));
+
         childNameTextView.setText(currentChild.getName());
         childPhoneTextView.setText(currentChild.getPhone());
         //set filename for bmp
         filename = currentChild.getPhone();
         // Load bmp
         ivThumbnailPhoto.setImageBitmap(PictUtil.loadFromCacheFile(filename));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        eventController.setMyEvents(this, currentEvents);
     }
 
     @Override
@@ -172,20 +222,17 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         }
     }
 
-    public void listEvents(){
+    public void listEvents()
+    {
         // Get ListView object from xml
-        listView = (ListView) findViewById(R.id.list);
+        listView = (ListView) findViewById(android.R.id.list);
 
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
+        /*// Defined Array values to show in ListView
+        String[] values = new String[] { "Skole d. 21.12.14 kl. 8.00 - 15.00",
+                "Fodbold d. 21.12.14 kl. 16.00 - 17.00",
+                "Skole d. 22.12.14 kl. 8.00 - 14.00",
+                "Tandlæge d. 22.12.14 kl. 15.00 - 15.30",
+        };*/
 
         // Define a new Adapter
         // First parameter - Context
@@ -193,12 +240,19 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
         // Third parameter - ID of the TextView to which the data is written
         // Forth - the Array of data
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        String[] values = new String[currentEvents.size()];
+
+        for(int i = 0; i < currentEvents.size(); i++)
+        {
+            values[i] = currentEvents.get(i).toString();
+        }
+
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, values);
 
 
         // Assign adapter to ListView
-        listView.setAdapter(adapter);
+        listView.setAdapter(adapter);*/
 
         // ListView Item Click Listener
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -217,9 +271,86 @@ public class OverviewActivity extends Activity implements View.OnClickListener, 
                 Toast.makeText(getApplicationContext(),
                         "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
                         .show();
-
             }
 
         });
+    }
+
+    private Runnable returnRes = new Runnable() {
+        @Override
+        public void run() {
+            if (currentEvents != null && currentEvents.size() > 0){
+                eventAdapter.notifyDataSetChanged();
+                for (int i = 0; i < currentEvents.size(); i++)
+                    eventAdapter.add(currentEvents.get(i));
+            }
+            m_ProgressDialog.dismiss();
+            eventAdapter.notifyDataSetChanged();
+        }
+    };
+
+    private void getChild() throws FileNotFoundException, IOException {
+        try
+        {
+            Thread.sleep(500);
+            Log.i("ARRAY", "" + currentEvents.size());
+        } catch (Exception e){
+            Log.e("BACKGROUND_PROC", e.getMessage());
+        }
+
+        runOnUiThread(returnRes);
+    }
+
+    private class EventAdapter extends ArrayAdapter<Event>
+    {
+        public EventAdapter(Context context, int textViewResourceId, ArrayList<Event> items)
+        {
+            super(context, textViewResourceId, items);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            View v = convertView;
+            if(v == null)
+            {
+                LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.event_row, null);
+            }
+
+            Event c = null;
+            c = currentEvents.get(position);
+
+            if (c != null)
+            {
+                TextView eventName = (TextView) v.findViewById(R.id.event_name_textview);
+                TextView startDate = (TextView) v.findViewById(R.id.event_startdate_textview);
+                TextView startTime = (TextView) v.findViewById(R.id.event_starttime_textview);
+                TextView endDate = (TextView) v.findViewById(R.id.event_enddate_textview);
+                TextView endTime = (TextView) v.findViewById(R.id.event_endtime_textview);
+
+                if (eventName != null)
+                {
+                    eventName.setText("Begivenhed: " + c.getEventName());
+                }
+                if (startDate != null)
+                {
+                    startDate.setText("Dato: " + c.getStartDate() + " til ");
+                }
+                if (endDate != null)
+                {
+                    endDate.setText(c.getEndDate());
+                }
+                if (startTime != null)
+                {
+                    startTime.setText("Fra " + c.getStartTime() + " til ");
+                }
+                if (endTime != null)
+                {
+                    endTime.setText(c.getEndTime());
+                }
+            }
+
+            return v;
+        }
     }
 }
