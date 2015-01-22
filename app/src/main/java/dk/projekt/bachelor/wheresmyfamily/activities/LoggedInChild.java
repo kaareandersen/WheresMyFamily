@@ -334,7 +334,7 @@ public class LoggedInChild extends BaseActivity implements GooglePlayServicesCli
     @Override
     public void onConnected(Bundle bundle) {
 
-        Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "LocationActivity connected", Toast.LENGTH_SHORT).show();
 
         locationClient.requestLocationUpdates(mLocationRequest, this);
 
